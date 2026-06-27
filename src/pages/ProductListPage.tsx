@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiSearch, FiShoppingCart, FiTag, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -29,7 +29,6 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
 const ProductListPage = () => {
-  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -40,11 +39,6 @@ const ProductListPage = () => {
   const limit = 9;
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
     loadProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, search, category]);
