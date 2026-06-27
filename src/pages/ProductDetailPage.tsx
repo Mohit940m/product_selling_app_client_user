@@ -57,10 +57,17 @@ const ProductDetailPage = () => {
     setIsLoading(true);
     try {
       const { data } = await userApi.get(`/products/get-product/${productId}`);
-      const p: Product = data.data;
+      const { product: productData, selectedVariant: defaultVariant, variants } = data.data;
+      const p: Product = {
+        ...productData,
+        price: defaultVariant?.price ?? 0,
+        discountedPrice: defaultVariant?.discountedPrice ?? defaultVariant?.price ?? 0,
+        activeOffer: defaultVariant?.activeOffer ?? null,
+        variants: variants ?? [],
+      };
       setProduct(p);
-      if (p.variants?.length > 0) {
-        setSelectedVariant(p.variants[0]);
+      if (variants?.length > 0) {
+        setSelectedVariant(variants[0]);
       }
     } catch (err) {
       const msg = axios.isAxiosError(err)
