@@ -162,7 +162,9 @@ const ProductDetailPage = () => {
   }
 
   const displayPrice = selectedVariant?.price ?? product.price;
-  const savings = product.price - product.discountedPrice;
+  const isDefaultVariant = !selectedVariant || selectedVariant._id === product.variants[0]?._id;
+  const shownPrice = isDefaultVariant ? product.discountedPrice : displayPrice;
+  const savings = isDefaultVariant ? product.price - product.discountedPrice : 0;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-text">
@@ -217,7 +219,7 @@ const ProductDetailPage = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-accent">{formatCurrency(product.discountedPrice)}</span>
+                <span className="text-3xl font-bold text-accent">{formatCurrency(shownPrice)}</span>
                 {savings > 0 && (
                   <>
                     <span className="text-lg text-gray-400 line-through">{formatCurrency(product.price)}</span>
@@ -251,10 +253,10 @@ const ProductDetailPage = () => {
                         key={val}
                         type="button"
                         onClick={() => selectVariantByAttribute(key, val)}
-                        className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                        className={`cursor-pointer rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all duration-150 ${
                           selectedVariant?.attributes[key] === val
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-gray-200 bg-white text-text hover:border-primary hover:text-accent'
+                            ? 'border-accent bg-secondary text-accent shadow-sm'
+                            : 'border-gray-200 bg-white text-text hover:border-primary hover:bg-secondary hover:text-accent hover:scale-105'
                         }`}
                       >
                         {val}
@@ -269,12 +271,6 @@ const ProductDetailPage = () => {
                   Stock: <span className={`font-semibold ${selectedVariant.stock > 0 ? 'text-green-700' : 'text-red-600'}`}>
                     {selectedVariant.stock > 0 ? `${selectedVariant.stock} units available` : 'Out of stock'}
                   </span>
-                </p>
-              )}
-
-              {selectedVariant && displayPrice !== product.price && (
-                <p className="text-sm text-gray-600">
-                  Variant price: <span className="font-semibold text-text">{formatCurrency(displayPrice)}</span>
                 </p>
               )}
 
