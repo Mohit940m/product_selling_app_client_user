@@ -181,7 +181,7 @@ const ProductDetailPage = () => {
 
           <div className="grid gap-8 lg:grid-cols-2">
             <div className="space-y-3">
-              <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+              <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
                 {product.images[selectedImage] ? (
                   <img
                     src={product.images[selectedImage]}
@@ -192,6 +192,11 @@ const ProductDetailPage = () => {
                   <div className="flex h-96 items-center justify-center bg-secondary text-primary">
                     <FiShoppingCart size={48} />
                   </div>
+                )}
+                {(!product.isActive || (selectedVariant && selectedVariant.stock === 0)) && (
+                  <span className="absolute right-3 top-3 rounded-lg bg-gray-500 px-2 py-0.5 text-xs font-bold text-white">
+                    Out of stock
+                  </span>
                 )}
               </div>
               {product.images.length > 1 && (
