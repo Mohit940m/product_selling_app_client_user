@@ -196,7 +196,7 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
-                {summary?.shippingAddress && !useNewAddress && !addressId && (
+                {summary?.shippingAddress && !useNewAddress && (
                   <div className="mb-4 rounded-lg border border-primary bg-secondary p-3 text-sm">
                     <p className="font-bold text-text">{summary.shippingAddress.fullName}</p>
                     <p className="text-gray-600">{summary.shippingAddress.addressLine1}{summary.shippingAddress.addressLine2 ? `, ${summary.shippingAddress.addressLine2}` : ''}</p>

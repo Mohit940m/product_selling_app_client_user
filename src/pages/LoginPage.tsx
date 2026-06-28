@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiLock, FiMail, FiShield, FiShoppingBag } from 'react-icons/fi';
+import { FiMail, FiShield, FiShoppingBag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -40,7 +40,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<LoginStep>('credentials');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -54,7 +53,7 @@ const LoginPage = () => {
 
     try {
       if (step === 'credentials') {
-        const { data } = await userApi.post('/auth/login', { email, password });
+        const { data } = await userApi.post('/auth/login', { email });
 
         if (data.success === false) {
           throw new Error(data.message ?? 'Unable to send OTP.');
@@ -123,7 +122,7 @@ const LoginPage = () => {
               <div>
                 <h2 className="text-2xl font-bold text-text">Login</h2>
                 <p className="text-sm text-gray-600">
-                  {step === 'credentials' ? 'Enter your email and password.' : 'Enter the OTP sent to your email.'}
+                  {step === 'credentials' ? 'Enter your email address.' : 'Enter the OTP sent to your email.'}
                 </p>
               </div>
             </div>
@@ -133,38 +132,21 @@ const LoginPage = () => {
 
             <form className="space-y-4" onSubmit={submitLogin}>
               {step === 'credentials' ? (
-                <>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-text">Email address</label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiMail className="shrink-0 text-primary" size={18} />
-                      <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="jane@example.com"
-                        required
-                      />
-                    </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-text">Email address</label>
+                  <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                    <FiMail className="shrink-0 text-primary" size={18} />
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      className="w-full px-3 py-3 text-sm outline-none"
+                      placeholder="jane@example.com"
+                      required
+                    />
                   </div>
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-text">Password</label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiLock className="shrink-0 text-primary" size={18} />
-                      <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="••••••••"
-                        required
-                      />
-                    </div>
-                  </div>
-                </>
+                </div>
               ) : (
                 <div>
                   <label htmlFor="otp" className="block text-sm font-medium text-text">OTP</label>
