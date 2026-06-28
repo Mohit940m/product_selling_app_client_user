@@ -75,7 +75,6 @@ const CheckoutPage = () => {
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [useNewAddress, setUseNewAddress] = useState(false);
-  const [addressId, setAddressId] = useState('');
 
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -96,7 +95,6 @@ const CheckoutPage = () => {
   }, []);
 
   const buildAddressPayload = () => {
-    if (addressId) return { addressId };
     if (useNewAddress) return { fullName, phone, addressLine1, addressLine2, city, state, pincode };
     return {};
   };
@@ -209,38 +207,12 @@ const CheckoutPage = () => {
                 )}
 
                 <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-text">Use a saved address ID (optional)</label>
-                    <div className="mt-1 flex gap-2">
-                      <input
-                        type="text"
-                        value={addressId}
-                        onChange={(e) => setAddressId(e.target.value)}
-                        className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="Enter address ID"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => { setUseNewAddress(false); handleAddressChange(); }}
-                        className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-text hover:border-primary hover:text-accent"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <div className="h-px flex-1 bg-gray-200" />
-                    <span className="text-xs text-gray-500">or</span>
-                    <div className="h-px flex-1 bg-gray-200" />
-                  </div>
-
                   <button
                     type="button"
-                    onClick={() => { setUseNewAddress(!useNewAddress); setAddressId(''); }}
+                    onClick={() => setUseNewAddress(!useNewAddress)}
                     className="text-sm font-semibold text-accent hover:underline"
                   >
-                    {useNewAddress ? 'Cancel new address' : '+ Add new address'}
+                    {useNewAddress ? '− Cancel new address' : '+ Use a different address'}
                   </button>
 
                   {useNewAddress && (
@@ -287,7 +259,8 @@ const CheckoutPage = () => {
                           className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
                           placeholder="Pincode" />
                       </div>
-                      <div className="flex items-end">
+                      <div className="flex flex-col justify-end gap-1">
+                        <p className="text-xs text-gray-500">Fill in the fields above, then click Recalculate to update shipping.</p>
                         <button
                           type="button"
                           onClick={handleAddressChange}
