@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiPhone, FiShield, FiShoppingBag } from 'react-icons/fi';
+import { FiLock, FiMail, FiShield, FiShoppingBag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -9,7 +9,7 @@ import Button from '../components/Button';
 
 const OTP_SCREEN_DELAY_MS = 1000;
 
-type LoginStep = 'phone' | 'otp';
+type LoginStep = 'credentials' | 'otp';
 
 const AuthTopBar = () => (
   <header className="border-b border-gray-200 bg-white">
@@ -38,8 +38,9 @@ const AuthFooter = () => (
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<LoginStep>('phone');
-  const [phone, setPhone] = useState('');
+  const [step, setStep] = useState<LoginStep>('credentials');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -52,8 +53,8 @@ const LoginPage = () => {
     setIsSubmitting(true);
 
     try {
-      if (step === 'phone') {
-        const { data } = await userApi.post('/auth/login', { phone });
+      if (step === 'credentials') {
+        const { data } = await userApi.post('/auth/login', { email, password });
 
         if (data.success === false) {
           throw new Error(data.message ?? 'Unable to send OTP.');
@@ -63,14 +64,14 @@ const LoginPage = () => {
           icon: <FiShield color="#A78BFA" />,
           autoClose: 10000,
         });
-        setMessage('OTP received. Opening verification...');
+        setMessage('OTP sent to your email. Opening verification...');
         await new Promise((resolve) => setTimeout(resolve, OTP_SCREEN_DELAY_MS));
         setStep('otp');
         setMessage('Enter the OTP to finish login.');
         return;
       }
 
-      const { data } = await userApi.post('/auth/verify-login', { phone, otp });
+      const { data } = await userApi.post('/auth/verify-login', { email, otp });
 
       if (data.success === false) {
         throw new Error(data.message ?? 'OTP verification failed.');
@@ -117,12 +118,12 @@ const LoginPage = () => {
           <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-md sm:p-8">
             <div className="mb-6 flex items-center gap-3">
               <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary text-primary">
-                <FiPhone size={24} />
+                <FiMail size={24} />
               </span>
               <div>
                 <h2 className="text-2xl font-bold text-text">Login</h2>
                 <p className="text-sm text-gray-600">
-                  {step === 'phone' ? 'Enter your phone number to receive an OTP.' : 'Enter the OTP to complete login.'}
+                  {step === 'credentials' ? 'Enter your email and password.' : 'Enter the OTP sent to your email.'}
                 </p>
               </div>
             </div>
@@ -131,24 +132,40 @@ const LoginPage = () => {
             {error && <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
             <form className="space-y-4" onSubmit={submitLogin}>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-text">Phone number</label>
-                <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                  <FiPhone className="text-primary" size={20} />
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value)}
-                    disabled={step === 'otp'}
-                    className="w-full px-3 py-3 text-sm outline-none disabled:bg-white disabled:text-gray-500"
-                    placeholder="9876543210"
-                    required
-                  />
-                </div>
-              </div>
-
-              {step === 'otp' && (
+              {step === 'credentials' ? (
+                <>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-text">Email address</label>
+                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                      <FiMail className="shrink-0 text-primary" size={18} />
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        className="w-full px-3 py-3 text-sm outline-none"
+                        placeholder="jane@example.com"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium text-text">Password</label>
+                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                      <FiLock className="shrink-0 text-primary" size={18} />
+                      <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        className="w-full px-3 py-3 text-sm outline-none"
+                        placeholder="••••••••"
+                        required
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <div>
                   <label htmlFor="otp" className="block text-sm font-medium text-text">OTP</label>
                   <input
@@ -158,6 +175,7 @@ const LoginPage = () => {
                     onChange={(event) => setOtp(event.target.value)}
                     className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
                     placeholder="6 digit OTP"
+                    maxLength={6}
                     required
                   />
                 </div>
@@ -166,7 +184,7 @@ const LoginPage = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                label={isSubmitting ? 'Please wait...' : step === 'phone' ? 'Send OTP' : 'Verify and login'}
+                label={isSubmitting ? 'Please wait...' : step === 'credentials' ? 'Send OTP' : 'Verify and login'}
                 className="w-full py-3"
               />
             </form>
