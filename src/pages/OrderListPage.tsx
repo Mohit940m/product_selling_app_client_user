@@ -52,11 +52,11 @@ const OrderListPage = () => {
                   Continue shopping
                 </Link>
                 <Link
-                  to="/cart"
+                  to="/products"
                   className="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-md hover:bg-accent"
                 >
                   <FiPackage size={16} />
-                  View cart
+                  Browse more products
                 </Link>
               </div>
             </div>
