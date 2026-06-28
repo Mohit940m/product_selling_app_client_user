@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiPhone, FiShield, FiShoppingBag, FiUser } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiLock, FiMail, FiPhone, FiShield, FiShoppingBag, FiUser } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -40,9 +40,11 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<RegisterStep>('details');
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [otp, setOtp] = useState('');
-  const [registrationToken, setRegistrationToken] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,23 +57,25 @@ const SignUpPage = () => {
 
     try {
       if (step === 'details') {
-        const { data } = await userApi.post('/auth/register', { name, phone });
+        const payload: Record<string, string> = { name, email, password };
+        if (phone) payload.phone = phone;
+
+        const { data } = await userApi.post('/auth/register', payload);
 
         if (data.success === false) {
           throw new Error(data.message ?? 'Registration failed.');
         }
 
-        setRegistrationToken(data.registrationToken ?? '');
         toast.success(`Your OTP is: ${data.otp}`, {
           icon: <FiShield color="#A78BFA" />,
           autoClose: 10000,
         });
-        setMessage('OTP received. Opening verification...');
+        setMessage('OTP sent to your email. Opening verification...');
         await new Promise((resolve) => setTimeout(resolve, OTP_SCREEN_DELAY_MS));
         setStep('otp');
         setMessage('Enter the OTP to verify your account.');
       } else {
-        const { data } = await userApi.post('/auth/verify-registration', { otp, registrationToken });
+        const { data } = await userApi.post('/auth/verify-registration', { email, otp });
 
         if (data.success === false) {
           throw new Error(data.message ?? 'OTP verification failed.');
@@ -124,7 +128,7 @@ const SignUpPage = () => {
               <div>
                 <h2 className="text-2xl font-bold text-text">Create account</h2>
                 <p className="text-sm text-gray-600">
-                  {step === 'details' ? 'Enter your name and phone number.' : 'Enter the OTP to verify your account.'}
+                  {step === 'details' ? 'Fill in your details to get started.' : 'Enter the OTP sent to your email.'}
                 </p>
               </div>
             </div>
@@ -137,20 +141,67 @@ const SignUpPage = () => {
                 <>
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-text">Full name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="Jane Doe"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-text">Phone number</label>
                     <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiPhone className="text-primary" size={20} />
+                      <FiUser className="shrink-0 text-primary" size={18} />
+                      <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-3 py-3 text-sm outline-none"
+                        placeholder="Jane Doe"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-text">Email address</label>
+                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                      <FiMail className="shrink-0 text-primary" size={18} />
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-3 py-3 text-sm outline-none"
+                        placeholder="jane@example.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium text-text">Password</label>
+                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                      <FiLock className="shrink-0 text-primary" size={18} />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3 py-3 text-sm outline-none"
+                        placeholder="Min 6 characters"
+                        minLength={6}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="shrink-0 text-gray-400 hover:text-text"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-text">
+                      Phone number <span className="text-gray-400">(optional)</span>
+                    </label>
+                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
+                      <FiPhone className="shrink-0 text-primary" size={18} />
                       <input
                         type="tel"
                         id="phone"
@@ -158,7 +209,6 @@ const SignUpPage = () => {
                         onChange={(e) => setPhone(e.target.value)}
                         className="w-full px-3 py-3 text-sm outline-none"
                         placeholder="9876543210"
-                        required
                       />
                     </div>
                   </div>
@@ -173,6 +223,7 @@ const SignUpPage = () => {
                     onChange={(e) => setOtp(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
                     placeholder="6 digit OTP"
+                    maxLength={6}
                     required
                   />
                 </div>
