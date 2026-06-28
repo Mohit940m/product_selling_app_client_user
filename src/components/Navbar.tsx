@@ -61,6 +61,15 @@ const Navbar = () => {
             </Link>
           )}
 
+          {isLoggedIn && (
+            <Link className="rounded-lg px-3 py-2 hover:bg-secondary hover:text-accent" to="/profile">
+              <span className="flex items-center gap-1.5">
+                <FiUser size={16} />
+                Profile
+              </span>
+            </Link>
+          )}
+
           {isLoggedIn ? (
             <button
               type="button"
