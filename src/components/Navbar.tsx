@@ -1,13 +1,19 @@
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiLogOut, FiShoppingBag, FiShoppingCart, FiPackage, FiUser } from 'react-icons/fi';
+import { FiList, FiLogOut, FiShoppingBag, FiShoppingCart, FiPackage, FiUser } from 'react-icons/fi';
+import userApi from '../api/userApi';
 
-interface NavbarProps {
-  cartCount?: number;
-}
-
-const Navbar = ({ cartCount = 0 }: NavbarProps) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('userToken');
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    userApi.get('/cart/get-cart')
+      .then(({ data }) => setCartCount(data.data?.items?.length ?? 0))
+      .catch(() => {});
+  }, [isLoggedIn]);
 
   const logout = () => {
     localStorage.removeItem('userToken');
@@ -49,7 +55,7 @@ const Navbar = ({ cartCount = 0 }: NavbarProps) => {
           {isLoggedIn && (
             <Link className="rounded-lg px-3 py-2 hover:bg-secondary hover:text-accent" to="/orders">
               <span className="flex items-center gap-1.5">
-                <FiPackage size={16} />
+                <FiList size={16} />
                 Orders
               </span>
             </Link>

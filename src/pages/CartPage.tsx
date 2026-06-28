@@ -96,7 +96,7 @@ const CartPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-text">
-      <Navbar cartCount={cartItemCount} />
+      <Navbar />
       <main className="flex-1">
         <section className="border-b border-gray-200 bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 sm:px-6">
