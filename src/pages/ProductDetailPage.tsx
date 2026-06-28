@@ -60,6 +60,7 @@ const ProductDetailPage = () => {
       const { product: productData, selectedVariant: defaultVariant, variants } = data.data;
       const p: Product = {
         ...productData,
+        isActive: productData.isActive ?? true,
         price: defaultVariant?.price ?? 0,
         discountedPrice: defaultVariant?.discountedPrice ?? defaultVariant?.price ?? 0,
         activeOffer: defaultVariant?.activeOffer ?? null,
