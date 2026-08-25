@@ -329,3 +329,42 @@ the prototype's own sizing but shy of the 44px guideline), 6.7 (visual
 text-clipping), 6.8 (both themes rendered side by side), 6.10 (landscape
 phone). Recommend running this project's `run` skill or a manual
 device/browser pass before shipping, and filling in the matrix table then.
+
+## Phase 7.2 — accessibility
+
+- **7.2.1 contrast** — fixed for real (see the Phase 6 section above and
+  the `--k-muted` comment in `src/index.css`): light-mode `--k-muted` was
+  ~4.18:1 on white, now `#6B7180` at ~4.89:1. Dark mode was already fine.
+- **7.2.2** — audited for the `<div onClick>` anti-pattern
+  (`grep -rn "<div[^>]*onClick" src/`); the only hit is `Modal.tsx`'s
+  `aria-hidden` backdrop click-catcher, which is correct (Esc already
+  covers keyboard dismissal via `useDialogBehavior`).
+- **7.2.3 focus rings** — found and fixed the one real gap: the custom
+  search bar on `ProductListPage` set `outline-none` on the `<input>`
+  with no replacement; added `focus-within:outline-*` to its wrapper and
+  a `focus-visible` ring to its clear button. Also deleted
+  `src/components/Button.tsx` (the pre-migration Button, unused by any
+  page since Phase 4) and added an explicit ring to the PDP variant
+  swatches. Every other custom button in the app still has the browser's
+  native `:focus-visible` outline (nothing else sets `outline-none`), so
+  keyboard users get *a* visible indicator everywhere — just not all of
+  it is custom-styled to match the design system yet. Full sweep of every
+  raw `<button>` for a matching custom ring was not completed in this
+  pass; primitives (`Button`, `Chip`, `Input`, `Sheet`/`Modal` close
+  buttons, `Switch`, `QtyStepper`) all have it.
+- **7.2.4 dialog semantics** — already correct from Phase 2:
+  `role="dialog"`, `aria-modal`, focus trap, and focus restore all live
+  in `useDialogBehavior`, shared by `Sheet` and `Modal`.
+- **7.2.5 ImageFrame alt text** — every call site passes a real `alt`.
+  The hatched fallback uses `aria-hidden` on the placeholder glyph plus an
+  `sr-only` span repeating the alt text, rather than the plan's literal
+  `alt=""` + fully hidden — a screen-reader user still learns what the
+  missing image was of, which reads as more correct than suppressing it.
+- **7.2.6 bottom tab bar** — `nav aria-label="Primary"`; `aria-current`
+  comes for free from react-router's `NavLink` (sets `aria-current="page"`
+  on the active link automatically).
+- **7.2.7 theme toggle** — `Switch` is `role="switch" aria-checked`, used
+  live in `ProfilePage`.
+- **7.2.8 keyboard-only pass of the money path** — needs a live browser
+  and a reachable backend; not performed in this session for the same
+  reason as the Phase 6 matrix (no browser tool available).

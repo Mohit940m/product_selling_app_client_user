@@ -12,7 +12,12 @@
   --k-bg: #ececee;
   --k-card: #ffffff;
   --k-ink: #171a22;
-  --k-muted: #767c8c;
+  /* Darkened from the prototype's #767C8C: that value is ~4.18:1 on white,
+     short of WCAG's 4.5:1 for normal text (many labels using --k-muted are
+     10-13px, below the "large text" exception even when bold). #6B7180 is
+     ~4.89:1. Dark mode's muted (#9AA0B0 on #181B23, ~6.48:1) already
+     passes and is left as-is. */
+  --k-muted: #6b7180;
   --k-edge: #1b1f2a;
   --k-line: #e4e4ea;
   --k-soft: #f6e8ff;

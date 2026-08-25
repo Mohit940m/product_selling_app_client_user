@@ -322,6 +322,7 @@ const ProductDetailPage = () => {
                       disabled={!available}
                       className={[
                         'h-11 min-w-[46px] rounded-ctl border px-3 text-[12px] font-bold t-fast lift-sm',
+                        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                         selected
                           ? 'border-transparent bg-accent text-onacc'
                           : available

@@ -636,13 +636,13 @@ Pass criteria applied at every width:
 
 ## 7.2 Accessibility
 
-- [ ] **7.2.1** Contrast: verify `--k-muted` on `--k-card` in **both** themes hits 4.5:1 for body text. If light-mode `#767C8C` on `#FFFFFF` falls short at small sizes, darken to `#6B7180` for text and keep `#767C8C` for icons and borders. Record the decision in `doc/KARTLY_MIGRATION_NOTES.md`.
-- [ ] **7.2.2** Every interactive element is a real `<button>` or `<a>`. The prototype uses `<div onClick>` throughout — do not carry that over.
-- [ ] **7.2.3** Visible focus ring on every control: `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`. The design's border-only focus is insufficient for keyboard users.
-- [ ] **7.2.4** Sheets, drawers and modals: `role="dialog"`, `aria-modal`, focus trap, focus restored to the trigger on close.
-- [ ] **7.2.5** Every `ImageFrame` renders a meaningful `alt`; decorative hatch fallbacks get `alt=""` + `aria-hidden`.
-- [ ] **7.2.6** Bottom tab bar is a `<nav aria-label="Primary">` with `aria-current="page"` on the active tab.
-- [ ] **7.2.7** Theme toggle is a `<button role="switch" aria-checked>`.
+- [x] **7.2.1** Contrast: verify `--k-muted` on `--k-card` in **both** themes hits 4.5:1 for body text. If light-mode `#767C8C` on `#FFFFFF` falls short at small sizes, darken to `#6B7180` for text and keep `#767C8C` for icons and borders. Record the decision in `doc/KARTLY_MIGRATION_NOTES.md`.
+- [x] **7.2.2** Every interactive element is a real `<button>` or `<a>`. The prototype uses `<div onClick>` throughout — do not carry that over.
+- [x] **7.2.3** Visible focus ring on every control: `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`. The design's border-only focus is insufficient for keyboard users.
+- [x] **7.2.4** Sheets, drawers and modals: `role="dialog"`, `aria-modal`, focus trap, focus restored to the trigger on close.
+- [x] **7.2.5** Every `ImageFrame` renders a meaningful `alt`; decorative hatch fallbacks get `alt=""` + `aria-hidden`.
+- [x] **7.2.6** Bottom tab bar is a `<nav aria-label="Primary">` with `aria-current="page"` on the active tab.
+- [x] **7.2.7** Theme toggle is a `<button role="switch" aria-checked>`.
 - [ ] **7.2.8** Keyboard-only pass of the money path: browse → PDP → add to cart → checkout → pay. No trap, no unreachable control.
 
 ## 7.3 Verification

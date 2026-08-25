@@ -105,7 +105,7 @@ const ProductListPage = () => {
           </div>
 
           <form onSubmit={handleSearch} className="flex w-full items-center gap-2 lg:max-w-[380px]">
-            <div className="flex flex-1 items-center gap-2.5 rounded-full border border-line bg-transparent px-4 py-3 t-fast focus-within:border-accent hover:border-accent">
+            <div className="flex flex-1 items-center gap-2.5 rounded-full border border-line bg-transparent px-4 py-3 t-fast focus-within:border-accent focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent hover:border-accent">
               <FiSearch className="shrink-0 text-muted" size={16} />
               <input
                 type="text"
@@ -115,7 +115,12 @@ const ProductListPage = () => {
                 placeholder={`Search ${total || ''} products`.trim()}
               />
               {searchInput && (
-                <button type="button" onClick={clearSearch} aria-label="Clear search" className="shrink-0 text-muted hover:text-ink">
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  aria-label="Clear search"
+                  className="shrink-0 text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
                   <FiX size={16} />
                 </button>
               )}
