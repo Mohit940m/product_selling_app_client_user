@@ -13,7 +13,6 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Sheet from '../components/ui/Sheet';
 import Switch from '../components/ui/Switch';
-import EmptyState from '../components/ui/EmptyState';
 import Skeleton from '../components/ui/Skeleton';
 import { useTheme } from '../theme/ThemeProvider';
 
@@ -386,14 +385,16 @@ const ProfilePage = () => {
                     Edit
                   </button>
                 )}
-                <button
-                  type="button"
-                  onClick={startAddAddress}
-                  className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm font-bold text-muted t-fast hover:border-accent hover:text-accent"
-                >
-                  <FiPlus size={14} />
-                  Add new
-                </button>
+                {profile.defaultAddress && (
+                  <button
+                    type="button"
+                    onClick={startAddAddress}
+                    className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm font-bold text-muted t-fast hover:border-accent hover:text-accent"
+                  >
+                    <FiPlus size={14} />
+                    Add new
+                  </button>
+                )}
               </div>
             </div>
 
@@ -414,11 +415,13 @@ const ProfilePage = () => {
                 <p className="text-muted">Phone: {profile.defaultAddress.phone}</p>
               </div>
             ) : (
-              <EmptyState
-                icon={<FiMapPin size={28} />}
-                title="No address saved"
-                description="Add a default shipping address to speed up checkout."
-              />
+              <button
+                type="button"
+                onClick={startAddAddress}
+                className="w-full rounded-card border border-dashed border-edge p-4.5 text-center font-extrabold text-muted t-fast hover:border-accent hover:bg-soft2 hover:text-accent"
+              >
+                + Add new address
+              </button>
             )}
           </Panel>
 

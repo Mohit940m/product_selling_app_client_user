@@ -521,7 +521,7 @@ The current file is 524 lines with inline edit forms. Restructure it rather than
 ### Addresses (screens 11, 12)
 
 - [x] **4.7.6** Address card: `rounded-card border border-line p-4`, label `font-extrabold text-[13.5px]` + a `Badge` (`DEFAULT` → accent, others → `tone="plum"`), address line `text-[12px] text-muted leading-[1.55]`, then `Edit` / `Delete` pill buttons. Card hover `lift border-accent shadow-lift-accent`; `Delete` hover turns `border-danger text-danger`.
-- [ ] **4.7.7** `+ Add new address` — dashed `rounded-card border border-dashed border-edge p-4.5 text-center font-extrabold`, hover `bg-soft2 border-accent text-accent`.
+- [x] **4.7.7** `+ Add new address` — dashed `rounded-card border border-dashed border-edge p-4.5 text-center font-extrabold`, hover `bg-soft2 border-accent text-accent`.
 - [x] **4.7.8** Move the add/edit form out of inline page state into `src/components/profile/AddressForm.tsx`, rendered inside `Modal` on desktop and `Sheet` on mobile. Keep the existing `saveAddress` API call and validation intact.
 - [x] **4.7.9** Form layout per screen 12: a pin-location band (`h-[132px] rounded-card bg-soft2` with an accent dot and an 8px accent glow ring — static visual, not a live map, unless a maps key exists), then stacked `Input`s: Full name / Address line 1 / Line 2 / (City + ZIP side by side) / Phone.
 - [ ] **4.7.10** Label chips (`Home` / `Work` / `Other`) as a selected-`Chip` row above the save button; persist as the address label.
