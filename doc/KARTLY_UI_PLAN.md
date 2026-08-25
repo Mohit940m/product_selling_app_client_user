@@ -628,11 +628,11 @@ Pass criteria applied at every width:
 
 ## 7.1 Removal of the old system
 
-- [ ] **7.1.1** Re-run the Phase 0.1.2 grep. It must return **zero** matches for the legacy `bg-primary` / `text-text` / `bg-secondary` / `bg-background` / `text-accent` meanings. Anything left is unstyled markup.
-- [ ] **7.1.2** Delete `product_selling_app_client_user/tailwind.config.js` — Tailwind v4 does not read it, and keeping it invites the next person to edit a dead file.
-- [ ] **7.1.3** Delete `src/App.css` (Vite scaffold leftovers: `.counter`, `.hero`, `.logo`) and remove its import.
-- [ ] **7.1.4** Remove the compatibility re-export at `src/components/Navbar.tsx` once every page imports `layout/TopNav`.
-- [ ] **7.1.5** Remove unused assets: `src/assets/react.svg`, `src/assets/vite.svg` if nothing references them.
+- [x] **7.1.1** Re-run the Phase 0.1.2 grep. It must return **zero** matches for the legacy `bg-primary` / `text-text` / `bg-secondary` / `bg-background` / `text-accent` meanings. Anything left is unstyled markup.
+- [x] **7.1.2** Delete `product_selling_app_client_user/tailwind.config.js` — Tailwind v4 does not read it, and keeping it invites the next person to edit a dead file.
+- [x] **7.1.3** Delete `src/App.css` (Vite scaffold leftovers: `.counter`, `.hero`, `.logo`) and remove its import.
+- [x] **7.1.4** Remove the compatibility re-export at `src/components/Navbar.tsx` once every page imports `layout/TopNav`.
+- [x] **7.1.5** Remove unused assets: `src/assets/react.svg`, `src/assets/vite.svg` if nothing references them.
 
 ## 7.2 Accessibility
 
