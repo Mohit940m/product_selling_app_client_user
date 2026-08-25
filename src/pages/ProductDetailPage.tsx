@@ -13,6 +13,8 @@ type Variant = {
   attributes: Record<string, string>;
   price: number;
   stock: number;
+  discountedPrice?: number;
+  activeOffer?: ActiveOffer | null;
 };
 
 type ActiveOffer = {
@@ -58,17 +60,22 @@ const ProductDetailPage = () => {
     try {
       const { data } = await userApi.get(`/products/get-product/${productId}`);
       const { product: productData, selectedVariant: defaultVariant, variants } = data.data;
+      const enrichedVariants: Variant[] = (variants ?? []).map((v: Variant) =>
+        v._id === defaultVariant?._id
+          ? { ...v, discountedPrice: defaultVariant.discountedPrice, activeOffer: defaultVariant.activeOffer ?? null }
+          : v
+      );
       const p: Product = {
         ...productData,
         isActive: productData.isActive ?? true,
         price: defaultVariant?.price ?? 0,
         discountedPrice: defaultVariant?.discountedPrice ?? defaultVariant?.price ?? 0,
         activeOffer: defaultVariant?.activeOffer ?? null,
-        variants: variants ?? [],
+        variants: enrichedVariants,
       };
       setProduct(p);
-      if (variants?.length > 0) {
-        setSelectedVariant(variants[0]);
+      if (enrichedVariants.length > 0) {
+        setSelectedVariant(enrichedVariants[0]);
       }
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -162,10 +169,9 @@ const ProductDetailPage = () => {
     );
   }
 
-  const displayPrice = selectedVariant?.price ?? product.price;
-  const isDefaultVariant = !selectedVariant || selectedVariant._id === product.variants[0]?._id;
-  const shownPrice = isDefaultVariant ? product.discountedPrice : displayPrice;
-  const savings = isDefaultVariant ? product.price - product.discountedPrice : 0;
+  const rawPrice = selectedVariant?.price ?? product.price;
+  const shownPrice = selectedVariant?.discountedPrice ?? rawPrice;
+  const savings = rawPrice - shownPrice;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-text">
@@ -228,7 +234,7 @@ const ProductDetailPage = () => {
                 <span className="text-3xl font-bold text-accent">{formatCurrency(shownPrice)}</span>
                 {savings > 0 && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">{formatCurrency(product.price)}</span>
+                    <span className="text-lg text-gray-400 line-through">{formatCurrency(rawPrice)}</span>
                     <span className="rounded-lg bg-green-50 px-2 py-1 text-sm font-bold text-green-700">
                       Save {formatCurrency(savings)}
                     </span>
@@ -236,17 +242,20 @@ const ProductDetailPage = () => {
                 )}
               </div>
 
-              {product.activeOffer && (
-                <div className="flex items-start gap-2 rounded-lg border border-primary bg-secondary p-3">
-                  <FiTag className="mt-0.5 shrink-0 text-primary" size={16} />
-                  <div>
-                    <p className="text-sm font-bold text-accent">{product.activeOffer.name}</p>
-                    {product.activeOffer.minCartValue && (
-                      <p className="text-xs text-gray-600">Min. cart value: {formatCurrency(product.activeOffer.minCartValue)}</p>
-                    )}
+              {(() => {
+                const offer = selectedVariant?.activeOffer ?? product.activeOffer;
+                return offer ? (
+                  <div className="flex items-start gap-2 rounded-lg border border-primary bg-secondary p-3">
+                    <FiTag className="mt-0.5 shrink-0 text-primary" size={16} />
+                    <div>
+                      <p className="text-sm font-bold text-accent">{offer.name}</p>
+                      {offer.minCartValue && (
+                        <p className="text-xs text-gray-600">Min. cart value: {formatCurrency(offer.minCartValue)}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : null;
+              })()}
 
               {getAttributeKeys().map((key) => (
                 <div key={key}>
