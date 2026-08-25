@@ -545,12 +545,12 @@ No prototype screen exists for auth, so compose from the design-system panel.
 
 ## 4.9 `WelcomePage.tsx` — onboarding (screen 01) — **new file, optional**
 
-- [ ] **4.9.1** Create `src/pages/WelcomePage.tsx` at `/welcome`. Show once: on first load, if `localStorage.kartlySeenWelcome` is unset and no `userToken` exists, redirect `/` → `/welcome`; set the flag on `Get Started`.
-- [ ] **4.9.2** Composition: full-height column; centred illustration — a `220×220 rounded-full bg-soft` disc behind a `230×280 rounded-hero border border-line bg-hatch2` card running `animate-float`.
-- [ ] **4.9.3** Copy block: heading at `font-extrabold text-[30px] leading-[1.15] tracking-[-.03em]`, muted sub, then a three-dot pager (`26×6` active accent pill + two `6×6` line dots).
-- [ ] **4.9.4** `Get Started` — full-width `dark` Button with `lift` + `shadow-lift-ink` hover.
-- [ ] **4.9.5** **Desktop:** same content centred at `max-w-[420px]`, illustration scaled to `320×390`.
-- [ ] **4.9.6** Add a `Skip` text link top-right that sets the flag and goes to `/products`.
+- [x] **4.9.1** Create `src/pages/WelcomePage.tsx` at `/welcome`. Show once: on first load, if `localStorage.kartlySeenWelcome` is unset and no `userToken` exists, redirect `/` → `/welcome`; set the flag on `Get Started`.
+- [x] **4.9.2** Composition: full-height column; centred illustration — a `220×220 rounded-full bg-soft` disc behind a `230×280 rounded-hero border border-line bg-hatch2` card running `animate-float`.
+- [x] **4.9.3** Copy block: heading at `font-extrabold text-[30px] leading-[1.15] tracking-[-.03em]`, muted sub, then a three-dot pager (`26×6` active accent pill + two `6×6` line dots).
+- [x] **4.9.4** `Get Started` — full-width `dark` Button with `lift` + `shadow-lift-ink` hover.
+- [x] **4.9.5** **Desktop:** same content centred at `max-w-[420px]`, illustration scaled to `320×390`.
+- [x] **4.9.6** Add a `Skip` text link top-right that sets the flag and goes to `/products`.
 
 ## 4.10 `AssistantPage.tsx` — AI assistant (screens 09, D3) — **feature-flagged, UI only**
 

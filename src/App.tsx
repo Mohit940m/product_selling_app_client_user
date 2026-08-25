@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { ThemeProvider, useTheme } from './theme/ThemeProvider'
 import AppLayout from './components/layout/AppLayout'
+import WelcomePage, { WELCOME_SEEN_KEY } from './pages/WelcomePage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProductListPage from './pages/ProductListPage'
@@ -14,13 +15,23 @@ import OrderListPage from './pages/OrderListPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import ProfilePage from './pages/ProfilePage'
 
+const RootRedirect = () => {
+  const hasSeenWelcome = typeof window !== 'undefined' && localStorage.getItem(WELCOME_SEEN_KEY);
+  const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('userToken');
+  if (!hasSeenWelcome && !isLoggedIn) {
+    return <Navigate to="/welcome" replace />;
+  }
+  return <Navigate to="/products" replace />;
+};
+
 const AppRoutes = () => {
   const { theme } = useTheme()
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/products" replace />} />
+        <Route path="/" element={<RootRedirect />} />
+        <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
 
