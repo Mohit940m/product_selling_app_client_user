@@ -62,14 +62,14 @@ Everything in this phase lands in **two places**: `src/index.css` and `src/theme
 
 `DESIGN REF` `.dc.html` lines 13–17 and `project/uploads/Fonts.txt`.
 
-- [ ] **1.1.1** In `index.html`, add to `<head>` before the module script:
+- [x] **1.1.1** In `index.html`, add to `<head>` before the module script:
   ```html
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
   ```
-- [ ] **1.1.2** In `index.html`, set `<title>` to the storefront brand and keep the existing favicon wiring.
-- [ ] **1.1.3** In `src/index.css`, set the body face and antialiasing:
+- [x] **1.1.2** In `index.html`, set `<title>` to the storefront brand and keep the existing favicon wiring.
+- [x] **1.1.3** In `src/index.css`, set the body face and antialiasing:
   ```css
   html, body { margin: 0; padding: 0; }
   body {
@@ -79,7 +79,7 @@ Everything in this phase lands in **two places**: `src/index.css` and `src/theme
     color: var(--k-ink);
   }
   ```
-- [ ] **1.1.4** Register the mono face used for metadata/eyebrow labels: `--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;` inside the `@theme` block (see 1.2.4).
+- [x] **1.1.4** Register the mono face used for metadata/eyebrow labels: `--font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;` inside the `@theme` block (see 1.2.4).
 
 ## 1.2 Colour tokens — `src/index.css`
 
@@ -89,7 +89,7 @@ Two layers, deliberately:
 1. **Raw CSS custom properties** (`--k-*`) on `:root` / `[data-theme="dark"]` — these are what actually flip on theme change.
 2. **Tailwind `@theme` mappings** pointing at those properties — these are what generate `bg-card`, `text-ink`, `border-line` utilities.
 
-- [ ] **1.2.1** Add the light palette to `src/index.css`:
+- [x] **1.2.1** Add the light palette to `src/index.css`:
   ```css
   :root {
     --k-bg:     #ECECEE;
@@ -105,7 +105,7 @@ Two layers, deliberately:
     --k-shadow: 0 24px 60px rgba(20,20,30,.10);
   }
   ```
-- [ ] **1.2.2** Add the dark palette:
+- [x] **1.2.2** Add the dark palette:
   ```css
   [data-theme="dark"] {
     --k-bg:     #0D0F14;
@@ -121,7 +121,7 @@ Two layers, deliberately:
     --k-shadow: 0 24px 60px rgba(0,0,0,.45);
   }
   ```
-- [ ] **1.2.3** Add the **fixed** status palette (these do *not* flip with theme — the prototype hardcodes them so badges stay legible on `--k-soft` chips):
+- [x] **1.2.3** Add the **fixed** status palette (these do *not* flip with theme — the prototype hardcodes them so badges stay legible on `--k-soft` chips):
   ```css
   :root {
     --k-ok-bg:   #E6F6EE; --k-ok-fg:   #1E7A52;  /* Delivered / success  */
@@ -132,7 +132,7 @@ Two layers, deliberately:
     --k-on-soft: #171A22;                        /* ink on soft chips    */
   }
   ```
-- [ ] **1.2.4** Map them into Tailwind v4 so utilities generate:
+- [x] **1.2.4** Map them into Tailwind v4 so utilities generate:
   ```css
   @theme {
     --color-bg:     var(--k-bg);
@@ -154,7 +154,7 @@ Two layers, deliberately:
     --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   ```
-- [ ] **1.2.5** Add the radius scale from the prototype (12 / 14 / 16 / 20 / 22 / 26 / 28 / 38 / pill):
+- [x] **1.2.5** Add the radius scale from the prototype (12 / 14 / 16 / 20 / 22 / 26 / 28 / 38 / pill):
   ```css
   @theme {
     --radius-ctl:   12px;  /* small controls, size swatches */
@@ -166,7 +166,7 @@ Two layers, deliberately:
     --radius-sheet: 28px;  /* bottom sheets                 */
   }
   ```
-- [ ] **1.2.6** Add the elevation recipes as utilities (used constantly on hover):
+- [x] **1.2.6** Add the elevation recipes as utilities (used constantly on hover):
   ```css
   @layer utilities {
     .shadow-kartly          { box-shadow: var(--k-shadow); }
@@ -176,21 +176,21 @@ Two layers, deliberately:
     .shadow-lift-ink        { box-shadow: 0 16px 32px rgba(20,20,30,.30); }
   }
   ```
-- [ ] **1.2.7** Add the "product shot" placeholder pattern used everywhere an image is missing (this replaces today's plain grey box):
+- [x] **1.2.7** Add the "product shot" placeholder pattern used everywhere an image is missing (this replaces today's plain grey box):
   ```css
   @layer utilities {
     .bg-hatch  { background: repeating-linear-gradient(45deg, var(--k-soft),  var(--k-soft)  8px, transparent 8px, transparent 16px); }
     .bg-hatch2 { background: repeating-linear-gradient(45deg, var(--k-soft2), var(--k-soft2) 9px, transparent 9px, transparent 18px); }
   }
   ```
-- [ ] **1.2.8** Add a `.no-scrollbar` utility for horizontal chip rails (`::-webkit-scrollbar { width:0; height:0 }` + `scrollbar-width: none`). Scope it to the class — do **not** hide scrollbars globally the way the prototype does; the storefront needs real page scrollbars on desktop.
+- [x] **1.2.8** Add a `.no-scrollbar` utility for horizontal chip rails (`::-webkit-scrollbar { width:0; height:0 }` + `scrollbar-width: none`). Scope it to the class — do **not** hide scrollbars globally the way the prototype does; the storefront needs real page scrollbars on desktop.
 
 ## 1.3 Motion layer
 
 `DESIGN REF` `.dc.html` lines 23–32 (the ten `@keyframes`).
 
-- [ ] **1.3.1** Port all ten keyframes verbatim into `src/index.css`, keeping the prototype names: `kfPop`, `kfDraw`, `kfRing`, `kfUp`, `kfFloat`, `kfRoll`, `kfDot`, `kfShim`, `kfConf`, `kfBar`.
-- [ ] **1.3.2** Register them as Tailwind v4 animation tokens so they are usable as `animate-*` utilities:
+- [x] **1.3.1** Port all ten keyframes verbatim into `src/index.css`, keeping the prototype names: `kfPop`, `kfDraw`, `kfRing`, `kfUp`, `kfFloat`, `kfRoll`, `kfDot`, `kfShim`, `kfConf`, `kfBar`.
+- [x] **1.3.2** Register them as Tailwind v4 animation tokens so they are usable as `animate-*` utilities:
   ```css
   @theme {
     --animate-pop:   kfPop .7s cubic-bezier(.2,1.3,.3,1) both;
@@ -203,7 +203,7 @@ Two layers, deliberately:
     --animate-bar:   kfBar .9s cubic-bezier(.2,.8,.2,1) both;
   }
   ```
-- [ ] **1.3.3** Add the canonical easings and transition presets:
+- [x] **1.3.3** Add the canonical easings and transition presets:
   ```css
   @layer utilities {
     .t-fast { transition: all .2s; }
@@ -212,7 +212,7 @@ Two layers, deliberately:
     .t-slow { transition: all .3s  cubic-bezier(.2,.8,.2,1); }
   }
   ```
-- [ ] **1.3.4** Add the hover-lift utilities the prototype applies to nearly every interactive surface:
+- [x] **1.3.4** Add the hover-lift utilities the prototype applies to nearly every interactive surface:
   ```css
   @layer utilities {
     .lift-sm:hover   { transform: translateY(-2px); }
@@ -223,7 +223,7 @@ Two layers, deliberately:
     .pop-icon:hover  { transform: scale(1.08) rotate(8deg); }
   }
   ```
-- [ ] **1.3.5** **Reduced motion is mandatory.** Add a global guard so every animation above degrades:
+- [x] **1.3.5** **Reduced motion is mandatory.** Add a global guard so every animation above degrades:
   ```css
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -234,28 +234,28 @@ Two layers, deliberately:
     }
   }
   ```
-- [ ] **1.3.6** Create `src/components/motion/Reveal.tsx` — a wrapper applying `animate-up` with a `delay` prop (`style={{ animationDelay: delay + 'ms' }}`) so lists stagger without per-item CSS. The prototype staggers the success-screen copy at 250 / 400 / 550 / 700 ms — expose that as the default ladder.
-- [ ] **1.3.7** Create `src/components/motion/Shimmer.tsx` — the skeleton block from the design-system panel: `linear-gradient(90deg, var(--k-line) 25%, var(--k-soft2) 50%, var(--k-line) 75%)`, `background-size: 260px 100%`, `animate-shim`. This replaces every `animate-pulse bg-secondary` skeleton in the app.
+- [x] **1.3.6** Create `src/components/motion/Reveal.tsx` — a wrapper applying `animate-up` with a `delay` prop (`style={{ animationDelay: delay + 'ms' }}`) so lists stagger without per-item CSS. The prototype staggers the success-screen copy at 250 / 400 / 550 / 700 ms — expose that as the default ladder.
+- [x] **1.3.7** Create `src/components/motion/Shimmer.tsx` — the skeleton block from the design-system panel: `linear-gradient(90deg, var(--k-line) 25%, var(--k-soft2) 50%, var(--k-line) 75%)`, `background-size: 260px 100%`, `animate-shim`. This replaces every `animate-pulse bg-secondary` skeleton in the app.
 
 ## 1.4 Theme controller (light / dark)
 
 The prototype ships a real dark theme and a toggle on the profile screen. The storefront must support it end-to-end.
 
-- [ ] **1.4.1** Create `src/theme/ThemeProvider.tsx`:
+- [x] **1.4.1** Create `src/theme/ThemeProvider.tsx`:
   - State: `'light' | 'dark'`.
   - Initial value: `localStorage.getItem('kartlyTheme')` → else `window.matchMedia('(prefers-color-scheme: dark)')` → else `'light'`.
   - Effect: write `data-theme` onto `document.documentElement`, persist to `localStorage`.
   - Export `useTheme()` returning `{ theme, setTheme, toggleTheme }`.
-- [ ] **1.4.2** Add a no-flash inline script in `index.html` `<head>` that reads `localStorage.kartlyTheme` and stamps `data-theme` on `<html>` before React mounts. Without this the page flashes light on reload for dark-mode users.
-- [ ] **1.4.3** Wrap `<Router>` in `src/App.tsx` with `<ThemeProvider>`.
-- [ ] **1.4.4** Add `<meta name="color-scheme" content="light dark">` to `index.html` so native form controls and scrollbars follow.
-- [ ] **1.4.5** Retheme `<ToastContainer>` in `src/App.tsx`: replace the hardcoded `toastClassName="... bg-white text-[#1F2937] ..."` with `bg-card text-ink border-line rounded-[var(--radius-tile)] shadow-kartly`, set `progressClassName="bg-accent"`, and pass `theme={theme}` from `useTheme()`.
+- [x] **1.4.2** Add a no-flash inline script in `index.html` `<head>` that reads `localStorage.kartlyTheme` and stamps `data-theme` on `<html>` before React mounts. Without this the page flashes light on reload for dark-mode users.
+- [x] **1.4.3** Wrap `<Router>` in `src/App.tsx` with `<ThemeProvider>`.
+- [x] **1.4.4** Add `<meta name="color-scheme" content="light dark">` to `index.html` so native form controls and scrollbars follow.
+- [x] **1.4.5** Retheme `<ToastContainer>` in `src/App.tsx`: replace the hardcoded `toastClassName="... bg-white text-[#1F2937] ..."` with `bg-card text-ink border-line rounded-[var(--radius-tile)] shadow-kartly`, set `progressClassName="bg-accent"`, and pass `theme={theme}` from `useTheme()`.
 
 ## 1.5 The responsive contract (binding for all of Phase 4)
 
 The prototype gives two distinct compositions: a 340×720 phone and a 1280-wide desktop. This app is a single responsive SPA, so:
 
-- [ ] **1.5.1** Record and honour these breakpoints (Tailwind defaults, no customisation):
+- [x] **1.5.1** Record and honour these breakpoints (Tailwind defaults, no customisation):
 
   | Range | Name | Composition |
   |---|---|---|
@@ -264,7 +264,7 @@ The prototype gives two distinct compositions: a 340×720 phone and a 1280-wide 
   | `≥ 1024px` (`lg`) | desktop | full top nav, 3–4 col grids, side drawers, no bottom bar |
   | `≥ 1280px` (`xl`) | wide | 4-col product grid, content capped at `1280px` |
 
-- [ ] **1.5.2** Fix the page container once, in `src/components/layout/Container.tsx`: `mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10`. Replace every ad-hoc `mx-auto max-w-7xl px-4 sm:px-6` in the app with it during Phase 4.
+- [x] **1.5.2** Fix the page container once, in `src/components/layout/Container.tsx`: `mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10`. Replace every ad-hoc `mx-auto max-w-7xl px-4 sm:px-6` in the app with it during Phase 4.
 - [ ] **1.5.3** Rule: **no fixed pixel widths in page code.** The prototype's `340px` and `1280px` are artboard sizes, not layout values. The only permitted fixed widths are the desktop cart drawer (`w-[340px]`) and the desktop account rail (`w-[300px]`) — and both collapse to full-width sheets below `lg`.
 - [ ] **1.5.4** Rule: every tap target is ≥ 44×44 CSS px on touch widths. The prototype's 38px icon tiles get padding-box expansion, not a smaller hit area.
 

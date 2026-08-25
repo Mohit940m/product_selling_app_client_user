@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+import { ThemeProvider, useTheme } from './theme/ThemeProvider'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProductListPage from './pages/ProductListPage'
@@ -11,7 +12,9 @@ import CheckoutPage from './pages/CheckoutPage'
 import OrderListPage from './pages/OrderListPage'
 import ProfilePage from './pages/ProfilePage'
 
-const App = () => {
+const AppRoutes = () => {
+  const { theme } = useTheme()
+
   return (
     <Router>
       <Routes>
@@ -32,11 +35,19 @@ const App = () => {
         newestOnTop
         closeOnClick
         pauseOnHover
-        theme="light"
-        toastClassName="rounded-lg border border-gray-200 bg-white text-[#1F2937] shadow-md"
-        progressClassName="bg-[#A78BFA]"
+        theme={theme}
+        toastClassName="rounded-[var(--radius-tile)] border border-line bg-card text-ink shadow-kartly"
+        progressClassName="bg-accent"
       />
     </Router>
+  )
+}
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <AppRoutes />
+    </ThemeProvider>
   )
 }
 
