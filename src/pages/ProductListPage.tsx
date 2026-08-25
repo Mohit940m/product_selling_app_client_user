@@ -221,8 +221,8 @@ const ProductListPage = () => {
               <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-accent" />
             </span>
             <span>
-              <span className="block text-[13px] font-extrabold text-[#171A22]">Ask the AI stylist</span>
-              <span className="block text-[11px] font-medium text-[#5A5566]">
+              <span className="block text-[13px] font-extrabold text-[var(--k-on-soft)]">Ask the AI stylist</span>
+              <span className="block text-[11px] font-medium text-[var(--k-on-soft-muted)]">
                 "Gift under ₹5,000 for my sister"
               </span>
             </span>

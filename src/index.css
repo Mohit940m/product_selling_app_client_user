@@ -30,7 +30,12 @@
   --k-bad-fg: #a83a2a;
   --k-plum-fg: #5b3f86;
   --k-danger: #e0614f;
+
+  /* Text sitting on the --k-soft wash (offer chips, hero bands, teaser
+     rows). Flips per theme — --k-soft is a light plum in light mode but a
+     dark purple in dark mode, so text here must flip too. */
   --k-on-soft: #171a22;
+  --k-on-soft-muted: #6e5f80;
 }
 
 [data-theme="dark"] {
@@ -45,6 +50,8 @@
   --k-accent: #b999f7;
   --k-onAcc: #14101c;
   --k-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --k-on-soft: #f1f0f4;
+  --k-on-soft-muted: #b9afc9;
 }
 
 @theme {

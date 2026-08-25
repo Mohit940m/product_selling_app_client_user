@@ -611,15 +611,15 @@ Test every route at every width, in **both themes**. Tick a route only when all 
 
 Pass criteria applied at every width:
 
-- [ ] **6.1** No horizontal page scroll. Verify on every route with `document.documentElement.scrollWidth <= window.innerWidth` in the console.
+- [x] **6.1** No horizontal page scroll. Verify on every route with `document.documentElement.scrollWidth <= window.innerWidth` in the console.
 - [ ] **6.2** Wide content (order tables, chip rails, galleries) scrolls inside its own `overflow-x-auto` container, never the body.
-- [ ] **6.3** Bottom tab bar visible below `lg`, hidden at `lg+`; no content sits underneath it.
-- [ ] **6.4** Top-nav category links hidden below `lg`; search collapses to an icon.
-- [ ] **6.5** All sheets present as bottom sheets below `lg` and as side drawers/modals at `lg+`.
+- [x] **6.3** Bottom tab bar visible below `lg`, hidden at `lg+`; no content sits underneath it.
+- [x] **6.4** Top-nav category links hidden below `lg`; search collapses to an icon.
+- [x] **6.5** All sheets present as bottom sheets below `lg` and as side drawers/modals at `lg+`.
 - [ ] **6.6** Every tap target ≥ 44px on touch widths.
 - [ ] **6.7** Text never clips: long product names `line-clamp-2`, long addresses wrap.
 - [ ] **6.8** Run the entire matrix twice — once light, once dark.
-- [ ] **6.9** Safe-area insets respected on iOS (notch top, home indicator bottom).
+- [x] **6.9** Safe-area insets respected on iOS (notch top, home indicator bottom).
 - [ ] **6.10** Landscape phone (`812×375`) does not break the PDP sticky bar or the checkout pay bar.
 
 ---

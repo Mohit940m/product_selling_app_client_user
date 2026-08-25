@@ -31,8 +31,8 @@ const AuthLayout = ({ eyebrow, heading, features, children }: AuthLayoutProps) =
             <Link to="/products" className="mb-8 inline-block">
               <BrandMark size={30} />
             </Link>
-            <p className="font-mono text-[11px] font-bold text-[#6E5F80]">{eyebrow}</p>
-            <h1 className="mt-3 max-w-lg font-black text-[38px] leading-[1.1] tracking-[-.03em] text-[#171A22]">
+            <p className="font-mono text-[11px] font-bold text-[var(--k-on-soft-muted)]">{eyebrow}</p>
+            <h1 className="mt-3 max-w-lg font-black text-[38px] leading-[1.1] tracking-[-.03em] text-[var(--k-on-soft)]">
               {heading}
             </h1>
             <div className="mt-10 flex items-center justify-center">

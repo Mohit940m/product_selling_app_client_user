@@ -276,3 +276,56 @@ non-functional navs.
   transition** — both require UI that was itself deferred (CheckoutPage's
   step progress bar, and OrderTrackingPage) per the Phase 4 notes above.
   Nothing to animate until that UI exists.
+
+## Phase 6 — Responsive QA matrix: code-audit pass, not live-viewport
+
+This session has no browser/screenshot tool available (no MCP browser,
+no Playwright/Puppeteer configured) — Phase 6 as written calls for
+testing every route at 375/768/1024/1440px in both themes visually,
+which genuinely requires a rendered browser. What follows is what a
+static code audit *could* verify, and what still needs a real pass.
+
+**A real bug found and fixed by this audit:** `--k-on-soft` (text color
+for content sitting on the `--k-soft` wash — offer chips, hero panels,
+the AI teaser row) was only defined once, under `:root`. In dark mode
+`--k-soft` flips from a light plum (`#F6E8FF`) to a dark purple
+(`#2A2138`), but the text color stayed `#171A22` (near-black) — illegible
+on a dark background. Same issue existed with three more spots that
+hardcoded raw hex (`#171A22`, `#6E5F80`, `#5A5566`) instead of a token, in
+`AuthLayout.tsx`, `PromoCard.tsx`, and `ProductListPage.tsx`. Fixed by:
+- Adding a dark-mode override for `--k-on-soft` (`#F1F0F4`) and a new
+  `--k-on-soft-muted` token (light `#6E5F80` / dark `#B9AFC9`) for
+  secondary text on the same surfaces.
+- Replacing every hardcoded hex text color sitting on `bg-soft` with
+  `text-[var(--k-on-soft)]` / `text-[var(--k-on-soft-muted)]`.
+- Confirmed via `grep -rnoE "(bg|text|border)-(white|black|gray-[0-9]+|
+  green-[0-9]+|red-[0-9]+)\b" src/` that only one non-token color remains
+  in page/component code: the decorative `bg-white/45` highlight circle in
+  `AuthLayout`'s hero panel, which matches the source prototype's own
+  choice to keep that specific blob white in both themes (a11y-neutral,
+  it's a translucent decorative shape, not text).
+
+**Verified by class/structure inspection (not live rendering):**
+- 6.1 no horizontal overflow — audited every `w-[Npx]` / `max-w-[Npx]` in
+  `src/pages` and `src/components`; every one is either small chrome
+  (icon tiles, avatars, a switch knob, dot-pager segments) or explicitly
+  `lg:`-scoped (the two documented exceptions: `TopNav`'s search bar and
+  `Sheet`'s desktop drawer, both `max-w-[340px]`/`w-[340px]` gated behind
+  `lg:`). Nothing unscoped is wide enough to force mobile overflow.
+- 6.3 bottom tab bar — `BottomTabBar` is `lg:hidden`; nothing else fills
+  that role at `lg+`.
+- 6.4 top-nav collapse — category links and the inline search bar in
+  `TopNav` are `hidden ... lg:flex`; a search icon takes over below `lg`.
+- 6.5 sheets — `Sheet.tsx` renders bottom-sheet classes unconditionally
+  and drawer classes under `lg:`, confirmed by reading the component.
+- 6.9 safe-area insets — `BottomTabBar` has
+  `pb-[env(safe-area-inset-bottom)]`.
+
+**Not verified — needs an actual browser pass:** the full route × width ×
+theme matrix table above, 6.2 (wide-content scroll containers — none of
+this app's pages currently have a table wide enough to test), 6.6 (exact
+44px tap-target compliance — a few nav icon tiles are 38-40px, matching
+the prototype's own sizing but shy of the 44px guideline), 6.7 (visual
+text-clipping), 6.8 (both themes rendered side by side), 6.10 (landscape
+phone). Recommend running this project's `run` skill or a manual
+device/browser pass before shipping, and filling in the matrix table then.
