@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiMapPin, FiPackage, FiTruck } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
+import { FiArrowLeft, FiMapPin, FiPackage, FiTruck } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -194,9 +194,18 @@ const CheckoutPage = () => {
     <Container className="py-6 lg:py-10">
       {isVerifying && <LoadingOverlay />}
 
-      <div className="mb-6 lg:mb-8">
-        <p className="font-mono text-[11px] font-bold text-muted">FINAL STEP</p>
-        <h1 className="mt-1.5 font-extrabold text-[22px] tracking-[-.02em]">Checkout</h1>
+      <div className="mb-6 flex items-center gap-3.5 lg:mb-8">
+        <Link
+          to="/cart"
+          aria-label="Back to cart"
+          className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-[13px] border border-edge t-fast hover:border-accent"
+        >
+          <FiArrowLeft size={16} />
+        </Link>
+        <div>
+          <p className="font-mono text-[11px] font-bold text-muted">FINAL STEP</p>
+          <h1 className="mt-1 font-extrabold text-[22px] tracking-[-.02em]">Checkout</h1>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
