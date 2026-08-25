@@ -152,3 +152,27 @@ Deliberately **not** built:
 - **4.3.5 bottom-pinned mobile summary sheet** — the summary renders as
   a normal `Panel` in flow, not pinned to the viewport bottom with a
   rounded-top overlap.
+
+### 4.4 CheckoutPage
+
+Implemented: restyled address card/form on the new `Input`/`Panel`/`Button`
+primitives, restyled order-items and price-summary panels, Razorpay themed
+to the Kartly accent (`#A87BF5`), and a blocking three-dot overlay while
+`/order/verify-payment` is in flight so the pay action can't double-submit.
+
+Deliberately **not** built:
+
+- **4.4.1 back tile**, **4.4.2/4.4.9 step progress bar** — this flow has no
+  explicit step state machine (it's address-entry + one payment action, with
+  Razorpay's own modal handling the rest); a fake 3-step indicator would
+  imply steps that don't exist in the code.
+- **4.4.4 custom payment-method radio rows (card/wallet/pay-in-4)** — this
+  app delegates payment method selection entirely to the Razorpay checkout
+  modal, which already lists whatever methods the merchant account
+  supports. Building a parallel custom radio UI would either duplicate or
+  contradict Razorpay's own method list.
+- **4.4.5 sticky pay bar / 4.4.10 side-by-side panels at xl** — the pay
+  button stays in normal flow inside the summary panel rather than pinned
+  to the viewport; address and items panels stack in one column rather
+  than sitting side by side, since the order-items panel is conditionally
+  rendered after the summary loads.
