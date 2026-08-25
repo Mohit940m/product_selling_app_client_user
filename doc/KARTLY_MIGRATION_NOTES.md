@@ -368,3 +368,19 @@ device/browser pass before shipping, and filling in the matrix table then.
 - **7.2.8 keyboard-only pass of the money path** — needs a live browser
   and a reachable backend; not performed in this session for the same
   reason as the Phase 6 matrix (no browser tool available).
+
+## Post-Phase-7 follow-up — ProductDetailPage
+
+Two previously-deferred items that didn't actually need backend support:
+
+- **4.2.6 description expand/collapse** — was rendering the full
+  description always; now truncates to 3 lines with a "See details" /
+  "Show less" toggle (only shown when the description is long enough to
+  need it).
+- **4.2.8 sticky mobile action bar** — the Add to cart row was in normal
+  flow; now a `sticky bottom-[76px]` bar (clearing `BottomTabBar`) shows
+  Total price, the qty stepper, and Add to cart on mobile. Desktop keeps
+  the original inline row + separate "Buy it now" button — mobile does
+  **not** get "Buy it now" in the sticky bar, matching the prototype's own
+  screen 04, which only shows Add to cart on the mobile sticky bar (Buy it
+  now is a D2/desktop-only affordance in the source design).

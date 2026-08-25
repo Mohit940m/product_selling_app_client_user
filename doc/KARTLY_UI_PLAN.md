@@ -432,9 +432,9 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 - [ ] **4.2.3** Detail sheet: `flex-1 bg-card rounded-t-sheet -mt-6 relative px-6 pt-6.5` — it must visually overlap the gallery by 24px.
 - [ ] **4.2.4** Title `font-extrabold text-[23px] leading-[1.15] tracking-[-.02em]`; sub line `{brand} · {stock status}` at `text-[12px] text-muted font-semibold`; rating pill `rounded-full bg-soft px-2.75 py-1.75 font-extrabold text-[12px]`.
 - [x] **4.2.5** Variant selector (currently a plain `<select>`): rebuild as swatch tiles — `46×40 rounded-ctl border border-line font-bold text-[12px]`, selected `bg-accent text-onacc`, out-of-stock `text-muted` and non-interactive. Heading = the live variant attribute name at `font-semibold text-[12px]`.
-- [ ] **4.2.6** Description `text-[12.5px] text-muted leading-[1.6]` with a `See details` accent link that expands the full text.
+- [x] **4.2.6** Description `text-[12.5px] text-muted leading-[1.6]` with a `See details` accent link that expands the full text.
 - [ ] **4.2.7** Trust row: three icon+label stacks (free ship / returns / warranty) at `text-[10px] font-semibold text-muted`, using the prototype's bare geometric marks (square, circle, rotated square) rather than filled icons.
-- [ ] **4.2.8** Sticky bottom bar: `mt-auto border-t border-line py-4 flex items-center gap-3.5` — left `Total` + price at `font-extrabold text-[22px]`, right a full-width `primary` Button `Add to cart`. On mobile the bar is `sticky bottom-[76px]` so it clears the tab bar.
+- [x] **4.2.8** Sticky bottom bar: `mt-auto border-t border-line py-4 flex items-center gap-3.5` — left `Total` + price at `font-extrabold text-[22px]`, right a full-width `primary` Button `Add to cart`. On mobile the bar is `sticky bottom-[76px]` so it clears the tab bar.
 
 ### Desktop (screen D2)
 

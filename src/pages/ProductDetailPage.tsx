@@ -59,6 +59,7 @@ const ProductDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -89,6 +90,7 @@ const ProductDetailPage = () => {
       }
       setQuantity(1);
       setSelectedImage(0);
+      setDescriptionExpanded(false);
     } catch (err) {
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message ?? 'Failed to load product.'
@@ -347,7 +349,28 @@ const ProductDetailPage = () => {
             </p>
           )}
 
-          <div className="flex items-center gap-3">
+          <div className="rounded-panel border border-line bg-card p-4">
+            <h3 className="mb-2 text-sm font-extrabold text-ink">Description</h3>
+            <p
+              className={`whitespace-pre-wrap text-sm leading-relaxed text-muted ${
+                descriptionExpanded ? '' : 'line-clamp-3'
+              }`}
+            >
+              {product.description}
+            </p>
+            {product.description.length > 160 && (
+              <button
+                type="button"
+                onClick={() => setDescriptionExpanded((v) => !v)}
+                className="mt-1.5 text-xs font-bold text-accent hover:underline"
+              >
+                {descriptionExpanded ? 'Show less' : 'See details'}
+              </button>
+            )}
+          </div>
+
+          {/* Desktop: inline action row. Mobile: sticky bar above the tab bar (see below). */}
+          <div className="hidden lg:flex lg:items-center lg:gap-3">
             <QtyStepper
               value={quantity}
               onChange={setQuantity}
@@ -366,15 +389,30 @@ const ProductDetailPage = () => {
               {justAdded ? 'Added' : 'Add to cart'}
             </Button>
           </div>
-          <Button variant="outline" onClick={buyItNow} disabled={outOfStock || isAddingToCart} fullWidth>
+          <Button variant="outline" onClick={buyItNow} disabled={outOfStock || isAddingToCart} fullWidth className="hidden lg:inline-flex">
             Buy it now
           </Button>
-
-          <div className="rounded-panel border border-line bg-card p-4">
-            <h3 className="mb-2 text-sm font-extrabold text-ink">Description</h3>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">{product.description}</p>
-          </div>
         </div>
+      </div>
+
+      {/* Mobile sticky action bar — sits just above the bottom tab bar. */}
+      <div className="sticky bottom-[76px] z-30 -mx-5 mt-5 flex items-center gap-3.5 border-t border-line bg-card px-5 py-4 sm:-mx-8 sm:px-8 lg:hidden">
+        <div>
+          <p className="text-[10px] font-semibold text-muted">Total</p>
+          <p className="font-extrabold text-[22px] text-ink">{formatCurrency(shownPrice * quantity)}</p>
+        </div>
+        <QtyStepper value={quantity} onChange={setQuantity} max={selectedVariant?.stock || 99} disabled={outOfStock} />
+        <Button
+          variant={justAdded ? 'dark' : 'primary'}
+          icon={justAdded ? <FiCheck size={18} /> : <FiShoppingCart size={18} />}
+          onClick={() => addToCart()}
+          loading={isAddingToCart}
+          disabled={outOfStock}
+          fullWidth
+          className="flex-1"
+        >
+          {justAdded ? 'Added' : 'Add to cart'}
+        </Button>
       </div>
     </Container>
   );
