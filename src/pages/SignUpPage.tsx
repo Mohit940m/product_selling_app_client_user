@@ -1,40 +1,21 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiEye, FiEyeOff, FiLock, FiMail, FiPhone, FiShield, FiShoppingBag, FiUser } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiShield, FiUser } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
-import Button from '../components/Button';
+import AuthLayout from '../components/layout/AuthLayout';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import OtpInput from '../components/auth/OtpInput';
+import { useCountdown } from '../hooks/useCountdown';
 
 const OTP_SCREEN_DELAY_MS = 1000;
+const RESEND_COOLDOWN_SECONDS = 60;
 
 type RegisterStep = 'details' | 'otp';
-
-const AuthTopBar = () => (
-  <header className="border-b border-gray-200 bg-white">
-    <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-      <Link to="/products" className="flex items-center gap-2 text-text">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white">
-          <FiShoppingBag size={22} />
-        </span>
-        <span className="text-lg font-bold">ShopNow</span>
-      </Link>
-      <Link to="/login" className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-text hover:border-primary hover:text-accent">
-        Sign in
-      </Link>
-    </div>
-  </header>
-);
-
-const AuthFooter = () => (
-  <footer className="border-t border-gray-200 bg-white">
-    <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <p>ShopNow</p>
-      <p>Browse, add to cart, and checkout with ease.</p>
-    </div>
-  </footer>
-);
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -45,9 +26,42 @@ const SignUpPage = () => {
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [otp, setOtp] = useState('');
+  const [devOtp, setDevOtp] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const resendCountdown = useCountdown(RESEND_COOLDOWN_SECONDS);
+
+  const requestOtp = async () => {
+    const payload: Record<string, string> = { name, email, password };
+    if (phone) payload.phone = phone;
+
+    const { data } = await userApi.post('/auth/register', payload);
+
+    if (data.success === false) {
+      throw new Error(data.message ?? 'Registration failed.');
+    }
+
+    setDevOtp(data.otp ?? '');
+    toast.success(`Your OTP is: ${data.otp}`, {
+      icon: <FiShield color="var(--k-accent)" />,
+      autoClose: 10000,
+    });
+    setMessage('OTP sent to your email.');
+    resendCountdown.start();
+  };
+
+  const resendOtp = async () => {
+    setError('');
+    try {
+      await requestOtp();
+    } catch (err) {
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? 'Unable to resend OTP.'
+        : 'Unable to resend OTP.';
+      toast.error(errorMessage);
+    }
+  };
 
   const submitRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,20 +71,7 @@ const SignUpPage = () => {
 
     try {
       if (step === 'details') {
-        const payload: Record<string, string> = { name, email, password };
-        if (phone) payload.phone = phone;
-
-        const { data } = await userApi.post('/auth/register', payload);
-
-        if (data.success === false) {
-          throw new Error(data.message ?? 'Registration failed.');
-        }
-
-        toast.success(`Your OTP is: ${data.otp}`, {
-          icon: <FiShield color="#A78BFA" />,
-          autoClose: 10000,
-        });
-        setMessage('OTP sent to your email. Opening verification...');
+        await requestOtp();
         await new Promise((resolve) => setTimeout(resolve, OTP_SCREEN_DELAY_MS));
         setStep('otp');
         setMessage('Enter the OTP to verify your account.');
@@ -85,7 +86,7 @@ const SignUpPage = () => {
           localStorage.setItem('userToken', data.token);
         }
         toast.success('Account created! Welcome to ShopNow.', {
-          icon: <FiShield color="#A78BFA" />,
+          icon: <FiShield color="var(--k-accent)" />,
         });
         navigate('/products');
       }
@@ -101,150 +102,108 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-text">
-      <AuthTopBar />
-      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
-        <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_440px] lg:items-center">
-          <section className="hidden lg:block">
-            <p className="text-sm font-semibold uppercase tracking-wide text-accent">Join ShopNow</p>
-            <h1 className="mt-3 max-w-xl text-4xl font-bold leading-tight text-text">
-              Create your buyer account and start shopping in minutes.
-            </h1>
-            <div className="mt-8 grid max-w-xl grid-cols-2 gap-4">
-              {['Free to join', 'Secure OTP login', 'Track orders', 'Easy returns'].map((item) => (
-                <div key={item} className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                  <FiShield className="text-primary" size={24} />
-                  <p className="mt-3 text-sm font-semibold text-text">{item}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-md sm:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary text-primary">
-                <FiUser size={24} />
-              </span>
-              <div>
-                <h2 className="text-2xl font-bold text-text">Create account</h2>
-                <p className="text-sm text-gray-600">
-                  {step === 'details' ? 'Fill in your details to get started.' : 'Enter the OTP sent to your email.'}
-                </p>
-              </div>
-            </div>
-
-            {message && <div className="mb-4 rounded-lg border border-primary bg-secondary p-3 text-sm text-accent">{message}</div>}
-            {error && <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
-            <form className="space-y-4" onSubmit={submitRegister}>
-              {step === 'details' ? (
-                <>
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-text">Full name</label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiUser className="shrink-0 text-primary" size={18} />
-                      <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="Jane Doe"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-text">Email address</label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiMail className="shrink-0 text-primary" size={18} />
-                      <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="jane@example.com"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-text">Password</label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiLock className="shrink-0 text-primary" size={18} />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="Min 6 characters"
-                        minLength={6}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((v) => !v)}
-                        className="shrink-0 text-gray-400 hover:text-text"
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-text">
-                      Phone number <span className="text-gray-400">(optional)</span>
-                    </label>
-                    <div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                      <FiPhone className="shrink-0 text-primary" size={18} />
-                      <input
-                        type="tel"
-                        id="phone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-3 py-3 text-sm outline-none"
-                        placeholder="9876543210"
-                      />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div>
-                  <label htmlFor="otp" className="block text-sm font-medium text-text">OTP</label>
-                  <input
-                    type="text"
-                    id="otp"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="6 digit OTP"
-                    maxLength={6}
-                    required
-                  />
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                label={isSubmitting ? 'Please wait...' : step === 'details' ? 'Send OTP' : 'Verify and create account'}
-                className="w-full py-3"
-              />
-            </form>
-
-            <p className="mt-6 text-center text-sm text-gray-600">
-              Already have an account? <Link to="/login" className="font-semibold text-accent hover:underline">Sign in</Link>
-            </p>
-          </section>
+    <AuthLayout
+      eyebrow="JOIN SHOPNOW"
+      heading="Create your buyer account and start shopping in minutes."
+      features={['Free to join', 'Secure OTP login', 'Track orders', 'Easy returns']}
+    >
+      <div className="mb-6 flex items-center gap-3">
+        <span className="flex h-12 w-12 items-center justify-center rounded-tile bg-soft text-[var(--k-on-soft)]">
+          <FiUser size={22} />
+        </span>
+        <div>
+          <h1 className="text-2xl font-extrabold text-ink">Create account</h1>
+          <p className="text-sm text-muted">
+            {step === 'details' ? 'Fill in your details to get started.' : 'Enter the OTP sent to your email.'}
+          </p>
         </div>
-      </main>
-      <AuthFooter />
-    </div>
+      </div>
+
+      {message && (
+        <div className="mb-4 rounded-btn border border-accent bg-soft2 p-3 text-sm font-semibold text-accent">{message}</div>
+      )}
+      {step === 'otp' && devOtp && (
+        <div className="mb-4 flex items-center gap-2 rounded-btn border border-warn-fg/30 bg-warn-bg p-3">
+          <Badge tone="warn">DEV</Badge>
+          <p className="font-mono text-xs font-bold text-warn-fg">OTP: {devOtp} (shown for testing — no SMS/email is sent)</p>
+        </div>
+      )}
+      {error && (
+        <div className="mb-4 rounded-btn border border-danger bg-bad-bg p-3 text-sm font-semibold text-bad-fg">{error}</div>
+      )}
+
+      <form className="space-y-4" onSubmit={submitRegister}>
+        {step === 'details' ? (
+          <div key="details" className="animate-up space-y-4">
+            <Input label="Full name" id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" required />
+            <Input
+              label="Email address"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="jane@example.com"
+              required
+            />
+            <div className="relative">
+              <Input
+                label="Password"
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Min 6 characters"
+                minLength={6}
+                required
+                className="pr-11"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute right-3.5 top-[38px] text-muted hover:text-ink"
+              >
+                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+              </button>
+            </div>
+            <Input
+              label={
+                <>
+                  Phone number <span className="text-muted">(optional)</span>
+                </>
+              }
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="9876543210"
+            />
+          </div>
+        ) : (
+          <div key="otp" className="animate-up">
+            <p className="mb-2.5 text-[12px] font-extrabold text-ink">OTP</p>
+            <OtpInput value={otp} onChange={setOtp} disabled={isSubmitting} />
+            <button
+              type="button"
+              onClick={resendOtp}
+              disabled={!resendCountdown.isReady}
+              className="mt-3 text-xs font-bold text-muted disabled:cursor-not-allowed enabled:text-accent enabled:hover:underline"
+            >
+              {resendCountdown.isReady ? 'Resend OTP' : `Resend OTP in ${resendCountdown.remaining}s`}
+            </button>
+          </div>
+        )}
+
+        <Button type="submit" variant="primary" loading={isSubmitting} fullWidth>
+          {step === 'details' ? 'Send OTP' : 'Verify and create account'}
+        </Button>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-muted">
+        Already have an account? <Link to="/login" className="font-bold text-accent hover:underline">Sign in</Link>
+      </p>
+    </AuthLayout>
   );
 };
 

@@ -534,14 +534,14 @@ The current file is 524 lines with inline edit forms. Restructure it rather than
 
 No prototype screen exists for auth, so compose from the design-system panel.
 
-- [ ] **4.8.1** Split screen at `lg`: left `flex-[1.1]` brand panel `bg-soft rounded-hero` with the `BrandMark`, a display heading, and the floating hatch illustration from screen 01 running `animate-float`; right the form column at `max-w-[420px]`, centred.
-- [ ] **4.8.2** On mobile the brand panel collapses to a compact header (mark + heading) and the form takes the full width.
-- [ ] **4.8.3** Rebuild both forms with the `Input` primitive; step 1 (credentials) and step 2 (OTP) become two `animate-up` panels with a crossfade between them.
-- [ ] **4.8.4** OTP entry: six separate `48×56 rounded-ctl border border-line text-center font-extrabold text-[20px]` boxes with auto-advance, paste support, and backspace-to-previous. Filled boxes get `border-accent`. This replaces the current single text field.
-- [ ] **4.8.5** The backend returns the OTP in the response body ("for testing/demo purposes"). Keep surfacing it, but render it in a clearly-marked dev notice card (`Badge tone="warn"` + mono text), not as ordinary UI copy.
-- [ ] **4.8.6** Resend-OTP link with a live 60s countdown in `text-muted`, becoming an accent link when ready.
-- [ ] **4.8.7** Submit buttons: full-width `primary`, `loading` wired to the existing request flags.
-- [ ] **4.8.8** Error surface: `rounded-btn border border-danger bg-bad-bg text-bad-fg px-4 py-3 text-[13px] font-semibold`, entering with `animate-up`.
+- [x] **4.8.1** Split screen at `lg`: left `flex-[1.1]` brand panel `bg-soft rounded-hero` with the `BrandMark`, a display heading, and the floating hatch illustration from screen 01 running `animate-float`; right the form column at `max-w-[420px]`, centred.
+- [x] **4.8.2** On mobile the brand panel collapses to a compact header (mark + heading) and the form takes the full width.
+- [x] **4.8.3** Rebuild both forms with the `Input` primitive; step 1 (credentials) and step 2 (OTP) become two `animate-up` panels with a crossfade between them.
+- [x] **4.8.4** OTP entry: six separate `48×56 rounded-ctl border border-line text-center font-extrabold text-[20px]` boxes with auto-advance, paste support, and backspace-to-previous. Filled boxes get `border-accent`. This replaces the current single text field.
+- [x] **4.8.5** The backend returns the OTP in the response body ("for testing/demo purposes"). Keep surfacing it, but render it in a clearly-marked dev notice card (`Badge tone="warn"` + mono text), not as ordinary UI copy.
+- [x] **4.8.6** Resend-OTP link with a live 60s countdown in `text-muted`, becoming an accent link when ready.
+- [x] **4.8.7** Submit buttons: full-width `primary`, `loading` wired to the existing request flags.
+- [x] **4.8.8** Error surface: `rounded-btn border border-danger bg-bad-bg text-bad-fg px-4 py-3 text-[13px] font-semibold`, entering with `animate-up`.
 
 ## 4.9 `WelcomePage.tsx` — onboarding (screen 01) — **new file, optional**
 
