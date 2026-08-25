@@ -12,6 +12,7 @@ import QtyStepper from '../components/ui/QtyStepper';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import { showKartlyToast } from '../components/ui/Toast';
+import CartDrawer from '../components/cart/CartDrawer';
 
 const ADDED_FEEDBACK_MS = 900;
 
@@ -60,6 +61,7 @@ const ProductDetailPage = () => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -101,7 +103,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  const addToCart = async (): Promise<boolean> => {
+  const addToCart = async (options?: { openDrawer?: boolean }): Promise<boolean> => {
     const token = localStorage.getItem('userToken');
     if (!token) {
       toast.error('Please login to add items to cart.');
@@ -120,6 +122,7 @@ const ProductDetailPage = () => {
       showKartlyToast({ title: 'Added to bag', sub: `${product.name}${selectedVariant ? ` · ×${quantity}` : ''}` });
       setJustAdded(true);
       setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS);
+      if (options?.openDrawer !== false) setCartDrawerOpen(true);
       return true;
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -133,7 +136,7 @@ const ProductDetailPage = () => {
   };
 
   const buyItNow = async () => {
-    const added = await addToCart();
+    const added = await addToCart({ openDrawer: false });
     if (added) navigate('/checkout');
   };
 
@@ -414,6 +417,8 @@ const ProductDetailPage = () => {
           {justAdded ? 'Added' : 'Add to cart'}
         </Button>
       </div>
+
+      <CartDrawer open={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
     </Container>
   );
 };

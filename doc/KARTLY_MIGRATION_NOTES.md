@@ -384,3 +384,21 @@ Two previously-deferred items that didn't actually need backend support:
   **not** get "Buy it now" in the sticky bar, matching the prototype's own
   screen 04, which only shows Add to cart on the mobile sticky bar (Buy it
   now is a D2/desktop-only affordance in the source design).
+
+## Post-Phase-7 follow-up — CartDrawer
+
+**4.2.13/4.2.14 desktop cart drawer**, previously deferred as needing a
+cart-refetch-after-add flow — built it. New
+`src/components/cart/CartDrawer.tsx` refetches `GET /cart/get-cart` each
+time it opens (no global cart store in this app, so a light per-open
+refetch is simpler than threading cart state through props) and renders
+via the existing `Sheet` primitive: bottom sheet on mobile, right drawer
+at `lg+`. Opens automatically after a successful add-to-cart from either
+the desktop or mobile Add to cart button (not after "Buy it now", which
+skips straight to checkout instead); never auto-dismisses.
+
+**Simplified from the plan's literal spec:** rendered as a `Sheet` overlay
+at every width, not "inline beside the PDP at `xl`" — building a
+third, non-overlay desktop-only layout variant just for the `xl`
+breakpoint was judged not worth the added complexity versus reusing the
+overlay pattern already established for every other drawer in the app.

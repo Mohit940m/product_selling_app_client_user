@@ -442,8 +442,8 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 - [x] **4.2.10** Info column: mono brand eyebrow, title `font-black text-[34px] leading-[1.05] tracking-[-.03em]`, price row = current price `font-extrabold text-[26px]` + struck original `text-muted line-through` + `Badge tone="ink"` with the computed discount percent. Wire to the existing `activeOffer` / `discountedPrice` fields.
 - [x] **4.2.11** Size swatches at `52×44`, hover `lift-sm border-accent`.
 - [x] **4.2.12** Action row: `QtyStepper` + `primary` `Add to cart` (`flex-1`), then a full-width `outline` `Buy it now` beneath that routes straight to `/checkout`.
-- [ ] **4.2.13** Cart drawer: create `src/components/cart/CartDrawer.tsx` — `w-[340px] border-l border-line bg-soft2 p-8` at `lg`, rendered inline beside the PDP at `xl` and as a `Sheet` below `lg`. Header `Your bag` + close; line items `rounded-[18px] bg-card border border-line p-3` with a `56×56` thumb; footer `Total` row + `dark` Checkout Button. Row hover `border-accent`.
-- [ ] **4.2.14** The drawer opens (animated) after a successful add-to-cart. It does **not** auto-dismiss — the user closes it.
+- [x] **4.2.13** Cart drawer: create `src/components/cart/CartDrawer.tsx` — `w-[340px] border-l border-line bg-soft2 p-8` at `lg`, rendered inline beside the PDP at `xl` and as a `Sheet` below `lg`. Header `Your bag` + close; line items `rounded-[18px] bg-card border border-line p-3` with a `56×56` thumb; footer `Total` row + `dark` Checkout Button. Row hover `border-accent`.
+- [x] **4.2.14** The drawer opens (animated) after a successful add-to-cart. It does **not** auto-dismiss — the user closes it.
 
 ## 4.3 `CartPage.tsx` — bag (screen 05)
 
