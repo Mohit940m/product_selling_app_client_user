@@ -424,20 +424,20 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 ### Mobile (screen 04)
 
 - [ ] **4.2.1** Gallery: full-bleed `h-[300px] bg-soft`, image via `ImageFrame`. Floating back tile top-left and wishlist heart top-right, both `38×38 rounded-[13px] bg-card`; heart hover `text-accent scale-[1.08]`.
-- [ ] **4.2.2** Dot pager at the gallery bottom: active dot `22×5 rounded-full bg-ink`, inactive `5×5 bg-ink/30`. Wire to the existing image-index state; support horizontal swipe.
+- [x] **4.2.2** Dot pager at the gallery bottom: active dot `22×5 rounded-full bg-ink`, inactive `5×5 bg-ink/30`. Wire to the existing image-index state; support horizontal swipe.
 - [ ] **4.2.3** Detail sheet: `flex-1 bg-card rounded-t-sheet -mt-6 relative px-6 pt-6.5` — it must visually overlap the gallery by 24px.
 - [ ] **4.2.4** Title `font-extrabold text-[23px] leading-[1.15] tracking-[-.02em]`; sub line `{brand} · {stock status}` at `text-[12px] text-muted font-semibold`; rating pill `rounded-full bg-soft px-2.75 py-1.75 font-extrabold text-[12px]`.
-- [ ] **4.2.5** Variant selector (currently a plain `<select>`): rebuild as swatch tiles — `46×40 rounded-ctl border border-line font-bold text-[12px]`, selected `bg-accent text-onacc`, out-of-stock `text-muted` and non-interactive. Heading = the live variant attribute name at `font-semibold text-[12px]`.
+- [x] **4.2.5** Variant selector (currently a plain `<select>`): rebuild as swatch tiles — `46×40 rounded-ctl border border-line font-bold text-[12px]`, selected `bg-accent text-onacc`, out-of-stock `text-muted` and non-interactive. Heading = the live variant attribute name at `font-semibold text-[12px]`.
 - [ ] **4.2.6** Description `text-[12.5px] text-muted leading-[1.6]` with a `See details` accent link that expands the full text.
 - [ ] **4.2.7** Trust row: three icon+label stacks (free ship / returns / warranty) at `text-[10px] font-semibold text-muted`, using the prototype's bare geometric marks (square, circle, rotated square) rather than filled icons.
 - [ ] **4.2.8** Sticky bottom bar: `mt-auto border-t border-line py-4 flex items-center gap-3.5` — left `Total` + price at `font-extrabold text-[22px]`, right a full-width `primary` Button `Add to cart`. On mobile the bar is `sticky bottom-[76px]` so it clears the tab bar.
 
 ### Desktop (screen D2)
 
-- [ ] **4.2.9** Three-column body: thumbnail column (`96×96 rounded-tile` tiles, selected `border-accent`), main image `flex-1 rounded-hero bg-soft min-h-[470px]`, info column `w-[340px]`.
-- [ ] **4.2.10** Info column: mono brand eyebrow, title `font-black text-[34px] leading-[1.05] tracking-[-.03em]`, price row = current price `font-extrabold text-[26px]` + struck original `text-muted line-through` + `Badge tone="ink"` with the computed discount percent. Wire to the existing `activeOffer` / `discountedPrice` fields.
-- [ ] **4.2.11** Size swatches at `52×44`, hover `lift-sm border-accent`.
-- [ ] **4.2.12** Action row: `QtyStepper` + `primary` `Add to cart` (`flex-1`), then a full-width `outline` `Buy it now` beneath that routes straight to `/checkout`.
+- [x] **4.2.9** Three-column body: thumbnail column (`96×96 rounded-tile` tiles, selected `border-accent`), main image `flex-1 rounded-hero bg-soft min-h-[470px]`, info column `w-[340px]`.
+- [x] **4.2.10** Info column: mono brand eyebrow, title `font-black text-[34px] leading-[1.05] tracking-[-.03em]`, price row = current price `font-extrabold text-[26px]` + struck original `text-muted line-through` + `Badge tone="ink"` with the computed discount percent. Wire to the existing `activeOffer` / `discountedPrice` fields.
+- [x] **4.2.11** Size swatches at `52×44`, hover `lift-sm border-accent`.
+- [x] **4.2.12** Action row: `QtyStepper` + `primary` `Add to cart` (`flex-1`), then a full-width `outline` `Buy it now` beneath that routes straight to `/checkout`.
 - [ ] **4.2.13** Cart drawer: create `src/components/cart/CartDrawer.tsx` — `w-[340px] border-l border-line bg-soft2 p-8` at `lg`, rendered inline beside the PDP at `xl` and as a `Sheet` below `lg`. Header `Your bag` + close; line items `rounded-[18px] bg-card border border-line p-3` with a `56×56` thumb; footer `Total` row + `dark` Checkout Button. Row hover `border-accent`.
 - [ ] **4.2.14** The drawer opens (animated) after a successful add-to-cart. It does **not** auto-dismiss — the user closes it.
 
