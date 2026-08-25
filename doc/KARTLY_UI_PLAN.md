@@ -19,7 +19,7 @@
 | 0 | Audit & prerequisites | 6 | ✅ |
 | 1 | Design foundation (tokens, motion, theme) | 28 | ☐ |
 | 2 | Primitive component library | 23 | ✅ |
-| 3 | App shell & navigation | 16 | ☐ |
+| 3 | App shell & navigation | 16 | ✅ |
 | 4 | Page migrations | 107 | ☐ |
 | 5 | Motion & interaction pass | 14 | ☐ |
 | 6 | Responsive QA matrix | 10 | ☐ |
@@ -343,30 +343,30 @@ The prototype has three distinct navigation surfaces. The SPA must present the r
 
 `DESIGN REF` lines 524–541 (D1 storefront header).
 
-- [ ] **3.1.1** Rewrite `src/components/Navbar.tsx` as `src/components/layout/TopNav.tsx`. Keep a re-export at the old path until Phase 7 so pages don't break mid-migration.
-- [ ] **3.1.2** Left cluster: the Kartly mark — a `28×28 rounded-[10px] bg-ink` tile with a `12×12 rounded-full bg-accent` dot pinned at `-3px / -3px`, then the wordmark at `font-extrabold text-[17px] tracking-[-.02em]`. Build this once as `src/components/layout/BrandMark.tsx` (props: `size`, `inverted`) — the admin app reuses the same construction.
-- [ ] **3.1.3** Category links (`New`, plus live categories from the products endpoint): `text-[13px] font-semibold`, hover `text-accent t-fast`. Hidden below `lg`.
-- [ ] **3.1.4** Search: `flex-1 max-w-[340px] rounded-full border border-line px-4 py-2.5`, hover `border-accent`. Below `lg` it collapses to an icon that opens a full-screen search sheet.
-- [ ] **3.1.5** Right cluster: soft-pill `✦ Ask AI` button (see 4.10, feature-flagged), cart count tile (`38×38 rounded-[12px] border border-line`, hover `border-accent`), avatar tile (`38×38 rounded-[12px] bg-soft`).
-- [ ] **3.1.6** Sticky: `sticky top-0 z-50 bg-bg border-b border-line`. Add a `backdrop-blur` + reduced-opacity variant that engages after 12px of scroll.
+- [x] **3.1.1** Rewrite `src/components/Navbar.tsx` as `src/components/layout/TopNav.tsx`. Keep a re-export at the old path until Phase 7 so pages don't break mid-migration.
+- [x] **3.1.2** Left cluster: the Kartly mark — a `28×28 rounded-[10px] bg-ink` tile with a `12×12 rounded-full bg-accent` dot pinned at `-3px / -3px`, then the wordmark at `font-extrabold text-[17px] tracking-[-.02em]`. Build this once as `src/components/layout/BrandMark.tsx` (props: `size`, `inverted`) — the admin app reuses the same construction.
+- [x] **3.1.3** Category links (`New`, plus live categories from the products endpoint): `text-[13px] font-semibold`, hover `text-accent t-fast`. Hidden below `lg`.
+- [x] **3.1.4** Search: `flex-1 max-w-[340px] rounded-full border border-line px-4 py-2.5`, hover `border-accent`. Below `lg` it collapses to an icon that opens a full-screen search sheet.
+- [x] **3.1.5** Right cluster: soft-pill `✦ Ask AI` button (see 4.10, feature-flagged), cart count tile (`38×38 rounded-[12px] border border-line`, hover `border-accent`), avatar tile (`38×38 rounded-[12px] bg-soft`).
+- [x] **3.1.6** Sticky: `sticky top-0 z-50 bg-bg border-b border-line`. Add a `backdrop-blur` + reduced-opacity variant that engages after 12px of scroll.
 
 ## 3.2 Mobile bottom tab bar
 
 `DESIGN REF` lines 137–143 (the 5-tab footer: Shop / Search / AI / Cart / You).
 
-- [ ] **3.2.1** Create `src/components/layout/BottomTabBar.tsx`. Fixed, `lg:hidden`, `border-t border-line bg-card`, `pb-[env(safe-area-inset-bottom)]`.
-- [ ] **3.2.2** Five tabs → routes: `Shop → /products`, `Search → /products?focus=search`, `AI → /assistant` (flagged), `Cart → /cart`, `You → /profile`.
-- [ ] **3.2.3** Active tab: an `8px` accent dot above a `text-[10px] font-bold` label; inactive: muted dot + `font-semibold`. Animate the dot with a `t-base` scale on activation.
-- [ ] **3.2.4** Cart tab carries the item-count badge. Lift the existing `cartCount` fetch out of `Navbar.tsx` into a shared hook `src/hooks/useCartCount.ts` so both nav surfaces share one request.
-- [ ] **3.2.5** Every page adds `pb-24 lg:pb-0` to its main scroll container so content clears the bar.
+- [x] **3.2.1** Create `src/components/layout/BottomTabBar.tsx`. Fixed, `lg:hidden`, `border-t border-line bg-card`, `pb-[env(safe-area-inset-bottom)]`.
+- [x] **3.2.2** Five tabs → routes: `Shop → /products`, `Search → /products?focus=search`, `AI → /assistant` (flagged), `Cart → /cart`, `You → /profile`.
+- [x] **3.2.3** Active tab: an `8px` accent dot above a `text-[10px] font-bold` label; inactive: muted dot + `font-semibold`. Animate the dot with a `t-base` scale on activation.
+- [x] **3.2.4** Cart tab carries the item-count badge. Lift the existing `cartCount` fetch out of `Navbar.tsx` into a shared hook `src/hooks/useCartCount.ts` so both nav surfaces share one request.
+- [x] **3.2.5** Every page adds `pb-24 lg:pb-0` to its main scroll container so content clears the bar.
 
 ## 3.3 Layout wrapper
 
-- [ ] **3.3.1** Create `src/components/layout/AppLayout.tsx`: renders `TopNav`, `<main className="flex-1">`, `Footer`, and `BottomTabBar` on a `flex min-h-screen flex-col bg-bg text-ink` root.
-- [ ] **3.3.2** Create `src/components/layout/Footer.tsx` from the current inline footer (repeated verbatim in `ProductListPage`, `OrderListPage` and others) — `border-t border-line bg-card`, muted text. Content columns on desktop; a single centred line on mobile.
-- [ ] **3.3.3** Convert `src/App.tsx` to a nested-route layout: a parent `<Route element={<AppLayout />}>` with `<Outlet />`, so the shell is not re-mounted on every navigation (today each page renders its own `<Navbar />` and footer).
-- [ ] **3.3.4** Add a scroll-to-top effect on pathname change.
-- [ ] **3.3.5** Keep `/login`, `/signup` and `/welcome` **outside** `AppLayout` — those screens use a minimal brand-only header.
+- [x] **3.3.1** Create `src/components/layout/AppLayout.tsx`: renders `TopNav`, `<main className="flex-1">`, `Footer`, and `BottomTabBar` on a `flex min-h-screen flex-col bg-bg text-ink` root.
+- [x] **3.3.2** Create `src/components/layout/Footer.tsx` from the current inline footer (repeated verbatim in `ProductListPage`, `OrderListPage` and others) — `border-t border-line bg-card`, muted text. Content columns on desktop; a single centred line on mobile.
+- [x] **3.3.3** Convert `src/App.tsx` to a nested-route layout: a parent `<Route element={<AppLayout />}>` with `<Outlet />`, so the shell is not re-mounted on every navigation (today each page renders its own `<Navbar />` and footer).
+- [x] **3.3.4** Add a scroll-to-top effect on pathname change.
+- [x] **3.3.5** Keep `/login`, `/signup` and `/welcome` **outside** `AppLayout` — those screens use a minimal brand-only header.
 
 ---
 

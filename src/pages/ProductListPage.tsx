@@ -4,8 +4,6 @@ import { FiSearch, FiShoppingCart, FiTag, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
-import Navbar from '../components/Navbar';
-
 type ActiveOffer = {
   _id: string;
   name: string;
@@ -82,7 +80,6 @@ const ProductListPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-text">
-      <Navbar />
       <main className="flex-1">
         <section className="border-b border-gray-200 bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:px-6 lg:flex-row lg:items-end lg:justify-between">
@@ -231,12 +228,6 @@ const ProductListPage = () => {
         </section>
       </main>
 
-      <footer className="border-t border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>ShopNow</p>
-          <p>Discover and shop from thousands of products.</p>
-        </div>
-      </footer>
     </div>
   );
 };

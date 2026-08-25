@@ -4,7 +4,6 @@ import { FiArrowLeft, FiShoppingCart, FiTag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
-import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 
 type Variant = {
@@ -136,7 +135,6 @@ const ProductDetailPage = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col bg-background text-text">
-        <Navbar />
         <main className="flex-1">
           <div className="mx-auto max-w-7xl animate-pulse px-4 py-8 sm:px-6">
             <div className="grid gap-8 lg:grid-cols-2">
@@ -156,7 +154,6 @@ const ProductDetailPage = () => {
   if (!product) {
     return (
       <div className="flex min-h-screen flex-col bg-background text-text">
-        <Navbar />
         <main className="flex flex-1 items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-text">Product not found</h2>
@@ -175,7 +172,6 @@ const ProductDetailPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-text">
-      <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <Link
@@ -306,12 +302,6 @@ const ProductDetailPage = () => {
         </div>
       </main>
 
-      <footer className="border-t border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>ShopNow</p>
-          <p>Discover and shop from thousands of products.</p>
-        </div>
-      </footer>
     </div>
   );
 };

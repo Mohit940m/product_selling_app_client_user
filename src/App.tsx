@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { ThemeProvider, useTheme } from './theme/ThemeProvider'
+import AppLayout from './components/layout/AppLayout'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProductListPage from './pages/ProductListPage'
@@ -21,12 +22,15 @@ const AppRoutes = () => {
         <Route path="/" element={<Navigate to="/products" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/products" element={<ProductListPage />} />
-        <Route path="/products/:productId" element={<ProductDetailPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/orders" element={<OrderListPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+
+        <Route element={<AppLayout />}>
+          <Route path="/products" element={<ProductListPage />} />
+          <Route path="/products/:productId" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrderListPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Routes>
       <ToastContainer
         position="top-right"
