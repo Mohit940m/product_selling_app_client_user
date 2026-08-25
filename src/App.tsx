@@ -11,6 +11,7 @@ import ProductDetailPage from './pages/ProductDetailPage'
 import CartPage from './pages/CartPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderListPage from './pages/OrderListPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 import ProfilePage from './pages/ProfilePage'
 
 const AppRoutes = () => {
@@ -29,6 +30,7 @@ const AppRoutes = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrderListPage />} />
+          <Route path="/orders/success" element={<OrderSuccessPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>

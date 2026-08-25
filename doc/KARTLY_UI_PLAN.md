@@ -480,16 +480,16 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 
 The current `OrderListPage.tsx` (90 lines) is really a post-payment landing. Split it: success becomes its own page, and `/orders` becomes a real order list (4.6.8).
 
-- [ ] **4.5.1** Create `src/pages/OrderSuccessPage.tsx`, route it at `/orders/success`, and navigate there from `CheckoutPage` with `{ orderId }` in location state. Redirect to `/products` when state is absent.
-- [ ] **4.5.2** Centred column, `text-center`, vertically centred in the viewport.
-- [ ] **4.5.3** Success mark: `112×112 rounded-full bg-accent` with `animate-pop`, containing an inline SVG check (`M12 25l8 8 16-18`, `stroke-width 5`, round caps) drawn with `stroke-dasharray: 60; stroke-dashoffset: 60` and `kfDraw .55s .35s ease-out forwards`.
-- [ ] **4.5.4** Two concentric `130×130 rounded-full bg-accent opacity-20` rings running `animate-ring` at `0s` and `1.2s` delays.
-- [ ] **4.5.5** Confetti: 7 absolutely-positioned particles at the centre with per-particle `--tx` / `--ty` offsets `[-70,-40] [70,-52] [-84,36] [86,30] [0,-84] [24,80] [-30,78]`, alternating `7px` circles and `9px` rounded squares, alternating `bg-ink` / `bg-accent`, each running `kfConf 1.5s ease-out infinite` with a `0.35 + i*0.06`s delay. Build as `src/components/motion/Confetti.tsx`.
-- [ ] **4.5.6** Copy ladder with staggered `animate-up`: heading `Payment successful` at `font-black text-[30px]` (250ms), amount + order-id line (400ms), ETA card (550ms), CTA (700ms).
+- [x] **4.5.1** Create `src/pages/OrderSuccessPage.tsx`, route it at `/orders/success`, and navigate there from `CheckoutPage` with `{ orderId }` in location state. Redirect to `/products` when state is absent.
+- [x] **4.5.2** Centred column, `text-center`, vertically centred in the viewport.
+- [x] **4.5.3** Success mark: `112×112 rounded-full bg-accent` with `animate-pop`, containing an inline SVG check (`M12 25l8 8 16-18`, `stroke-width 5`, round caps) drawn with `stroke-dasharray: 60; stroke-dashoffset: 60` and `kfDraw .55s .35s ease-out forwards`.
+- [x] **4.5.4** Two concentric `130×130 rounded-full bg-accent opacity-20` rings running `animate-ring` at `0s` and `1.2s` delays.
+- [x] **4.5.5** Confetti: 7 absolutely-positioned particles at the centre with per-particle `--tx` / `--ty` offsets `[-70,-40] [70,-52] [-84,36] [86,30] [0,-84] [24,80] [-30,78]`, alternating `7px` circles and `9px` rounded squares, alternating `bg-ink` / `bg-accent`, each running `kfConf 1.5s ease-out infinite` with a `0.35 + i*0.06`s delay. Build as `src/components/motion/Confetti.tsx`.
+- [x] **4.5.6** Copy ladder with staggered `animate-up`: heading `Payment successful` at `font-black text-[30px]` (250ms), amount + order-id line (400ms), ETA card (550ms), CTA (700ms).
 - [ ] **4.5.7** ETA card: `rounded-card bg-soft2 border border-line p-4 flex justify-between` — left mono label `ESTIMATED ARRIVAL` + date `font-extrabold`, right a `pill` Button `Track` linking to `/orders/:orderId`.
-- [ ] **4.5.8** `Continue shopping` — full-width `dark` Button.
-- [ ] **4.5.9** **Desktop:** identical composition capped at `max-w-[480px]` and centred; confetti offsets scale 1.4× via a `scale` prop.
-- [ ] **4.5.10** Honour `prefers-reduced-motion`: skip confetti and rings entirely, render the check statically.
+- [x] **4.5.8** `Continue shopping` — full-width `dark` Button.
+- [x] **4.5.9** **Desktop:** identical composition capped at `max-w-[480px]` and centred; confetti offsets scale 1.4× via a `scale` prop.
+- [x] **4.5.10** Honour `prefers-reduced-motion`: skip confetti and rings entirely, render the check statically.
 
 ## 4.6 `OrderTrackingPage.tsx` — live tracking (screen 08) — **new file**
 

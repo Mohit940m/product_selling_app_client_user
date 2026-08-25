@@ -176,3 +176,40 @@ Deliberately **not** built:
   to the viewport; address and items panels stack in one column rather
   than sitting side by side, since the order-items panel is conditionally
   rendered after the summary loads.
+
+### 4.5 OrderSuccessPage (new) / OrderListPage split
+
+Implemented: new `src/pages/OrderSuccessPage.tsx` at `/orders/success`,
+redirecting to `/products` if reached without an `orderId` in navigation
+state. Full celebratory sequence — accent success mark with `animate-pop`,
+an SVG check drawn via `kfDraw`, two `kfRing` pulses, 7-particle
+`Confetti`, and the staggered 250/400/550/700ms copy ladder — all gated by
+a live `usePrefersReducedMotion()` hook that renders the static, motion-free
+version when the OS setting is on. `CheckoutPage` now navigates to
+`/orders/success` instead of `/orders` on verified payment.
+
+**Not built: 4.5.7 ETA card + Track button.** The checkout flow never
+receives an estimated-arrival date or a trackable order-detail endpoint
+(see the 4.6 note below) — there is nothing real to show, and a Track
+button would point at a page that doesn't exist. Omitted rather than
+fabricating a delivery date.
+
+### 4.6 OrderTrackingPage — not built (backend gap, out of scope)
+
+`OrderListPage.tsx` is simplified to an honest `EmptyState` instead of
+being rewritten into a real order list.
+
+**Root cause:** the backend's user order routes
+(`product_selling_app_server/src/routes/user.routes/order.routes.ts`)
+expose exactly three endpoints — `POST /checkout`, `POST /create-order`,
+`POST /verify-payment` — and nothing to list a user's past orders or fetch
+one order's status/tracking detail. Every item in plan section 4.6
+(`OrderTrackingPage.tsx` at `/orders/:orderId`, and rewriting
+`OrderListPage.tsx` into a real list) depends on endpoints that don't
+exist yet. Building the UI against them would mean either fabricating
+order/tracking data or shipping pages that always 404/error.
+
+This is a backend-scope gap, not a design-plan gap — the Kartly visual
+spec for both screens (order list rows, the live-tracking timeline) is
+still fully described in `doc/KARTLY_UI_PLAN.md` section 4.6 and can be
+implemented as soon as the corresponding list/detail endpoints exist.

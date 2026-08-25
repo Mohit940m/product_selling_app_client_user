@@ -165,7 +165,7 @@ const CheckoutPage = () => {
               razorpay_signature: response.razorpay_signature,
             });
             toast.success('Payment successful! Order placed.');
-            navigate('/orders', { state: { orderId } });
+            navigate('/orders/success', { state: { orderId } });
           } catch {
             toast.error('Payment verification failed. Please contact support.');
           } finally {
