@@ -18,7 +18,7 @@
 |---|---|---|---|
 | 0 | Audit & prerequisites | 6 | ✅ |
 | 1 | Design foundation (tokens, motion, theme) | 28 | ☐ |
-| 2 | Primitive component library | 23 | ☐ |
+| 2 | Primitive component library | 23 | ✅ |
 | 3 | App shell & navigation | 16 | ☐ |
 | 4 | Page migrations | 107 | ☐ |
 | 5 | Motion & interaction pass | 14 | ☐ |
@@ -280,7 +280,7 @@ All new files live under `src/components/ui/`. Each is a thin, typed, presentati
 
 Replaces the existing `src/components/Button.tsx` (26 lines, hardcoded `bg-[#A78BFA]`).
 
-- [ ] **2.1.1** Implement the variants exactly as the prototype's button row:
+- [x] **2.1.1** Implement the variants exactly as the prototype's button row:
 
   | Variant | Base | Hover |
   |---|---|---|
@@ -293,45 +293,45 @@ Replaces the existing `src/components/Button.tsx` (26 lines, hardcoded `bg-[#A78
   | `icon` | `w-12 h-12 rounded-full bg-ink text-card grid place-items-center` | `pop-icon` |
   | disabled | `bg-line text-muted cursor-not-allowed` | none |
 
-- [ ] **2.1.2** Sizes: `sm` (`px-4 py-2.5 text-xs`), `md` (`px-6 py-4 text-sm`), `lg` (`px-7 py-[17px] text-base`). Default `md`.
-- [ ] **2.1.3** Props: `variant`, `size`, `icon`, `iconPosition`, `loading`, `fullWidth`, plus native `ButtonHTMLAttributes`. When `loading`, swap children for the three-dot `animate-dot` cluster.
-- [ ] **2.1.4** Keep the current default-export signature (`label` prop) working with a deprecation comment, so Phase 4 can migrate pages one at a time instead of in one break-everything commit.
+- [x] **2.1.2** Sizes: `sm` (`px-4 py-2.5 text-xs`), `md` (`px-6 py-4 text-sm`), `lg` (`px-7 py-[17px] text-base`). Default `md`.
+- [x] **2.1.3** Props: `variant`, `size`, `icon`, `iconPosition`, `loading`, `fullWidth`, plus native `ButtonHTMLAttributes`. When `loading`, swap children for the three-dot `animate-dot` cluster.
+- [x] **2.1.4** Keep the current default-export signature (`label` prop) working with a deprecation comment, so Phase 4 can migrate pages one at a time instead of in one break-everything commit.
 
 ## 2.2 Form controls — `Input.tsx`, `Select.tsx`, `Textarea.tsx`
 
 `DESIGN REF` lines 892–898 (inputs: placeholder, focused, error).
 
-- [ ] **2.2.1** `Input` base: `rounded-btn border border-line bg-transparent px-4 py-3.5 text-[13px] font-medium text-ink placeholder:text-muted t-fast`; hover/focus `border-accent`. The design uses border colour for focus, not a ring.
-- [ ] **2.2.2** Error state: `border-danger text-danger`, message below at `text-[11px] font-bold text-danger`.
-- [ ] **2.2.3** Filled/valid state: `border-accent font-semibold text-ink` — the prototype shows the active field with an accent border and heavier weight.
-- [ ] **2.2.4** `label` renders above the field as `font-extrabold text-[12px] mb-2.5`, matching the "SIZE" / "Label" headings.
-- [ ] **2.2.5** Mobile: `<input>` font-size must be ≥ 16px on iOS to prevent zoom-on-focus. Use `text-base sm:text-[13px]`.
+- [x] **2.2.1** `Input` base: `rounded-btn border border-line bg-transparent px-4 py-3.5 text-[13px] font-medium text-ink placeholder:text-muted t-fast`; hover/focus `border-accent`. The design uses border colour for focus, not a ring.
+- [x] **2.2.2** Error state: `border-danger text-danger`, message below at `text-[11px] font-bold text-danger`.
+- [x] **2.2.3** Filled/valid state: `border-accent font-semibold text-ink` — the prototype shows the active field with an accent border and heavier weight.
+- [x] **2.2.4** `label` renders above the field as `font-extrabold text-[12px] mb-2.5`, matching the "SIZE" / "Label" headings.
+- [x] **2.2.5** Mobile: `<input>` font-size must be ≥ 16px on iOS to prevent zoom-on-focus. Use `text-base sm:text-[13px]`.
 
 ## 2.3 Chips, pills & badges — `Chip.tsx`, `Badge.tsx`
 
-- [ ] **2.3.1** `Chip`: `rounded-full px-4 py-2.5 text-xs font-bold border border-line t-fast`, hover `border-accent text-accent`; selected `bg-accent text-onacc border-transparent`.
-- [ ] **2.3.2** `Chip` supports a rail layout: parent gets `flex gap-2 overflow-x-auto no-scrollbar` on mobile, `flex-wrap` from `sm`.
-- [ ] **2.3.3** `Badge` tones mapped to the fixed status palette: `success` → `bg-ok-bg text-ok-fg`, `warn` → `bg-warn-bg text-warn-fg`, `danger` → `bg-bad-bg text-bad-fg`, `plum` → `bg-soft text-plum`, `ink` → `bg-ink text-card` (used for the `−25%` discount tag). All `rounded-full px-3 py-1.5 text-[11px] font-extrabold`.
+- [x] **2.3.1** `Chip`: `rounded-full px-4 py-2.5 text-xs font-bold border border-line t-fast`, hover `border-accent text-accent`; selected `bg-accent text-onacc border-transparent`.
+- [x] **2.3.2** `Chip` supports a rail layout: parent gets `flex gap-2 overflow-x-auto no-scrollbar` on mobile, `flex-wrap` from `sm`.
+- [x] **2.3.3** `Badge` tones mapped to the fixed status palette: `success` → `bg-ok-bg text-ok-fg`, `warn` → `bg-warn-bg text-warn-fg`, `danger` → `bg-bad-bg text-bad-fg`, `plum` → `bg-soft text-plum`, `ink` → `bg-ink text-card` (used for the `−25%` discount tag). All `rounded-full px-3 py-1.5 text-[11px] font-extrabold`.
 
 ## 2.4 Cards & surfaces
 
-- [ ] **2.4.1** `src/components/ui/Card.tsx` — `rounded-card border border-line bg-card overflow-hidden t-card`, hover `lift-card border-accent shadow-lift-accent`. Props: `as`, `interactive` (gates the hover), `padded`.
-- [ ] **2.4.2** `src/components/ui/Panel.tsx` — the non-interactive container: `rounded-panel border border-line bg-card p-6`.
-- [ ] **2.4.3** `src/components/ui/PromoCard.tsx` — `rounded-card bg-soft p-4 text-[var(--k-on-soft)]` with a mono eyebrow. Used for free-shipping / offer tiles.
-- [ ] **2.4.4** `src/components/ui/QtyStepper.tsx` — `flex items-center gap-3.5 rounded-full border border-line px-4 py-2`; minus in `text-muted`, plus in `text-accent`, both `font-extrabold`. Props `value`, `min`, `max`, `onChange`, `disabled`.
-- [ ] **2.4.5** `src/components/ui/ProgressBar.tsx` — `h-2 rounded-full bg-line overflow-hidden` with a `bg-accent` fill and `transition-[width] duration-1000 ease-out`.
-- [ ] **2.4.6** `src/components/ui/Skeleton.tsx` — wraps `Shimmer` (1.3.7) with `line` / `block` / `card` presets. Every `animate-pulse` skeleton in the app is replaced by this during Phase 4.
-- [ ] **2.4.7** `src/components/ui/EmptyState.tsx` — `border border-dashed border-edge rounded-card p-12 text-center`, icon in `text-accent`, title `font-extrabold`, sub `text-muted`, optional CTA.
-- [ ] **2.4.8** `src/components/ui/ImageFrame.tsx` — the universal image slot: renders the image with `object-cover` + `group-hover:scale-105 t-slow`, and falls back to `bg-hatch` plus a mono `product shot` caption when `src` is missing. Every product image in the app goes through this.
+- [x] **2.4.1** `src/components/ui/Card.tsx` — `rounded-card border border-line bg-card overflow-hidden t-card`, hover `lift-card border-accent shadow-lift-accent`. Props: `as`, `interactive` (gates the hover), `padded`.
+- [x] **2.4.2** `src/components/ui/Panel.tsx` — the non-interactive container: `rounded-panel border border-line bg-card p-6`.
+- [x] **2.4.3** `src/components/ui/PromoCard.tsx` — `rounded-card bg-soft p-4 text-[var(--k-on-soft)]` with a mono eyebrow. Used for free-shipping / offer tiles.
+- [x] **2.4.4** `src/components/ui/QtyStepper.tsx` — `flex items-center gap-3.5 rounded-full border border-line px-4 py-2`; minus in `text-muted`, plus in `text-accent`, both `font-extrabold`. Props `value`, `min`, `max`, `onChange`, `disabled`.
+- [x] **2.4.5** `src/components/ui/ProgressBar.tsx` — `h-2 rounded-full bg-line overflow-hidden` with a `bg-accent` fill and `transition-[width] duration-1000 ease-out`.
+- [x] **2.4.6** `src/components/ui/Skeleton.tsx` — wraps `Shimmer` (1.3.7) with `line` / `block` / `card` presets. Every `animate-pulse` skeleton in the app is replaced by this during Phase 4.
+- [x] **2.4.7** `src/components/ui/EmptyState.tsx` — `border border-dashed border-edge rounded-card p-12 text-center`, icon in `text-accent`, title `font-extrabold`, sub `text-muted`, optional CTA.
+- [x] **2.4.8** `src/components/ui/ImageFrame.tsx` — the universal image slot: renders the image with `object-cover` + `group-hover:scale-105 t-slow`, and falls back to `bg-hatch` plus a mono `product shot` caption when `src` is missing. Every product image in the app goes through this.
 
 ## 2.5 Overlays
 
-- [ ] **2.5.1** `src/components/ui/Sheet.tsx` — one component, two presentations driven by breakpoint:
+- [x] **2.5.1** `src/components/ui/Sheet.tsx` — one component, two presentations driven by breakpoint:
   - `< lg`: bottom sheet, `rounded-t-sheet`, slides up (`animate-up`), backdrop `bg-ink/40 backdrop-blur-sm`, drag-handle bar at top.
   - `≥ lg`: right-side drawer, `w-[340px] border-l border-line bg-soft2`, slides in from `translate-x-full`.
   - Must trap focus, close on `Esc`, close on backdrop click, and lock body scroll while open.
-- [ ] **2.5.2** `src/components/ui/Modal.tsx` — centred dialog on the same backdrop primitive; `rounded-hero bg-card shadow-kartly max-w-lg`. Used for address add/edit and confirmations.
-- [ ] **2.5.3** `src/components/ui/Toast.tsx` — the dark inline toast from the design-system panel: `rounded-[18px] bg-ink text-card px-4 py-4 flex items-center gap-3` with an accent dot, title, sub, and an accent `VIEW` action. Wire `react-toastify` to render this as its content component so app-wide toasts match.
+- [x] **2.5.2** `src/components/ui/Modal.tsx` — centred dialog on the same backdrop primitive; `rounded-hero bg-card shadow-kartly max-w-lg`. Used for address add/edit and confirmations.
+- [x] **2.5.3** `src/components/ui/Toast.tsx` — the dark inline toast from the design-system panel: `rounded-[18px] bg-ink text-card px-4 py-4 flex items-center gap-3` with an accent dot, title, sub, and an accent `VIEW` action. Wire `react-toastify` to render this as its content component so app-wide toasts match.
 
 ---
 
