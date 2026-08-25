@@ -16,7 +16,7 @@
 
 | Phase | Title | Items | Status |
 |---|---|---|---|
-| 0 | Audit & prerequisites | 6 | ☐ |
+| 0 | Audit & prerequisites | 6 | ✅ |
 | 1 | Design foundation (tokens, motion, theme) | 28 | ☐ |
 | 2 | Primitive component library | 23 | ☐ |
 | 3 | App shell & navigation | 16 | ☐ |
@@ -37,8 +37,8 @@ Consequence: every `bg-primary`, `text-text`, `bg-secondary`, `text-accent`, `bg
 
 **Decision for this plan:** do *not* revive `tailwind.config.js`. Move the token layer into `@theme` inside `src/index.css` (the v4-native way), and delete the stale config in Phase 7.
 
-- [ ] **0.1.1** Confirm the finding: run `npm run dev` in `product_selling_app_client_user/`, open `/products`, inspect the header logo tile — `bg-primary` renders transparent, not purple.
-- [ ] **0.1.2** Inventory every legacy token class so nothing is missed later:
+- [x] **0.1.1** Confirm the finding: run `npm run dev` in `product_selling_app_client_user/`, open `/products`, inspect the header logo tile — `bg-primary` renders transparent, not purple.
+- [x] **0.1.2** Inventory every legacy token class so nothing is missed later:
   ```bash
   cd product_selling_app_client_user
   grep -rnoE "(bg|text|border|from|to|via)-(primary|secondary|accent|background|text)\b" src/ | sort | uniq -c | sort -rn
@@ -47,10 +47,10 @@ Consequence: every `bg-primary`, `text-text`, `bg-secondary`, `text-accent`, `bg
 
 ## 0.2 Prerequisites
 
-- [ ] **0.2.1** Node deps installed: `cd product_selling_app_client_user && npm install`.
-- [ ] **0.2.2** `.env` present with `VITE_SERVER_URL` and `VITE_PORT=5204`.
-- [ ] **0.2.3** Baseline green build before touching anything: `npm run build` succeeds. Record the output in `doc/KARTLY_MIGRATION_NOTES.md`.
-- [ ] **0.2.4** Read `kartly-ecommerce-template-kit/project/Kartly Commerce Kit.dc.html` in full (1045 lines) plus its `support.js` data block at the bottom — the `renderVals()` method holds every sample dataset and the exact status-badge colours.
+- [x] **0.2.1** Node deps installed: `cd product_selling_app_client_user && npm install`.
+- [x] **0.2.2** `.env` present with `VITE_SERVER_URL` and `VITE_PORT=5204`.
+- [x] **0.2.3** Baseline green build before touching anything: `npm run build` succeeds. Record the output in `doc/KARTLY_MIGRATION_NOTES.md`.
+- [x] **0.2.4** Read `kartly-ecommerce-template-kit/project/Kartly Commerce Kit.dc.html` in full (1045 lines) plus its `support.js` data block at the bottom — the `renderVals()` method holds every sample dataset and the exact status-badge colours.
 
 ---
 
