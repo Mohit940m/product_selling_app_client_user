@@ -1,9 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { FiSearch, FiShoppingCart, FiTag, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
+import Container from '../components/layout/Container';
+import Card from '../components/ui/Card';
+import Chip from '../components/ui/Chip';
+import Badge from '../components/ui/Badge';
+import Button from '../components/ui/Button';
+import ImageFrame from '../components/ui/ImageFrame';
+import Skeleton from '../components/ui/Skeleton';
+import EmptyState from '../components/ui/EmptyState';
+import Reveal from '../components/motion/Reveal';
+
+const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
+
 type ActiveOffer = {
   _id: string;
   name: string;
@@ -59,7 +71,7 @@ const ProductListPage = () => {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     setSearch(searchInput);
     setPage(1);
@@ -79,155 +91,168 @@ const ProductListPage = () => {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-text">
-      <main className="flex-1">
-        <section className="border-b border-gray-200 bg-white">
-          <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:px-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-accent">Marketplace</p>
-              <h1 className="mt-2 text-2xl font-bold text-text">All Products</h1>
-              <p className="mt-2 text-sm text-gray-600">{total} product{total !== 1 ? 's' : ''} available</p>
-            </div>
-            <form onSubmit={handleSearch} className="flex w-full max-w-sm items-center gap-2">
-              <div className="flex flex-1 items-center rounded-lg border border-gray-200 bg-white px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary">
-                <FiSearch className="shrink-0 text-primary" size={18} />
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm outline-none"
-                  placeholder="Search products..."
-                />
-                {searchInput && (
-                  <button type="button" onClick={clearSearch} className="text-gray-400 hover:text-text">
-                    <FiX size={16} />
-                  </button>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-accent"
-              >
-                Search
-              </button>
-            </form>
+    <div className="bg-bg text-ink">
+      <section className="border-b border-line bg-card">
+        <Container className="flex flex-col gap-6 py-8 lg:flex-row lg:items-end lg:justify-between lg:py-12">
+          <div>
+            <p className="font-mono text-[11px] font-bold text-muted">MARKETPLACE</p>
+            <h1 className="mt-2 font-black text-[28px] leading-[1.1] tracking-[-.03em] lg:text-[44px] lg:leading-none lg:tracking-[-.04em]">
+              Find what you need today
+            </h1>
+            <p className="mt-2.5 text-sm font-medium text-muted">
+              {total} product{total !== 1 ? 's' : ''} available
+            </p>
           </div>
-        </section>
 
-        {category && (
-          <div className="border-b border-gray-200 bg-white px-4 py-3 sm:px-6">
-            <div className="mx-auto flex max-w-7xl items-center gap-2">
-              <span className="text-sm text-gray-600">Filtering by:</span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1 text-sm font-semibold text-accent">
-                <FiTag size={14} />
-                {category}
-                <button type="button" onClick={clearCategory} className="ml-1 text-gray-500 hover:text-text">
-                  <FiX size={14} />
+          <form onSubmit={handleSearch} className="flex w-full items-center gap-2 lg:max-w-[380px]">
+            <div className="flex flex-1 items-center gap-2.5 rounded-full border border-line bg-transparent px-4 py-3 t-fast focus-within:border-accent hover:border-accent">
+              <FiSearch className="shrink-0 text-muted" size={16} />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full bg-transparent text-base outline-none placeholder:text-muted sm:text-[13px]"
+                placeholder={`Search ${total || ''} products`.trim()}
+              />
+              {searchInput && (
+                <button type="button" onClick={clearSearch} aria-label="Clear search" className="shrink-0 text-muted hover:text-ink">
+                  <FiX size={16} />
                 </button>
-              </span>
+              )}
             </div>
-          </div>
-        )}
+            <Button type="submit" variant="dark" size="sm">
+              Search
+            </Button>
+          </form>
+        </Container>
+      </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-          {isLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                  <div className="mb-3 h-48 rounded-lg bg-secondary" />
-                  <div className="mb-2 h-4 w-3/4 rounded bg-secondary" />
-                  <div className="h-4 w-1/2 rounded bg-secondary" />
+      {category && (
+        <div className="border-b border-line bg-card py-3">
+          <Container className="flex items-center gap-2">
+            <span className="text-sm text-muted">Filtering by</span>
+            <Chip selected onClick={clearCategory}>
+              <FiTag size={13} />
+              {category}
+              <FiX size={13} />
+            </Chip>
+          </Container>
+        </div>
+      )}
+
+      <Container className="py-6 lg:py-10">
+        {isLoading ? (
+          <div className="grid gap-3.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Card key={i} interactive={false}>
+                <Skeleton preset="block" className="h-[104px] w-full rounded-none lg:h-[210px]" />
+                <div className="space-y-2 p-3 lg:p-4.5">
+                  <Skeleton className="h-3.5 w-3/4" />
+                  <Skeleton className="h-3.5 w-1/2" />
                 </div>
-              ))}
-            </div>
-          ) : products.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 p-12 text-center">
-              <FiShoppingCart className="mx-auto text-primary" size={32} />
-              <h3 className="mt-3 text-lg font-bold text-text">No products found</h3>
-              <p className="mt-1 text-sm text-gray-600">Try a different search term or category.</p>
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
-                <Link
-                  key={product._id}
-                  to={`/products/${product._id}`}
-                  className="group rounded-lg border border-gray-200 bg-white shadow-md transition-shadow hover:shadow-lg"
-                >
-                  <div className="relative overflow-hidden rounded-t-lg bg-secondary">
-                    {product.images[0] ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="h-52 w-full object-cover transition-transform group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-52 items-center justify-center text-primary">
-                        <FiShoppingCart size={36} />
-                      </div>
-                    )}
+              </Card>
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <EmptyState
+            icon={<FiShoppingCart size={32} />}
+            title="No products found"
+            description="Try a different search term or category."
+          />
+        ) : (
+          <div className="grid gap-3.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
+            {products.map((product, i) => (
+              <Reveal key={product._id} delay={Math.min(i, 10) * 40}>
+                <Card as={Link} to={`/products/${product._id}`} className="block lift-lg hover:shadow-lift-accent-lg">
+                  <div className="relative">
+                    <ImageFrame
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="h-[104px] lg:h-[210px]"
+                    />
                     {product.activeOffer && (
-                      <span className="absolute left-3 top-3 rounded-lg bg-accent px-2 py-0.5 text-xs font-bold text-white">
+                      <Badge tone="ink" className="absolute left-3 top-3">
                         {product.activeOffer.name}
-                      </span>
+                      </Badge>
                     )}
                     {!product.isActive && (
-                      <span className="absolute right-3 top-3 rounded-lg bg-gray-500 px-2 py-0.5 text-xs font-bold text-white">
+                      <Badge tone="plum" className="absolute right-3 top-3">
                         Out of stock
-                      </span>
+                      </Badge>
                     )}
                   </div>
 
-                  <div className="p-4">
+                  <div className="p-3 pt-2.75 pb-3.25 lg:p-4.5">
                     <button
                       type="button"
-                      onClick={(e) => { e.preventDefault(); setCategory(product.category); setPage(1); }}
-                      className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent hover:underline"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCategory(product.category);
+                        setPage(1);
+                      }}
+                      className="mb-1 font-mono text-[10px] font-bold uppercase tracking-wide text-muted hover:text-accent"
                     >
                       {product.category}
                     </button>
-                    <h3 className="line-clamp-2 text-sm font-bold text-text">{product.name}</h3>
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="text-lg font-bold text-accent">{formatCurrency(product.discountedPrice)}</span>
+                    <h3 className="line-clamp-2 text-[13px] font-bold text-ink">{product.name}</h3>
+                    <div className="mt-2.5 flex items-center gap-2 lg:mt-3">
+                      <span className="text-[14px] font-extrabold text-ink lg:text-base">
+                        {formatCurrency(product.discountedPrice)}
+                      </span>
                       {product.discountedPrice < product.price && (
-                        <>
-                          <span className="text-sm text-gray-400 line-through">{formatCurrency(product.price)}</span>
-                          <span className="rounded-lg bg-green-50 px-2 py-0.5 text-xs font-bold text-green-700">
-                            Save {formatCurrency(product.price - product.discountedPrice)}
-                          </span>
-                        </>
+                        <span className="text-[11px] font-semibold text-muted line-through">
+                          {formatCurrency(product.price)}
+                        </span>
                       )}
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
-          )}
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        )}
 
-          {totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-text shadow-sm hover:border-primary hover:text-accent disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="text-sm text-gray-600">Page {page} of {totalPages}</span>
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-text shadow-sm hover:border-primary hover:text-accent disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </section>
-      </main>
+        {ASSISTANT_ENABLED && (
+          <Link
+            to="/assistant"
+            className="mt-5 flex items-center gap-3.5 rounded-card bg-soft p-3.5 lift t-base lg:mt-8"
+          >
+            <span className="relative h-10.5 w-10.5 shrink-0 rounded-tile bg-ink">
+              <span className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-accent" />
+            </span>
+            <span>
+              <span className="block text-[13px] font-extrabold text-[#171A22]">Ask the AI stylist</span>
+              <span className="block text-[11px] font-medium text-[#5A5566]">
+                "Gift under ₹5,000 for my sister"
+              </span>
+            </span>
+          </Link>
+        )}
 
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-[13px] font-semibold text-muted">
+              Page {page} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+      </Container>
     </div>
   );
 };

@@ -398,26 +398,26 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 
 ### Mobile (screens 02 + 03)
 
-- [ ] **4.1.1** Header block: `Deliver to · {city}` in `text-[12px] font-medium text-muted`, then the two-line display heading at `font-extrabold text-[25px] leading-[1.15] tracking-[-.03em]`. Right: a notification tile `40×40 rounded-[13px] border border-edge` with the accent dot.
-- [ ] **4.1.2** Search field: full-width `rounded-tile border border-edge px-4.5 py-4`, hover/focus `border-accent`, placeholder showing the live product count (`Search {total} products`).
+- [x] **4.1.1** Header block: `Deliver to · {city}` in `text-[12px] font-medium text-muted`, then the two-line display heading at `font-extrabold text-[25px] leading-[1.15] tracking-[-.03em]`. Right: a notification tile `40×40 rounded-[13px] border border-edge` with the accent dot.
+- [x] **4.1.2** Search field: full-width `rounded-tile border border-edge px-4.5 py-4`, hover/focus `border-accent`, placeholder showing the live product count (`Search {total} products`).
 - [ ] **4.1.3** Category rail: horizontal `Chip` rail (`no-scrollbar`), `All` selected by default. Wire to the existing `category` state; keep the current "Filtering by" clear behaviour but restyle it as a selected `Chip` with an `×`.
 - [ ] **4.1.4** Section header row: `Trending now` at `font-extrabold text-base` with a `See all` link in `text-accent text-xs font-semibold`.
-- [ ] **4.1.5** Product grid: `grid grid-cols-2 gap-3.5`. Card = `Card` primitive; image slot `h-[104px]` via `ImageFrame`; body `px-3 pt-2.75 pb-3.25` with name `font-bold text-[13px]`, then a row with price `font-extrabold text-[14px]` and rating `text-[11px] text-muted font-semibold`.
-- [ ] **4.1.6** Keep the existing offer / out-of-stock badges, restyled: offer → `Badge tone="ink"` top-left; out-of-stock → `Badge tone="plum"` top-right.
-- [ ] **4.1.7** AI teaser row below the grid: `rounded-card bg-soft p-3.5 flex items-center gap-3.5`, ink tile with accent dot, title `Ask the AI stylist`, sub in `#5A5566`. Hover `lift`. Links to `/assistant`; hidden when the assistant flag is off.
+- [x] **4.1.5** Product grid: `grid grid-cols-2 gap-3.5`. Card = `Card` primitive; image slot `h-[104px]` via `ImageFrame`; body `px-3 pt-2.75 pb-3.25` with name `font-bold text-[13px]`, then a row with price `font-extrabold text-[14px]` and rating `text-[11px] text-muted font-semibold`.
+- [x] **4.1.6** Keep the existing offer / out-of-stock badges, restyled: offer → `Badge tone="ink"` top-left; out-of-stock → `Badge tone="plum"` top-right.
+- [x] **4.1.7** AI teaser row below the grid: `rounded-card bg-soft p-3.5 flex items-center gap-3.5`, ink tile with accent dot, title `Ask the AI stylist`, sub in `#5A5566`. Hover `lift`. Links to `/assistant`; hidden when the assistant flag is off.
 - [ ] **4.1.8** Filter bar (screen 03): three equal buttons `Price ▾ / Sort ▾ / Category ▾` — `flex-1 rounded-ctl border border-edge py-2.75 text-xs font-bold`, the active one `bg-ink text-card`. Each opens a mobile `Sheet` with its options.
-- [ ] **4.1.9** Replace the `animate-pulse` skeleton grid with `Skeleton` cards (2-col on mobile).
-- [ ] **4.1.10** Bottom padding `pb-24` so the tab bar clears.
+- [x] **4.1.9** Replace the `animate-pulse` skeleton grid with `Skeleton` cards (2-col on mobile).
+- [x] **4.1.10** Bottom padding `pb-24` so the tab bar clears.
 
 ### Desktop (screen D1)
 
 - [ ] **4.1.11** Hero band: `flex gap-6.5` — left hero `flex-[1.35] rounded-hero bg-soft p-11 min-h-[330px] relative overflow-hidden` with the decorative `300×300 rounded-full bg-white/45` blob at `right:-40px; top:-40px`; mono eyebrow; display heading at `font-black text-[52px] leading-[1.02] tracking-[-.04em]`; two CTAs (`dark` + `outline` variants).
 - [ ] **4.1.12** Right of hero: two stacked category tiles `flex-[.75] gap-4`, each `rounded-panel border border-line bg-hatch2`, label bottom-aligned at `font-extrabold text-[15px]`, hover `lift-card border-accent`. Populate from the top two live categories with their product counts.
 - [ ] **4.1.13** Product grid: `grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5`, image slot `h-[210px]`, body `px-4.5 pt-4 pb-4.5`; price `font-extrabold text-base` with a soft `+ Add` pill on the right that adds to cart without leaving the page (optimistic, with the `Toast` from 2.5.3).
-- [ ] **4.1.14** Card hover: `lift-lg border-accent shadow-lift-accent-lg` plus inner image `scale-105`, all on `t-slow`.
+- [x] **4.1.14** Card hover: `lift-lg border-accent shadow-lift-accent-lg` plus inner image `scale-105`, all on `t-slow`.
 - [ ] **4.1.15** Section header: `Trending now` at `font-extrabold text-[24px] tracking-[-.02em]`, right side `View all {total} →` in `text-accent text-[13px] font-bold`.
 - [ ] **4.1.16** Filters move from sheets into an inline row of `Chip`s plus a sort `Select` — no modal on desktop.
-- [ ] **4.1.17** Pagination restyled: `outline` Buttons with `Page {n} of {total}` in `text-muted text-[13px]` between them; keep the existing disabled logic.
+- [x] **4.1.17** Pagination restyled: `outline` Buttons with `Page {n} of {total}` in `text-muted text-[13px]` between them; keep the existing disabled logic.
 
 ## 4.2 `ProductDetailPage.tsx` — PDP (screens 04, D2)
 

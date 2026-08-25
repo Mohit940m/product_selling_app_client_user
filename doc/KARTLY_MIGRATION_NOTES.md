@@ -69,3 +69,38 @@ desktop screens, admin panel, design-system panel, and the `renderVals()`
 data block).
 
 Phase 0 complete.
+
+## Phase 4 — deliberate deviations
+
+Recorded as they come up, so ticked/unticked state in the plan stays honest.
+
+### 4.1 ProductListPage
+
+Implemented: responsive header/hero, search, active-category clear chip,
+2/3/4-col product grid with `ImageFrame`/`Badge`/`Card`, offer + out-of-stock
+badges, shimmer skeletons, empty state, AI teaser (flagged), pagination.
+
+Deliberately **not** built, and left unticked in the plan, because they need
+backend capability this pass didn't add or verify:
+
+- **4.1.3 full category rail** — the API has no "list categories" endpoint;
+  only a single active-category clear chip is shown (derived from a clicked
+  product), not a browsable rail. Building a fake rail would mean inventing
+  category names.
+- **4.1.4 / 4.1.15 "Trending now" section + "See all"** — the product list
+  endpoint returns one paginated set, not a separate trending subset. No
+  section split without fabricating one.
+- **4.1.8 Price/Sort/Category filter sheet** and **4.1.16 inline sort/filter
+  chips** — `loadProducts` only sends `page`, `limit`, `search`, `category`
+  today; sort/price-range params aren't wired against the backend yet.
+- **4.1.11/4.1.12 decorative hero blob + two category tiles with counts** —
+  the tiles need real per-category product counts; skipped rather than
+  showing invented numbers. The hero copy/CTA band itself is simplified to
+  heading + subtitle + search, no illustrated blob.
+- **4.1.13 desktop quick "+Add" pill** — needs a default variant id per
+  product, which the list endpoint's `Product` shape doesn't carry (only
+  `ProductDetailPage`'s single-product endpoint does). Adding it would mean
+  either fetching per-card product detail (N+1) or shipping a broken button.
+
+None of these block the page from working; they're follow-ups for whenever
+the corresponding backend support is confirmed.

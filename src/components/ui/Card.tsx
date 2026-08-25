@@ -1,13 +1,25 @@
-import type { ElementType, HTMLAttributes, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 
-interface CardProps extends HTMLAttributes<HTMLElement> {
-  as?: ElementType;
+type CardOwnProps<T extends ElementType> = {
+  as?: T;
   interactive?: boolean;
   padded?: boolean;
   children: ReactNode;
-}
+  className?: string;
+};
 
-const Card = ({ as: Tag = 'div', interactive = true, padded = false, className = '', children, ...rest }: CardProps) => {
+type CardProps<T extends ElementType> = CardOwnProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof CardOwnProps<T>>;
+
+const Card = <T extends ElementType = 'div'>({
+  as,
+  interactive = true,
+  padded = false,
+  className = '',
+  children,
+  ...rest
+}: CardProps<T>) => {
+  const Tag = (as ?? 'div') as ElementType;
+
   return (
     <Tag
       className={[
