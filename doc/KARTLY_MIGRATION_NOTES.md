@@ -247,3 +247,23 @@ optional `profile.defaultAddress`, not a list of labelled addresses:
 - **4.7.13–4.7.15 desktop three-column account shell (nav rail + profile
   rail)** — would need the same non-existent destinations as 4.7.3;
   kept the single responsive column instead.
+
+### 4.10 AssistantPage (new, flagged, demo UI only)
+
+Implemented behind `VITE_ENABLE_ASSISTANT` (default `false`, added to a new
+`.env.example` plus the local `.env`): chat header, message bubbles,
+product pick rows, a micro-checkout card, a typing indicator, a suggestion
+chip rail, and a composer — all wired as demo/static content since
+`product_selling_app_agent/` has no implementation yet, only a dev plan
+doc. Every non-functional control (pay button, suggestion chips, send
+button) is explicitly `disabled` with a "Demo only" tooltip rather than
+silently doing nothing. All entry points (top-nav pill, bottom tab, home
+teaser, the route itself) are gated by the same flag; reaching `/assistant`
+directly while the flag is off renders an honest `EmptyState`.
+
+**Not built: 4.10.9 desktop three-pane workspace** (account nav rail +
+profile rail either side of the conversation). Those rails would need the
+same non-existent destinations (Orders/Wishlist/Payments/Settings) already
+skipped in the ProfilePage note — kept a single centered conversation
+column at every width instead of building two more decorative,
+non-functional navs.

@@ -556,16 +556,16 @@ No prototype screen exists for auth, so compose from the design-system panel.
 
 `product_selling_app_agent/` is documentation-only today (`doc/AGENT_DEV_PLAN.md`), so the assistant has no backend. Build the UI behind a flag and leave the transport to be wired when the agent service exists.
 
-- [ ] **4.10.1** Add `VITE_ENABLE_ASSISTANT=false` to `.env` and `.env.example`. Every assistant entry point (top-nav pill, bottom tab, home teaser, route) reads this flag. Default **off**.
-- [ ] **4.10.2** Create `src/pages/AssistantPage.tsx` and `src/components/assistant/` for the message primitives.
-- [ ] **4.10.3** Chat header: `38×38 rounded-[13px] bg-ink` mark with accent dot, title `{brand} Assistant`, status line in `text-accent text-[11px] font-bold`.
-- [ ] **4.10.4** Message bubbles — user: `self-end max-w-[78%] rounded-[18px_18px_5px_18px] bg-ink text-card px-3.75 py-3 text-[12.5px]`; assistant: `max-w-[88%] rounded-[18px_18px_18px_5px] bg-soft2 border border-line`. Both enter with `animate-up`, assistant delayed 100ms.
-- [ ] **4.10.5** Product pick rows: `rounded-tile bg-card border border-line p-2.25 flex items-center gap-2.75` with a `46×46` thumb, name, note, price, and an accent `+ Add`. Hover `border-accent slide-x shadow-lift-accent`.
-- [ ] **4.10.6** Micro-checkout card: `rounded-[18px] border border-accent bg-soft2 p-3.5` with a mono `MICRO CHECKOUT` label, line rows, two payment chips, and a full-width accent pay Button.
-- [ ] **4.10.7** Typing indicator: three `6×6 rounded-full bg-accent` dots on `animate-dot` at `0 / .2s / .4s`.
-- [ ] **4.10.8** Suggestion chip rail above the composer (`no-scrollbar`); composer = pill input + `44×44 rounded-full bg-accent` send button with `pop-icon` hover.
+- [x] **4.10.1** Add `VITE_ENABLE_ASSISTANT=false` to `.env` and `.env.example`. Every assistant entry point (top-nav pill, bottom tab, home teaser, route) reads this flag. Default **off**.
+- [x] **4.10.2** Create `src/pages/AssistantPage.tsx` and `src/components/assistant/` for the message primitives.
+- [x] **4.10.3** Chat header: `38×38 rounded-[13px] bg-ink` mark with accent dot, title `{brand} Assistant`, status line in `text-accent text-[11px] font-bold`.
+- [x] **4.10.4** Message bubbles — user: `self-end max-w-[78%] rounded-[18px_18px_5px_18px] bg-ink text-card px-3.75 py-3 text-[12.5px]`; assistant: `max-w-[88%] rounded-[18px_18px_18px_5px] bg-soft2 border border-line`. Both enter with `animate-up`, assistant delayed 100ms.
+- [x] **4.10.5** Product pick rows: `rounded-tile bg-card border border-line p-2.25 flex items-center gap-2.75` with a `46×46` thumb, name, note, price, and an accent `+ Add`. Hover `border-accent slide-x shadow-lift-accent`.
+- [x] **4.10.6** Micro-checkout card: `rounded-[18px] border border-accent bg-soft2 p-3.5` with a mono `MICRO CHECKOUT` label, line rows, two payment chips, and a full-width accent pay Button.
+- [x] **4.10.7** Typing indicator: three `6×6 rounded-full bg-accent` dots on `animate-dot` at `0 / .2s / .4s`.
+- [x] **4.10.8** Suggestion chip rail above the composer (`no-scrollbar`); composer = pill input + `44×44 rounded-full bg-accent` send button with `pop-icon` hover.
 - [ ] **4.10.9** **Desktop (D3):** three-pane workspace — left account nav `w-[250px]`, centre conversation, right profile rail `w-[300px]`. Below `lg`, only the centre pane shows; the rails are reachable from the tab bar.
-- [ ] **4.10.10** While the flag is off, the route renders an `EmptyState` reading "Assistant coming soon" if reached directly.
+- [x] **4.10.10** While the flag is off, the route renders an `EmptyState` reading "Assistant coming soon" if reached directly.
 
 ---
 

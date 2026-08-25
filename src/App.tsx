@@ -14,6 +14,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import OrderListPage from './pages/OrderListPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import ProfilePage from './pages/ProfilePage'
+import AssistantPage from './pages/AssistantPage'
 
 const RootRedirect = () => {
   const hasSeenWelcome = typeof window !== 'undefined' && localStorage.getItem(WELCOME_SEEN_KEY);
@@ -43,6 +44,7 @@ const AppRoutes = () => {
           <Route path="/orders" element={<OrderListPage />} />
           <Route path="/orders/success" element={<OrderSuccessPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/assistant" element={<AssistantPage />} />
         </Route>
       </Routes>
       <ToastContainer
