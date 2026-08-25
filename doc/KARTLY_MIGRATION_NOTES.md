@@ -135,3 +135,20 @@ Deliberately **not** built:
 - **4.2.13/4.2.14 desktop cart drawer** — needs a cart-refetch-after-add
   flow and a new `CartDrawer` component; deferred rather than shipping a
   drawer that doesn't reflect real cart state.
+
+### 4.3 CartPage
+
+Implemented: bag title with count, restyled line items (`Card` +
+`ImageFrame`), disabled promo-code slot with a "coming soon" tooltip
+(rather than omitting it), remove-item action, `EmptyState`, and a
+two-column desktop layout with a sticky order-summary `Panel`.
+
+Deliberately **not** built:
+
+- **4.3.2/4.3.3 interactive `QtyStepper` per line + swipe-to-remove** —
+  there is no update-quantity endpoint wired into `userApi` (only
+  add-to-cart and remove-from-cart exist); quantity stays a read-only
+  `×N` label rather than shipping a stepper with nothing to call.
+- **4.3.5 bottom-pinned mobile summary sheet** — the summary renders as
+  a normal `Panel` in flow, not pinned to the viewport bottom with a
+  rounded-top overlap.

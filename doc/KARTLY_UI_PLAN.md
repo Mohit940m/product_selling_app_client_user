@@ -445,18 +445,18 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 
 ### Mobile
 
-- [ ] **4.3.1** Title `Your bag` at `font-extrabold text-[24px] tracking-[-.02em]` with the count in `text-muted text-[15px]`.
+- [x] **4.3.1** Title `Your bag` at `font-extrabold text-[24px] tracking-[-.02em]` with the count in `text-muted text-[15px]`.
 - [ ] **4.3.2** Line item: `rounded-card border border-line p-3 flex gap-3.25`, `64×64 rounded-[14px]` thumb via `ImageFrame`, name `font-bold text-[13px]`, variant `text-[11px] text-muted font-semibold`, then a row with the pill `QtyStepper` (`px-2 py-1`) and the line total `font-extrabold text-[13px]`. Hover `border-accent slide-x`.
 - [ ] **4.3.3** Wire the stepper to the existing update-quantity call. Remove-item is a swipe-left action on touch and an `×` on hover for pointer devices.
-- [ ] **4.3.4** Promo row: dashed `rounded-btn border border-dashed border-edge` input + `dark` Apply Button. If the backend has no promo endpoint, render it **disabled with a "Coming soon" note** rather than omitting the slot — the design calls for it.
+- [x] **4.3.4** Promo row: dashed `rounded-btn border border-dashed border-edge` input + `dark` Apply Button. If the backend has no promo endpoint, render it **disabled with a "Coming soon" note** rather than omitting the slot — the design calls for it.
 - [ ] **4.3.5** Summary sheet pinned to the bottom: `-mx-6 rounded-t-[24px] bg-soft2 border-t border-line p-5` with muted Subtotal / Shipping rows, a `border-t border-line` divider, `Total` at `font-extrabold text-[17px]`, and a full-width `primary` Checkout Button.
-- [ ] **4.3.6** Empty state via `EmptyState` with a `Browse products` CTA.
+- [x] **4.3.6** Empty state via `EmptyState` with a `Browse products` CTA.
 
 ### Desktop
 
-- [ ] **4.3.7** Two-column: items `flex-[1.6]`, summary `w-[380px] sticky top-28 self-start` in a `Panel` on `bg-soft2`.
-- [ ] **4.3.8** Line items get more room: `80×80` thumbs, name and variant on one line, stepper and price right-aligned.
-- [ ] **4.3.9** Summary panel repeats the same rows plus an itemised offer/savings line when `activeOffer` applies.
+- [x] **4.3.7** Two-column: items `flex-[1.6]`, summary `w-[380px] sticky top-28 self-start` in a `Panel` on `bg-soft2`.
+- [x] **4.3.8** Line items get more room: `80×80` thumbs, name and variant on one line, stepper and price right-aligned.
+- [x] **4.3.9** Summary panel repeats the same rows plus an itemised offer/savings line when `activeOffer` applies.
 
 ## 4.4 `CheckoutPage.tsx` — checkout (screen 06)
 

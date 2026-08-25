@@ -4,7 +4,13 @@ import { FiShoppingCart, FiTrash2, FiArrowRight } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
-import Button from '../components/Button';
+import Container from '../components/layout/Container';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import Panel from '../components/ui/Panel';
+import ImageFrame from '../components/ui/ImageFrame';
+import Skeleton from '../components/ui/Skeleton';
+import EmptyState from '../components/ui/EmptyState';
 
 type CartVariant = {
   _id: string;
@@ -94,148 +100,149 @@ const CartPage = () => {
   const cartItemCount = cart?.items?.length ?? 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-text">
-      <main className="flex-1">
-        <section className="border-b border-gray-200 bg-white">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 sm:px-6">
-            <p className="text-sm font-semibold uppercase tracking-wide text-accent">Shopping</p>
-            <h1 className="text-2xl font-bold text-text">Your Cart</h1>
-            <p className="text-sm text-gray-600">{cartItemCount} item{cartItemCount !== 1 ? 's' : ''}</p>
-          </div>
-        </section>
+    <Container className="py-6 lg:py-10">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="font-extrabold text-[24px] tracking-[-.02em]">
+          Your bag{' '}
+          {cartItemCount > 0 && <span className="text-[15px] font-medium text-muted">({cartItemCount})</span>}
+        </h1>
+      </div>
 
-        <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-          {isLoading ? (
-            <div className="space-y-4">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="animate-pulse rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                  <div className="flex gap-4">
-                    <div className="h-20 w-20 rounded-lg bg-secondary" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 w-3/4 rounded bg-secondary" />
-                      <div className="h-4 w-1/2 rounded bg-secondary" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : !cart || cartItemCount === 0 ? (
-            <div className="rounded-lg border border-dashed border-gray-300 p-12 text-center">
-              <FiShoppingCart className="mx-auto text-primary" size={32} />
-              <h3 className="mt-3 text-lg font-bold text-text">Your cart is empty</h3>
-              <p className="mt-1 text-sm text-gray-600">Add products to get started.</p>
-              <Link
-                to="/products"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-accent"
-              >
-                <FiShoppingCart size={16} />
-                Browse products
-              </Link>
-            </div>
-          ) : (
-            <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-              <div className="space-y-4">
-                {cart.items.map((item) => {
-                  const pid = item.productId._id;
-                  const vid = item.variantId._id;
-                  const isRemoving = removingId === `${pid}-${vid}`;
-
-                  return (
-                    <article key={`${pid}-${vid}`} className="flex gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                      <Link to={`/products/${pid}`} className="shrink-0">
-                        {item.productId.images?.[0] ? (
-                          <img
-                            src={item.productId.images[0]}
-                            alt={item.productId.name}
-                            className="h-20 w-20 rounded-lg object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-secondary text-primary">
-                            <FiShoppingCart size={24} />
-                          </div>
-                        )}
-                      </Link>
-
-                      <div className="flex flex-1 flex-col gap-1">
-                        <Link to={`/products/${pid}`} className="text-sm font-bold text-text hover:text-accent line-clamp-1">
-                          {item.productId.name}
-                        </Link>
-                        <p className="text-xs text-gray-600">{item.productId.category}</p>
-                        <div className="flex flex-wrap gap-1">
-                          {Object.entries(item.attributes).map(([k, v]) => (
-                            <span key={k} className="rounded bg-secondary px-2 py-0.5 text-xs text-text">
-                              {k}: {v}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
-                        {item.activeOffer && (
-                          <p className="text-xs font-semibold text-accent">{item.activeOffer.name}</p>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col items-end justify-between">
-                        <div className="text-right">
-                          <p className="text-sm font-bold text-accent">{formatCurrency(item.discountedPrice * item.quantity)}</p>
-                          {item.savings > 0 && (
-                            <p className="text-xs text-green-700">Save {formatCurrency(item.savings * item.quantity)}</p>
-                          )}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeItem(pid, vid)}
-                          disabled={isRemoving}
-                          className="flex items-center gap-1 rounded-lg border border-gray-200 px-2 py-1 text-xs font-semibold text-gray-600 hover:border-red-300 hover:text-red-600 disabled:opacity-50"
-                        >
-                          <FiTrash2 size={13} />
-                          {isRemoving ? 'Removing...' : 'Remove'}
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
+      {isLoading ? (
+        <div className="space-y-3.5">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i} interactive={false} className="flex gap-3.25 p-3">
+              <Skeleton className="h-16 w-16 rounded-[14px]" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-3.5 w-3/4" />
+                <Skeleton className="h-3.5 w-1/2" />
               </div>
+            </Card>
+          ))}
+        </div>
+      ) : !cart || cartItemCount === 0 ? (
+        <EmptyState
+          icon={<FiShoppingCart size={32} />}
+          title="Your cart is empty"
+          description="Add products to get started."
+          action={
+            <Button variant="primary" onClick={() => navigate('/products')} icon={<FiShoppingCart size={16} />}>
+              Browse products
+            </Button>
+          }
+        />
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+          <div className="space-y-3">
+            {cart.items.map((item) => {
+              const pid = item.productId._id;
+              const vid = item.variantId._id;
+              const isRemoving = removingId === `${pid}-${vid}`;
 
-              <aside className="space-y-4">
-                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-                  <h2 className="mb-4 text-lg font-bold text-text">Order Summary</h2>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span className="font-semibold text-text">{formatCurrency(cart.subTotal)}</span>
-                    </div>
-                    {cart.discount > 0 && (
-                      <div className="flex justify-between text-green-700">
-                        <span>Discount</span>
-                        <span className="font-semibold">-{formatCurrency(cart.discount)}</span>
-                      </div>
-                    )}
-                    <div className="border-t border-gray-200 pt-3 flex justify-between">
-                      <span className="font-bold text-text">Total</span>
-                      <span className="text-lg font-bold text-accent">{formatCurrency(cart.total)}</span>
-                    </div>
+              return (
+                <Card key={`${pid}-${vid}`} interactive className="flex gap-3.25 p-3 hover:border-accent">
+                  <Link to={`/products/${pid}`} className="shrink-0">
+                    <ImageFrame
+                      src={item.productId.images?.[0]}
+                      alt={item.productId.name}
+                      className="h-16 w-16 rounded-[14px] lg:h-20 lg:w-20"
+                    />
+                  </Link>
+
+                  <div className="flex flex-1 flex-col gap-1 min-w-0">
+                    <Link to={`/products/${pid}`} className="line-clamp-1 text-[13px] font-bold text-ink hover:text-accent">
+                      {item.productId.name}
+                    </Link>
+                    <p className="text-[11px] font-semibold text-muted">
+                      {Object.entries(item.attributes)
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(' · ')}
+                      {Object.keys(item.attributes).length > 0 ? ' · ' : ''}×{item.quantity}
+                    </p>
+                    {item.activeOffer && <p className="text-[11px] font-bold text-accent">{item.activeOffer.name}</p>}
                   </div>
-                  <Button
-                    label="Proceed to Checkout"
-                    icon={<FiArrowRight size={16} />}
-                    onClick={() => navigate('/checkout')}
-                    className="mt-4 w-full py-3"
-                  />
-                </div>
 
-                <Link
-                  to="/products"
-                  className="block rounded-lg border border-gray-200 bg-white px-4 py-3 text-center text-sm font-semibold text-text shadow-md hover:border-primary hover:text-accent"
+                  <div className="flex flex-col items-end justify-between">
+                    <div className="text-right">
+                      <p className="text-[13px] font-extrabold text-ink">
+                        {formatCurrency(item.discountedPrice * item.quantity)}
+                      </p>
+                      {item.savings > 0 && (
+                        <p className="text-[11px] font-semibold text-ok-fg">Save {formatCurrency(item.savings * item.quantity)}</p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeItem(pid, vid)}
+                      disabled={isRemoving}
+                      className="flex items-center gap-1 rounded-full border border-line px-2.5 py-1.5 text-[11px] font-bold text-muted t-fast hover:border-danger hover:text-danger disabled:opacity-50"
+                    >
+                      <FiTrash2 size={13} />
+                      {isRemoving ? 'Removing...' : 'Remove'}
+                    </button>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+
+          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <Panel className="bg-soft2">
+              <h2 className="mb-4 text-lg font-extrabold text-ink">Order Summary</h2>
+              <div className="mb-4 flex gap-2">
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Promo code"
+                  title="Promo codes are coming soon"
+                  className="flex-1 rounded-btn border border-dashed border-edge bg-transparent px-3.75 py-3.25 text-xs font-semibold text-muted placeholder:text-muted"
+                />
+                <button
+                  type="button"
+                  disabled
+                  title="Promo codes are coming soon"
+                  className="cursor-not-allowed rounded-btn bg-line px-4.5 py-3.25 text-xs font-bold text-muted"
                 >
-                  Continue shopping
-                </Link>
-              </aside>
-            </div>
-          )}
-        </section>
-      </main>
+                  Apply
+                </button>
+              </div>
+              <div className="space-y-2.5 text-sm">
+                <div className="flex justify-between">
+                  <span className="font-medium text-muted">Subtotal</span>
+                  <span className="font-semibold text-ink">{formatCurrency(cart.subTotal)}</span>
+                </div>
+                {cart.discount > 0 && (
+                  <div className="flex justify-between text-ok-fg">
+                    <span className="font-medium">Discount</span>
+                    <span className="font-semibold">-{formatCurrency(cart.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between border-t border-line pt-3">
+                  <span className="font-extrabold text-ink">Total</span>
+                  <span className="text-[17px] font-extrabold text-ink">{formatCurrency(cart.total)}</span>
+                </div>
+              </div>
+              <Button
+                variant="primary"
+                icon={<FiArrowRight size={16} />}
+                onClick={() => navigate('/checkout')}
+                fullWidth
+                className="mt-4"
+              >
+                Checkout
+              </Button>
+            </Panel>
 
-    </div>
+            <Link
+              to="/products"
+              className="block rounded-btn border border-line bg-card px-4 py-3 text-center text-sm font-semibold text-ink t-fast hover:border-accent hover:text-accent"
+            >
+              Continue shopping
+            </Link>
+          </aside>
+        </div>
+      )}
+    </Container>
   );
 };
 
