@@ -14,16 +14,20 @@
 
 ## Progress summary
 
-| Phase | Title | Items | Status |
+| Phase | Title | Done / Total | Status |
 |---|---|---|---|
-| 0 | Audit & prerequisites | 6 | ✅ |
-| 1 | Design foundation (tokens, motion, theme) | 28 | ☐ |
-| 2 | Primitive component library | 23 | ✅ |
-| 3 | App shell & navigation | 16 | ✅ |
-| 4 | Page migrations | 107 | ☐ |
-| 5 | Motion & interaction pass | 14 | ☐ |
-| 6 | Responsive QA matrix | 10 | ☐ |
-| 7 | Cleanup, a11y & verification | 19 | ☐ |
+| 0 | Audit & prerequisites | 6 / 6 | ✅ |
+| 1 | Design foundation (tokens, motion, theme) | 26 / 28 | ✅* |
+| 2 | Primitive component library | 23 / 23 | ✅ |
+| 3 | App shell & navigation | 16 / 16 | ✅ |
+| 4 | Page migrations | 63 / 107 | ⚠️ see notes |
+| 5 | Motion & interaction pass | 12 / 14 | ✅* |
+| 6 | Responsive QA matrix | 5 / 10 | ⚠️ no browser tool |
+| 7 | Cleanup, a11y & verification | 16 / 19 | ⚠️ see notes |
+
+\* The 2 open items in Phases 1 and 5 are binding *rules* honored throughout Phase 4 (verified by audit, not separately "completable") or gated on Phase 4 features that were themselves deferred — see `doc/KARTLY_MIGRATION_NOTES.md`.
+
+Every open item across every phase is accounted for in `doc/KARTLY_MIGRATION_NOTES.md`, most commonly for one of two reasons: **(a)** the backend doesn't yet expose the data or endpoint the item needs (order history/tracking, category list, sort/price filters, promo codes, wishlist, loyalty/stat data) — building the UI against nothing would mean fabricating data or shipping a permanently-broken control; or **(b)** this session had no browser/screenshot tool, so the live-viewport QA matrix (Phase 6) and the keyboard-only/full-payment smoke test (7.2.8/7.3.3) are code-audited rather than visually confirmed. Nothing is silently skipped — every gap is named, with the reason, in the migration notes.
 
 ---
 
@@ -647,12 +651,12 @@ Pass criteria applied at every width:
 
 ## 7.3 Verification
 
-- [ ] **7.3.1** `npm run lint` (oxlint) clean.
-- [ ] **7.3.2** `npm run build` clean — `tsc -b` will catch unused imports the migration leaves behind (`noUnusedLocals` is on).
+- [x] **7.3.1** `npm run lint` (oxlint) clean.
+- [x] **7.3.2** `npm run build` clean — `tsc -b` will catch unused imports the migration leaves behind (`noUnusedLocals` is on).
 - [ ] **7.3.3** Manual smoke of the money path against a live backend: browse → PDP → add to cart → checkout → Razorpay test payment → verify → success → tracking. Confirm no restyle broke a request payload.
-- [ ] **7.3.4** Update `product_selling_app_client_user/CLAUDE.md` → **Styling** section: replace the `tailwind.config.js` token list with the `@theme` token table and document the `data-theme` dark-mode contract.
-- [ ] **7.3.5** Update the root `CLAUDE.md` → **Frontend Architecture**, which currently states shared tokens live in each app's `tailwind.config.js`.
-- [ ] **7.3.6** Fill in the Progress summary table at the top of this file.
+- [x] **7.3.4** Update `product_selling_app_client_user/CLAUDE.md` → **Styling** section: replace the `tailwind.config.js` token list with the `@theme` token table and document the `data-theme` dark-mode contract.
+- [x] **7.3.5** Update the root `CLAUDE.md` → **Frontend Architecture**, which currently states shared tokens live in each app's `tailwind.config.js`.
+- [x] **7.3.6** Fill in the Progress summary table at the top of this file.
 
 ---
 
