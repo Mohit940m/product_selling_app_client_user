@@ -140,7 +140,7 @@ const CartPage = () => {
               const isRemoving = removingId === `${pid}-${vid}`;
 
               return (
-                <Card key={`${pid}-${vid}`} interactive className="flex gap-3.25 p-3 hover:border-accent">
+                <Card key={`${pid}-${vid}`} interactive className="flex gap-3.25 p-3 slide-x hover:border-accent">
                   <Link to={`/products/${pid}`} className="shrink-0">
                     <ImageFrame
                       src={item.productId.images?.[0]}

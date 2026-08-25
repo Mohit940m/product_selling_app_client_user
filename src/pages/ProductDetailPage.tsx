@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { FiArrowLeft, FiShoppingCart, FiTag } from 'react-icons/fi';
+import { FiArrowLeft, FiCheck, FiShoppingCart, FiTag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -11,6 +11,9 @@ import ImageFrame from '../components/ui/ImageFrame';
 import QtyStepper from '../components/ui/QtyStepper';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
+import { showKartlyToast } from '../components/ui/Toast';
+
+const ADDED_FEEDBACK_MS = 900;
 
 type Variant = {
   _id: string;
@@ -55,6 +58,7 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -111,7 +115,9 @@ const ProductDetailPage = () => {
         variantId: selectedVariant?._id,
         quantity,
       });
-      toast.success('Added to cart successfully.');
+      showKartlyToast({ title: 'Added to bag', sub: `${product.name}${selectedVariant ? ` · ×${quantity}` : ''}` });
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS);
       return true;
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -348,15 +354,15 @@ const ProductDetailPage = () => {
               disabled={outOfStock}
             />
             <Button
-              variant="primary"
-              icon={<FiShoppingCart size={18} />}
+              variant={justAdded ? 'dark' : 'primary'}
+              icon={justAdded ? <FiCheck size={18} /> : <FiShoppingCart size={18} />}
               onClick={() => addToCart()}
               loading={isAddingToCart}
               disabled={outOfStock}
               fullWidth
               className="flex-1"
             >
-              Add to cart
+              {justAdded ? 'Added' : 'Add to cart'}
             </Button>
           </div>
           <Button variant="outline" onClick={buyItNow} disabled={outOfStock || isAddingToCart} fullWidth>

@@ -573,20 +573,20 @@ No prototype screen exists for auth, so compose from the design-system panel.
 
 Do this after every page is structurally converted. Work through it as a single sweep so timings stay consistent.
 
-- [ ] **5.1** Page transitions: fade + 14px rise (`animate-up`, 300ms) on route change, applied once in `AppLayout`, keyed by pathname.
-- [ ] **5.2** Every product card: `t-slow`, hover `lift-lg` (desktop) / `lift-card` (tablet), `border-accent`, `shadow-lift-accent-lg`, inner image `scale-105`.
-- [ ] **5.3** Every primary/dark button: `t-base`, hover `lift` + matching shadow, `active:translate-y-0 active:shadow-none`.
-- [ ] **5.4** Every input and chip: `t-fast`, hover/focus `border-accent`.
-- [ ] **5.5** Every list row (cart, addresses, profile menu, order list): hover `slide-x` plus `bg-soft2` or `border-accent`.
-- [ ] **5.6** Icon buttons: `pop-icon` on hover.
-- [ ] **5.7** Grid entrance stagger: product grids reveal with `Reveal` at `index * 40ms`, capped at 400ms total so a 40-item page does not crawl.
-- [ ] **5.8** Sheets and drawers: 250ms `cubic-bezier(.2,.8,.2,1)` translate; backdrops fade at 200ms.
-- [ ] **5.9** Cart badge: `animate-pop` whenever the count increases.
-- [ ] **5.10** Add-to-cart: the button label crossfades to a check for 900ms before reverting, and the `Toast` from 2.5.3 fires.
-- [ ] **5.11** Skeletons: `animate-shim` everywhere. Confirm no `animate-pulse` remains — `grep -rn "animate-pulse" src/` returns nothing.
+- [x] **5.1** Page transitions: fade + 14px rise (`animate-up`, 300ms) on route change, applied once in `AppLayout`, keyed by pathname.
+- [x] **5.2** Every product card: `t-slow`, hover `lift-lg` (desktop) / `lift-card` (tablet), `border-accent`, `shadow-lift-accent-lg`, inner image `scale-105`.
+- [x] **5.3** Every primary/dark button: `t-base`, hover `lift` + matching shadow, `active:translate-y-0 active:shadow-none`.
+- [x] **5.4** Every input and chip: `t-fast`, hover/focus `border-accent`.
+- [x] **5.5** Every list row (cart, addresses, profile menu, order list): hover `slide-x` plus `bg-soft2` or `border-accent`.
+- [x] **5.6** Icon buttons: `pop-icon` on hover.
+- [x] **5.7** Grid entrance stagger: product grids reveal with `Reveal` at `index * 40ms`, capped at 400ms total so a 40-item page does not crawl.
+- [x] **5.8** Sheets and drawers: 250ms `cubic-bezier(.2,.8,.2,1)` translate; backdrops fade at 200ms.
+- [x] **5.9** Cart badge: `animate-pop` whenever the count increases.
+- [x] **5.10** Add-to-cart: the button label crossfades to a check for 900ms before reverting, and the `Toast` from 2.5.3 fires.
+- [x] **5.11** Skeletons: `animate-shim` everywhere. Confirm no `animate-pulse` remains — `grep -rn "animate-pulse" src/` returns nothing.
 - [ ] **5.12** Checkout progress bar fills with a 400ms width transition on step change.
 - [ ] **5.13** Tracking timeline dots and connectors animate on `transition-all .5s` when the stage advances.
-- [ ] **5.14** Re-verify the reduced-motion guard: with the OS setting on, no looping animation runs and no transform entrance plays; the success page shows a static check and no confetti.
+- [x] **5.14** Re-verify the reduced-motion guard: with the OS setting on, no looping animation runs and no transform entrance plays; the success page shows a static check and no confetti.
 
 ---
 

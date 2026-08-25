@@ -54,7 +54,10 @@ const BottomTabBar = ({ cartCount }: BottomTabBarProps) => {
                 />
                 <span className={`text-[10px] ${isActive ? 'font-bold text-ink' : 'font-semibold'}`}>{label}</span>
                 {label === 'Cart' && cartCount > 0 && (
-                  <span className="absolute right-1/2 top-1 translate-x-3.5 rounded-full bg-accent px-1 text-[9px] font-extrabold text-onacc">
+                  <span
+                    key={cartCount}
+                    className="absolute right-1/2 top-1 translate-x-3.5 animate-pop rounded-full bg-accent px-1 text-[9px] font-extrabold text-onacc"
+                  >
                     {cartCount}
                   </span>
                 )}

@@ -267,3 +267,12 @@ same non-existent destinations (Orders/Wishlist/Payments/Settings) already
 skipped in the ProfilePage note — kept a single centered conversation
 column at every width instead of building two more decorative,
 non-functional navs.
+
+## Phase 5 — motion & interaction pass
+
+12 of 14 items done. Not applicable and left unticked:
+
+- **5.12 checkout progress-bar transition** and **5.13 tracking timeline
+  transition** — both require UI that was itself deferred (CheckoutPage's
+  step progress bar, and OrderTrackingPage) per the Phase 4 notes above.
+  Nothing to animate until that UI exists.

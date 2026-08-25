@@ -87,7 +87,10 @@ const TopNav = ({ cartCount }: TopNavProps) => {
             >
               <FiShoppingCart size={16} />
               {cartCount > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-extrabold text-onacc animate-pop">
+                <span
+                  key={cartCount}
+                  className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-extrabold text-onacc animate-pop"
+                >
                   {cartCount}
                 </span>
               )}
