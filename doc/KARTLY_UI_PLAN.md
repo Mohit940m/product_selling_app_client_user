@@ -511,17 +511,17 @@ The current file is 524 lines with inline edit forms. Restructure it rather than
 - [ ] **4.7.1** Identity block: `66×66 rounded-[22px]` avatar (`bg-hatch` fallback), name `font-extrabold text-[19px] tracking-[-.02em]`, email `text-[12px] text-muted`, tier pill `rounded-full bg-soft text-[var(--k-on-soft)] px-2.5 py-1.25 font-extrabold text-[10px]`.
 - [ ] **4.7.2** Three stat tiles in a row: `flex-1 rounded-[18px] border border-line p-3.75`, value `font-extrabold text-[19px]`, label `text-[10.5px] text-muted font-bold`. Hover `lift border-accent`. Populate from live data (orders, wishlist, savings) — show `—` while loading, never `0` as a placeholder.
 - [ ] **4.7.3** Menu rows: `flex items-center gap-3.25 rounded-tile px-3.5 py-3.75`, `34×34 rounded-[11px] bg-soft` icon tile, label `font-bold text-[13px]`, sub `text-[10.5px] text-muted`, chevron `›` muted. Hover `bg-soft2 slide-x`. Rows: Orders, Addresses, Payment methods, Wishlist, Help & returns.
-- [ ] **4.7.4** Dark-mode row pinned at the bottom: `rounded-tile border border-line px-4 py-3.75 flex justify-between` with a real switch — `48×27 rounded-full` track, `21×21 rounded-full bg-card` knob, `justify-content` flips on `t-base`, track `bg-line` → `bg-accent`. Wire to `useTheme().toggleTheme`.
-- [ ] **4.7.5** Extract `src/components/ui/Switch.tsx` while doing 4.7.4 — the admin app needs it too.
+- [x] **4.7.4** Dark-mode row pinned at the bottom: `rounded-tile border border-line px-4 py-3.75 flex justify-between` with a real switch — `48×27 rounded-full` track, `21×21 rounded-full bg-card` knob, `justify-content` flips on `t-base`, track `bg-line` → `bg-accent`. Wire to `useTheme().toggleTheme`.
+- [x] **4.7.5** Extract `src/components/ui/Switch.tsx` while doing 4.7.4 — the admin app needs it too.
 
 ### Addresses (screens 11, 12)
 
-- [ ] **4.7.6** Address card: `rounded-card border border-line p-4`, label `font-extrabold text-[13.5px]` + a `Badge` (`DEFAULT` → accent, others → `tone="plum"`), address line `text-[12px] text-muted leading-[1.55]`, then `Edit` / `Delete` pill buttons. Card hover `lift border-accent shadow-lift-accent`; `Delete` hover turns `border-danger text-danger`.
+- [x] **4.7.6** Address card: `rounded-card border border-line p-4`, label `font-extrabold text-[13.5px]` + a `Badge` (`DEFAULT` → accent, others → `tone="plum"`), address line `text-[12px] text-muted leading-[1.55]`, then `Edit` / `Delete` pill buttons. Card hover `lift border-accent shadow-lift-accent`; `Delete` hover turns `border-danger text-danger`.
 - [ ] **4.7.7** `+ Add new address` — dashed `rounded-card border border-dashed border-edge p-4.5 text-center font-extrabold`, hover `bg-soft2 border-accent text-accent`.
-- [ ] **4.7.8** Move the add/edit form out of inline page state into `src/components/profile/AddressForm.tsx`, rendered inside `Modal` on desktop and `Sheet` on mobile. Keep the existing `saveAddress` API call and validation intact.
-- [ ] **4.7.9** Form layout per screen 12: a pin-location band (`h-[132px] rounded-card bg-soft2` with an accent dot and an 8px accent glow ring — static visual, not a live map, unless a maps key exists), then stacked `Input`s: Full name / Address line 1 / Line 2 / (City + ZIP side by side) / Phone.
+- [x] **4.7.8** Move the add/edit form out of inline page state into `src/components/profile/AddressForm.tsx`, rendered inside `Modal` on desktop and `Sheet` on mobile. Keep the existing `saveAddress` API call and validation intact.
+- [x] **4.7.9** Form layout per screen 12: a pin-location band (`h-[132px] rounded-card bg-soft2` with an accent dot and an 8px accent glow ring — static visual, not a live map, unless a maps key exists), then stacked `Input`s: Full name / Address line 1 / Line 2 / (City + ZIP side by side) / Phone.
 - [ ] **4.7.10** Label chips (`Home` / `Work` / `Other`) as a selected-`Chip` row above the save button; persist as the address label.
-- [ ] **4.7.11** Save button pinned to the bottom of the sheet: full-width `dark` Button.
+- [x] **4.7.11** Save button pinned to the bottom of the sheet: full-width `dark` Button.
 - [ ] **4.7.12** Delete confirmation must be a `Modal`, not a `window.confirm`.
 
 ### Desktop (screen D3 — account nav + profile rail)

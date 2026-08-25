@@ -213,3 +213,37 @@ This is a backend-scope gap, not a design-plan gap — the Kartly visual
 spec for both screens (order list rows, the live-tracking timeline) is
 still fully described in `doc/KARTLY_UI_PLAN.md` section 4.6 and can be
 implemented as soon as the corresponding list/detail endpoints exist.
+
+### 4.7 ProfilePage
+
+Implemented: restyled personal-info card and edit form on the new
+primitives (`Panel`, `Input`, `Select`, `Button`), the default-address
+card with a `DEFAULT` `Badge`, address add/edit moved out of inline page
+state into a `Sheet` overlay (responsive bottom-sheet/right-drawer by
+breakpoint, replacing the old always-inline form), and a **real, working**
+dark-mode `Switch` wired to `useTheme().toggleTheme` — the one part of the
+prototype's profile screen this app can actually back with live state.
+New `src/components/ui/Switch.tsx` primitive (shared with the future
+admin build).
+
+Deliberately **not** built — this app's address model is a single
+optional `profile.defaultAddress`, not a list of labelled addresses:
+
+- **4.7.1 tier/loyalty pill, 4.7.2 stat tiles (Orders/Wishlist/Wallet)**
+  — no loyalty tier, order-count, wishlist-count, or wallet-balance data
+  exists anywhere in this API. Fabricating "24 orders · Gold · $212"
+  would violate the same no-fake-data rule as the dashboard/order pages.
+- **4.7.3 menu rows (Orders/Addresses/Payment methods/Wishlist/Help)** —
+  Addresses is already the single card on this page, not a separate
+  destination; Payment methods/Wishlist/Help have no destination to link
+  to. Only a real "Orders" link would be honest, and it already exists
+  in the bottom tab bar.
+- **4.7.7 dashed "+ Add new address" CTA block, 4.7.10 Home/Work/Other
+  label chips, 4.7.12 delete confirmation** — the backend's address
+  shape (`UserAddress`) has no `label` field and there is exactly one
+  slot, added via `POST /profile/address` or replaced via
+  `PUT /profile/address/:id` — there's nothing to label or delete from a
+  list of one.
+- **4.7.13–4.7.15 desktop three-column account shell (nav rail + profile
+  rail)** — would need the same non-existent destinations as 4.7.3;
+  kept the single responsive column instead.
