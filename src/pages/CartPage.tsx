@@ -187,7 +187,7 @@ const CartPage = () => {
           </div>
 
           <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <Panel className="bg-soft2">
+            <Panel className="-mx-5 rounded-t-3xl rounded-b-none border-x-0 border-b-0 bg-soft2 sm:-mx-8 lg:mx-0 lg:rounded-panel lg:border">
               <h2 className="mb-4 text-lg font-extrabold text-ink">Order Summary</h2>
               <div className="mb-4 flex gap-2">
                 <input

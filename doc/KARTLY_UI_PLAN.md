@@ -453,7 +453,7 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 - [ ] **4.3.2** Line item: `rounded-card border border-line p-3 flex gap-3.25`, `64×64 rounded-[14px]` thumb via `ImageFrame`, name `font-bold text-[13px]`, variant `text-[11px] text-muted font-semibold`, then a row with the pill `QtyStepper` (`px-2 py-1`) and the line total `font-extrabold text-[13px]`. Hover `border-accent slide-x`.
 - [ ] **4.3.3** Wire the stepper to the existing update-quantity call. Remove-item is a swipe-left action on touch and an `×` on hover for pointer devices.
 - [x] **4.3.4** Promo row: dashed `rounded-btn border border-dashed border-edge` input + `dark` Apply Button. If the backend has no promo endpoint, render it **disabled with a "Coming soon" note** rather than omitting the slot — the design calls for it.
-- [ ] **4.3.5** Summary sheet pinned to the bottom: `-mx-6 rounded-t-[24px] bg-soft2 border-t border-line p-5` with muted Subtotal / Shipping rows, a `border-t border-line` divider, `Total` at `font-extrabold text-[17px]`, and a full-width `primary` Checkout Button.
+- [x] **4.3.5** Summary sheet pinned to the bottom: `-mx-6 rounded-t-[24px] bg-soft2 border-t border-line p-5` with muted Subtotal / Shipping rows, a `border-t border-line` divider, `Total` at `font-extrabold text-[17px]`, and a full-width `primary` Checkout Button.
 - [x] **4.3.6** Empty state via `EmptyState` with a `Browse products` CTA.
 
 ### Desktop
