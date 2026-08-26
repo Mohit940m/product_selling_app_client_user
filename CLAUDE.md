@@ -62,7 +62,8 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
 /checkout                 → address selection/entry, order breakdown, Razorpay payment
 /orders                   → order history landing (currently an EmptyState — see note below)
 /orders/success            → post-payment success screen (needs an orderId in navigation state)
-/profile                  → personal info + default address management, dark-mode toggle
+/wishlist                 → saved products, backed by the real /wishlist API (read-only, no remove endpoint yet)
+/profile                  → personal info, default address management, Orders/Wishlist menu rows, dark-mode toggle
 /assistant                → AI shopping assistant, demo UI behind VITE_ENABLE_ASSISTANT
 ```
 
