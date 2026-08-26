@@ -150,10 +150,17 @@ two-column desktop layout with a sticky order-summary `Panel`.
 
 Deliberately **not** built:
 
-- **4.3.2/4.3.3 interactive `QtyStepper` per line + swipe-to-remove** —
-  there is no update-quantity endpoint wired into `userApi` (only
-  add-to-cart and remove-from-cart exist); quantity stays a read-only
-  `×N` label rather than shipping a stepper with nothing to call.
+- **4.3.2 interactive `QtyStepper` per line** — corrected in the
+  post-Phase-7 follow-up below: `remove-from-cart` accepts an optional
+  `quantity` to decrement by (confirmed by reading
+  `cart.controller.ts`'s `removeFromCart`), not just "remove the whole
+  line," so a working `+`/`-` stepper was built after all.
+- **4.3.3 swipe-left-to-remove on touch** — still deferred. This is a
+  gesture-interaction build (not a backend gap), and with no browser or
+  touch device available this session to verify it doesn't regress or
+  interfere with normal scrolling, it wasn't worth the risk. The
+  existing tap-target `Remove` button covers both touch and pointer
+  devices in the meantime.
 - **4.3.5 bottom-pinned mobile summary sheet** — the summary renders as
   a normal `Panel` in flow, not pinned to the viewport bottom with a
   rounded-top overlap.
@@ -487,3 +494,20 @@ this a backend gap — corrected above. Built:
   stays unticked since Payment methods and Help & returns still have no
   real destination, and Addresses is intentionally not duplicated as a
   menu row (already the single card on this same page).
+
+## Post-Phase-7 follow-up — real CartPage QtyStepper (4.3.2, partial)
+
+Another corrected backend-gap claim: `POST /cart/remove-from-cart`
+accepts an optional `quantity` and decrements the line by that much
+(removing it entirely once it would hit 0), it isn't only a full-line
+remove. Combined with `add-to-cart`'s existing "increase quantity if
+already in cart" behavior, this gives a real `+`/`-` pair with something
+to call. Wired the existing `QtyStepper` primitive into each cart line:
+`+` calls `add-to-cart` with `quantity: 1`, `-` calls `remove-from-cart`
+with `quantity: 1`; both replace the cart state from the response so
+totals stay in sync without a full page reload. There's still no "jump
+straight to quantity N" endpoint, so the stepper only ever moves by 1
+per click — matches how it already behaves everywhere else in this app.
+4.3.2 stays unticked since 4.3.3 (swipe-to-remove) is bundled into the
+same checklist item and remains deferred as UX polish this session can't
+verify without a browser.

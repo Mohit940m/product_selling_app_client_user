@@ -9,6 +9,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Panel from '../components/ui/Panel';
 import ImageFrame from '../components/ui/ImageFrame';
+import QtyStepper from '../components/ui/QtyStepper';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 
@@ -55,6 +56,7 @@ const CartPage = () => {
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -94,6 +96,27 @@ const CartPage = () => {
       toast.error(msg);
     } finally {
       setRemovingId(null);
+    }
+  };
+
+  // No "set quantity to N" endpoint exists — /cart/add-to-cart increments
+  // and /cart/remove-from-cart decrements (optionally removing the line
+  // once it hits 0), so the stepper always moves by exactly 1 per click.
+  const updateQuantity = async (productId: string, variantId: string, delta: 1 | -1) => {
+    const key = `${productId}-${variantId}`;
+    setUpdatingId(key);
+    try {
+      const { data } = delta === 1
+        ? await userApi.post('/cart/add-to-cart', { productId, variantId, quantity: 1 })
+        : await userApi.post('/cart/remove-from-cart', { productId, variantId, quantity: 1 });
+      setCart(data.data);
+    } catch (err) {
+      const msg = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? 'Failed to update quantity.'
+        : 'Failed to update quantity.';
+      toast.error(msg);
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -137,7 +160,9 @@ const CartPage = () => {
             {cart.items.map((item) => {
               const pid = item.productId._id;
               const vid = item.variantId._id;
-              const isRemoving = removingId === `${pid}-${vid}`;
+              const key = `${pid}-${vid}`;
+              const isRemoving = removingId === key;
+              const isUpdating = updatingId === key;
 
               return (
                 <Card key={`${pid}-${vid}`} interactive className="flex gap-3.25 p-3 slide-x hover:border-accent">
@@ -157,20 +182,26 @@ const CartPage = () => {
                       {Object.entries(item.attributes)
                         .map(([k, v]) => `${k}: ${v}`)
                         .join(' · ')}
-                      {Object.keys(item.attributes).length > 0 ? ' · ' : ''}×{item.quantity}
                     </p>
                     {item.activeOffer && <p className="text-[11px] font-bold text-accent">{item.activeOffer.name}</p>}
-                  </div>
-
-                  <div className="flex flex-col items-end justify-between">
-                    <div className="text-right">
+                    <div className="mt-1 flex items-center gap-2.5">
+                      <QtyStepper
+                        value={item.quantity}
+                        max={item.variantId.stock}
+                        disabled={isUpdating || isRemoving}
+                        onChange={(next) => updateQuantity(pid, vid, next > item.quantity ? 1 : -1)}
+                        className="px-2! py-1!"
+                      />
                       <p className="text-[13px] font-extrabold text-ink">
                         {formatCurrency(item.discountedPrice * item.quantity)}
                       </p>
-                      {item.savings > 0 && (
-                        <p className="text-[11px] font-semibold text-ok-fg">Save {formatCurrency(item.savings * item.quantity)}</p>
-                      )}
                     </div>
+                    {item.savings > 0 && (
+                      <p className="text-[11px] font-semibold text-ok-fg">Save {formatCurrency(item.savings * item.quantity)}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col items-end justify-between">
                     <button
                       type="button"
                       onClick={() => removeItem(pid, vid)}
