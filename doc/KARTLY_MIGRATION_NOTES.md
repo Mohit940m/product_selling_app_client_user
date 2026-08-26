@@ -115,11 +115,11 @@ adds to cart then navigates straight to `/checkout`.
 
 Deliberately **not** built:
 
-- **4.2.1 floating back/wishlist tiles over the gallery** — kept the plain
-  "Back to products" link above the gallery instead of overlaying it, and
-  dropped the wishlist heart entirely: no wishlist endpoint is wired into
-  this frontend anywhere (`grep -rn wishlist src/` is empty), so a heart
-  button would have nothing to call.
+- **4.2.1 wishlist heart** — the floating back tile is now built (see the
+  post-Phase-7 follow-up below); the heart stays dropped entirely, since no
+  wishlist endpoint is wired into this frontend anywhere
+  (`grep -rn wishlist src/` is empty), so a heart button would have
+  nothing to call.
 - **4.2.3 mobile bottom-sheet overlap composition** — this page uses one
   responsive 3-column-collapsing-to-1 layout rather than the prototype's
   distinct "sheet overlapping the gallery by 24px" mobile treatment.
@@ -402,3 +402,11 @@ at every width, not "inline beside the PDP at `xl`" — building a
 third, non-overlay desktop-only layout variant just for the `xl`
 breakpoint was judged not worth the added complexity versus reusing the
 overlay pattern already established for every other drawer in the app.
+
+## Post-Phase-7 follow-up — PDP floating back tile
+
+The plain "Back to products" link above the gallery is now desktop-only
+(`hidden lg:inline-flex`); mobile gets the plan's floating `38×38
+rounded-[13px] bg-card` tile over the gallery's top-left corner instead.
+The wishlist heart on the top-right stays dropped — see the 4.2.1 note
+above.

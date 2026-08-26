@@ -207,7 +207,7 @@ const ProductDetailPage = () => {
     <Container className="py-6 lg:py-10">
       <Link
         to="/products"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-muted t-fast hover:text-accent"
+        className="mb-6 hidden items-center gap-1.5 text-sm font-semibold text-muted t-fast hover:text-accent lg:inline-flex"
       >
         <FiArrowLeft size={16} />
         Back to products
@@ -240,6 +240,13 @@ const ProductDetailPage = () => {
               alt={product.name}
               className="h-[300px] w-full lg:h-[470px]"
             />
+            <Link
+              to="/products"
+              aria-label="Back to products"
+              className="absolute left-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast hover:text-accent lg:hidden"
+            >
+              <FiArrowLeft size={16} />
+            </Link>
             {outOfStock && (
               <Badge tone="plum" className="absolute right-4 top-4">
                 Out of stock
