@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { FiSearch, FiShoppingCart, FiTag, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -90,6 +90,25 @@ const ProductListPage = () => {
 
   const totalPages = Math.ceil(total / limit);
 
+  // No categories-list endpoint exists, so this rail is scoped to the
+  // categories present in the currently loaded page rather than the full
+  // catalog — same honest-scoping approach as the admin dashboard's
+  // low-stock panel. The "All" chip and any selected-but-off-page category
+  // still clear/filter correctly since the actual request always goes
+  // through the backend's real `category` param.
+  const visibleCategories = useMemo(
+    () => [...new Set(products.map((p) => p.category).filter(Boolean))],
+    [products],
+  );
+  const categoryChips = category && !visibleCategories.includes(category)
+    ? [category, ...visibleCategories]
+    : visibleCategories;
+
+  const selectCategory = (next: string) => {
+    setCategory(next);
+    setPage(1);
+  };
+
   return (
     <div className="bg-bg text-ink">
       <section className="relative overflow-hidden border-b border-line bg-card lg:border-none lg:bg-soft">
@@ -133,15 +152,25 @@ const ProductListPage = () => {
         </Container>
       </section>
 
-      {category && (
+      {(categoryChips.length > 0 || category) && (
         <div className="border-b border-line bg-card py-3">
-          <Container className="flex items-center gap-2">
-            <span className="text-sm text-muted">Filtering by</span>
-            <Chip selected onClick={clearCategory}>
-              <FiTag size={13} />
-              {category}
-              <FiX size={13} />
-            </Chip>
+          <Container>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              <Chip selected={!category} onClick={clearCategory}>
+                All
+              </Chip>
+              {categoryChips.map((cat) => (
+                <Chip
+                  key={cat}
+                  selected={category === cat}
+                  onClick={() => (category === cat ? clearCategory() : selectCategory(cat))}
+                >
+                  <FiTag size={13} />
+                  {cat}
+                  {category === cat && <FiX size={13} />}
+                </Chip>
+              ))}
+            </div>
           </Container>
         </div>
       )}

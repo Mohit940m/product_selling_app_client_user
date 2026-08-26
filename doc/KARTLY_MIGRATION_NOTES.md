@@ -432,3 +432,21 @@ prototype's bare geometric marks exactly (rounded square, circle, rotated
 square — all border-only, no filled icons): source is `Kartly Commerce
 Kit.dc.html` lines 215-219. Purely static/decorative — no backend data
 involved, so no fabrication risk.
+
+## Post-Phase-7 follow-up — ProductListPage category rail (4.1.3)
+
+Replaced the old conditional "Filtering by {category}" bar with an
+always-visible horizontal `Chip` rail: `All` (selected when no filter is
+active) plus one chip per category. There is no categories-listing
+endpoint, so — same honest-scoping approach as the admin dashboard's
+low-stock panel — the rail's chip labels are scoped to categories present
+in the *currently loaded page* of products, not the full catalog; if a
+selected category happens to fall off the current page, its chip is kept
+pinned in so the active filter stays visible and clearable. The actual
+filtering always goes through the backend's real `category` query param,
+so results are correct even though the chip list itself is a partial
+view. Related: `4.1.12`/`4.1.15` (a real top-categories rail with counts)
+and `4.1.16` (desktop inline chips + sort `Select`) stay deferred — sort
+in particular is blocked since `/products/get-all-products` has no sort
+param, and a client-side sort of just the current page would misrepresent
+itself as a real global sort across pagination.
