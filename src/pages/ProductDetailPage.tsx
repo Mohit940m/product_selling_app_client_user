@@ -379,6 +379,21 @@ const ProductDetailPage = () => {
             )}
           </div>
 
+          <div className="flex gap-6.5">
+            <div className="flex flex-col items-center gap-1.75">
+              <div className="h-4 w-4 rounded-sm border-[1.5px] border-ink" />
+              <span className="text-[10px] font-semibold text-muted">Free ship</span>
+            </div>
+            <div className="flex flex-col items-center gap-1.75">
+              <div className="h-4 w-4 rounded-full border-[1.5px] border-ink" />
+              <span className="text-[10px] font-semibold text-muted">30d return</span>
+            </div>
+            <div className="flex flex-col items-center gap-1.75">
+              <div className="h-4 w-4 rotate-45 border-[1.5px] border-ink" />
+              <span className="text-[10px] font-semibold text-muted">Warranty</span>
+            </div>
+          </div>
+
           {/* Desktop: inline action row. Mobile: sticky bar above the tab bar (see below). */}
           <div className="hidden lg:flex lg:items-center lg:gap-3">
             <QtyStepper

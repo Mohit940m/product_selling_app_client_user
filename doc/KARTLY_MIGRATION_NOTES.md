@@ -423,3 +423,12 @@ keeps the plain card header). Heading/eyebrow/subtitle text switches to
 `--k-on-soft`/`--k-on-soft-muted` so it stays readable against the soft
 wash in both themes. The two CTA buttons from the prototype's hero are
 still deliberately left out — see the 4.1.11 note above.
+
+## Post-Phase-7 follow-up — PDP trust row (4.2.7)
+
+Added the three-mark trust row (`Free ship` / `30d return` / `Warranty`)
+below the description panel on `ProductDetailPage`, matching the
+prototype's bare geometric marks exactly (rounded square, circle, rotated
+square — all border-only, no filled icons): source is `Kartly Commerce
+Kit.dc.html` lines 215-219. Purely static/decorative — no backend data
+involved, so no fabrication risk.
