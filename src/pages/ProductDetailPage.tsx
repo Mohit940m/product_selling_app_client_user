@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { FiArrowLeft, FiCheck, FiShoppingCart, FiTag } from 'react-icons/fi';
+import { FiArrowLeft, FiCheck, FiHeart, FiShoppingCart, FiTag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -62,11 +62,51 @@ const ProductDetailPage = () => {
   const [justAdded, setJustAdded] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlisting, setIsWishlisting] = useState(false);
 
   useEffect(() => {
     loadProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
+
+  useEffect(() => {
+    if (!productId || !localStorage.getItem('userToken')) return;
+    userApi
+      .get('/wishlist')
+      .then(({ data }) => {
+        const inWishlist = (data.data ?? []).some((item: { productId?: { _id?: string } }) => item.productId?._id === productId);
+        setIsWishlisted(inWishlist);
+      })
+      .catch(() => {
+        // Non-critical — the heart just falls back to its default (unfilled) state.
+      });
+  }, [productId]);
+
+  const toggleWishlist = async () => {
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      toast.error('Please login to save items to your wishlist.');
+      navigate('/login');
+      return;
+    }
+    if (!product || isWishlisted) return;
+
+    setIsWishlisting(true);
+    try {
+      await userApi.post('/wishlist/add', { productId: product._id });
+      setIsWishlisted(true);
+      showKartlyToast({ title: 'Saved to wishlist', sub: product.name });
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        setIsWishlisted(true);
+      } else {
+        toast.error('Failed to save to wishlist.');
+      }
+    } finally {
+      setIsWishlisting(false);
+    }
+  };
 
   const loadProduct = async () => {
     setIsLoading(true);
@@ -247,8 +287,20 @@ const ProductDetailPage = () => {
             >
               <FiArrowLeft size={16} />
             </Link>
+            <button
+              type="button"
+              onClick={toggleWishlist}
+              disabled={isWishlisting}
+              aria-label={isWishlisted ? 'Saved to wishlist' : 'Save to wishlist'}
+              aria-pressed={isWishlisted}
+              className={`absolute right-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast hover:scale-[1.08] hover:text-accent disabled:opacity-60 ${
+                isWishlisted ? 'text-accent' : 'text-ink'
+              }`}
+            >
+              <FiHeart size={17} fill={isWishlisted ? 'currentColor' : 'none'} />
+            </button>
             {outOfStock && (
-              <Badge tone="plum" className="absolute right-4 top-4">
+              <Badge tone="plum" className="absolute right-16 top-4">
                 Out of stock
               </Badge>
             )}

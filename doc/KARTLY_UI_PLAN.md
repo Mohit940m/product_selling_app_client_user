@@ -427,7 +427,7 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 
 ### Mobile (screen 04)
 
-- [ ] **4.2.1** Gallery: full-bleed `h-[300px] bg-soft`, image via `ImageFrame`. Floating back tile top-left and wishlist heart top-right, both `38×38 rounded-[13px] bg-card`; heart hover `text-accent scale-[1.08]`.
+- [x] **4.2.1** Gallery: full-bleed `h-[300px] bg-soft`, image via `ImageFrame`. Floating back tile top-left and wishlist heart top-right, both `38×38 rounded-[13px] bg-card`; heart hover `text-accent scale-[1.08]`.
 - [x] **4.2.2** Dot pager at the gallery bottom: active dot `22×5 rounded-full bg-ink`, inactive `5×5 bg-ink/30`. Wire to the existing image-index state; support horizontal swipe.
 - [ ] **4.2.3** Detail sheet: `flex-1 bg-card rounded-t-sheet -mt-6 relative px-6 pt-6.5` — it must visually overlap the gallery by 24px.
 - [ ] **4.2.4** Title `font-extrabold text-[23px] leading-[1.15] tracking-[-.02em]`; sub line `{brand} · {stock status}` at `text-[12px] text-muted font-semibold`; rating pill `rounded-full bg-soft px-2.75 py-1.75 font-extrabold text-[12px]`.

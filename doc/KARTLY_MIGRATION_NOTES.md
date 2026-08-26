@@ -118,11 +118,13 @@ adds to cart then navigates straight to `/checkout`.
 
 Deliberately **not** built:
 
-- **4.2.1 wishlist heart** — the floating back tile is now built (see the
-  post-Phase-7 follow-up below); the heart stays dropped entirely, since no
-  wishlist endpoint is wired into this frontend anywhere
-  (`grep -rn wishlist src/` is empty), so a heart button would have
-  nothing to call.
+- **4.2.1 wishlist heart** — ~~dropped~~ **correction, see the
+  post-Phase-7 follow-up further down**: the earlier "no wishlist endpoint"
+  claim only checked this frontend repo (`grep -rn wishlist src/`), not the
+  actual backend. `product_selling_app_server` does expose a real
+  `/api/v1/user/wishlist` (`GET /`, `POST /add`, confirmed by reading
+  `wishList.routes.ts`/`wishList.controller.ts`), so the heart button and a
+  real Wishlist page were built after all.
 - **4.2.3 mobile bottom-sheet overlap composition** — this page uses one
   responsive 3-column-collapsing-to-1 layout rather than the prototype's
   distinct "sheet overlapping the gallery by 24px" mobile treatment.
@@ -236,11 +238,13 @@ optional `profile.defaultAddress`, not a list of labelled addresses:
   — no loyalty tier, order-count, wishlist-count, or wallet-balance data
   exists anywhere in this API. Fabricating "24 orders · Gold · $212"
   would violate the same no-fake-data rule as the dashboard/order pages.
-- **4.7.3 menu rows (Orders/Addresses/Payment methods/Wishlist/Help)** —
-  Addresses is already the single card on this page, not a separate
-  destination; Payment methods/Wishlist/Help have no destination to link
-  to. Only a real "Orders" link would be honest, and it already exists
-  in the bottom tab bar.
+- **4.7.3 menu rows** — see the post-Phase-7 follow-up further down: a
+  real Orders + Wishlist pair of rows is now built. Addresses stays out
+  (already the single card on this page, not a separate destination) and
+  Payment methods/Help & returns stay out (no destination to link to).
+  The earlier note that Orders "already exists in the bottom tab bar" was
+  wrong — it was never in `BottomTabBar.tsx` or `TopNav.tsx`, so `/orders`
+  was completely unreachable from the UI until this follow-up added it.
 - **4.7.7 dashed "+ Add new address" CTA block, 4.7.10 Home/Work/Other
   label chips, 4.7.12 delete confirmation** — the backend's address
   shape (`UserAddress`) has no `label` field and there is exactly one
@@ -450,3 +454,36 @@ and `4.1.16` (desktop inline chips + sort `Select`) stay deferred — sort
 in particular is blocked since `/products/get-all-products` has no sort
 param, and a client-side sort of just the current page would misrepresent
 itself as a real global sort across pagination.
+
+## Post-Phase-7 follow-up — real Wishlist feature + Profile menu rows (4.2.1, 4.7.3)
+
+Re-checked the backend directly (not just this frontend) and found a
+genuinely working, mounted wishlist API: `GET /api/v1/user/wishlist`
+and `POST /api/v1/user/wishlist/add` (`wishList.routes.ts`,
+`wishList.controller.ts`, mounted at `/wishlist` in `userRoute.ts`).
+Two earlier migration-notes entries (4.2.1, 4.7.3) had wrongly called
+this a backend gap — corrected above. Built:
+
+- **PDP wishlist heart** (`ProductDetailPage.tsx`): `38×38 rounded-[13px]
+  bg-card` tile top-right of the gallery, matching the existing back
+  tile. On mount, fetches `GET /wishlist` to check whether the current
+  product is already saved (no per-product "is wishlisted" field exists
+  on the product-detail response, so this is the only accurate way to
+  seed the initial state). Clicking calls `POST /wishlist/add`; a 400
+  "already in wishlist" response is treated as success (fills the heart)
+  rather than surfaced as an error. There is still no remove-from-
+  wishlist endpoint, so the heart is one-way (add only) — it does not
+  pretend to toggle off.
+- **`src/pages/WishlistPage.tsx`** (new, route `/wishlist`): fetches
+  `GET /wishlist`, renders real saved products in the same product-grid
+  card style as `ProductListPage`. Read-only — no remove button, since
+  there is nothing to call. Honest `EmptyState` when nothing is saved.
+- **`ProfilePage.tsx` menu rows** (4.7.3, partial): added a real
+  Orders + Wishlist row pair (icon tile, label, sub, chevron, exactly
+  per spec) between the address card and the dark-mode toggle. This also
+  fixes a genuine navigation bug: `/orders` had no link pointing to it
+  anywhere in the app (not in `BottomTabBar` or `TopNav`) despite being a
+  real, working route — it was reachable only by typing the URL. 4.7.3
+  stays unticked since Payment methods and Help & returns still have no
+  real destination, and Addresses is intentionally not duplicated as a
+  menu row (already the single card on this same page).

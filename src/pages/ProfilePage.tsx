@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCamera, FiEdit2, FiMapPin, FiPlus, FiSave, FiUser, FiX } from 'react-icons/fi';
+import { FiCamera, FiChevronRight, FiEdit2, FiHeart, FiMapPin, FiPackage, FiPlus, FiSave, FiUser, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -423,6 +423,32 @@ const ProfilePage = () => {
                 + Add new address
               </button>
             )}
+          </Panel>
+
+          {/* Menu rows — only destinations that are real, working routes.
+              Payment methods/Help & returns have no backend/page to link
+              to, so they're left out rather than shipped as dead links. */}
+          <Panel className="!p-2">
+            {[
+              { label: 'Orders', sub: 'Track and review your orders', icon: <FiPackage size={16} />, to: '/orders' },
+              { label: 'Wishlist', sub: 'Items you have saved', icon: <FiHeart size={16} />, to: '/wishlist' },
+            ].map((row) => (
+              <button
+                key={row.to}
+                type="button"
+                onClick={() => navigate(row.to)}
+                className="slide-x t-fast flex w-full items-center gap-3.25 rounded-tile px-3.5 py-3.75 text-left hover:bg-soft2"
+              >
+                <span className="flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-[11px] bg-soft text-[var(--k-on-soft)]">
+                  {row.icon}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[13px] font-bold text-ink">{row.label}</span>
+                  <span className="block text-[10.5px] text-muted">{row.sub}</span>
+                </span>
+                <FiChevronRight className="shrink-0 text-muted" size={16} />
+              </button>
+            ))}
           </Panel>
 
           {/* Preferences */}
