@@ -92,14 +92,15 @@ const ProductListPage = () => {
 
   return (
     <div className="bg-bg text-ink">
-      <section className="border-b border-line bg-card">
-        <Container className="flex flex-col gap-6 py-8 lg:flex-row lg:items-end lg:justify-between lg:py-12">
+      <section className="relative overflow-hidden border-b border-line bg-card lg:border-none lg:bg-soft">
+        <div className="pointer-events-none absolute -right-10 -top-10 hidden h-[300px] w-[300px] rounded-full bg-white/45 lg:block" aria-hidden="true" />
+        <Container className="relative flex flex-col gap-6 py-8 lg:flex-row lg:items-end lg:justify-between lg:py-14">
           <div>
-            <p className="font-mono text-[11px] font-bold text-muted">MARKETPLACE</p>
-            <h1 className="mt-2 font-black text-[28px] leading-[1.1] tracking-[-.03em] lg:text-[44px] lg:leading-none lg:tracking-[-.04em]">
+            <p className="font-mono text-[11px] font-bold text-muted lg:text-[var(--k-on-soft-muted)]">MARKETPLACE</p>
+            <h1 className="mt-2 font-black text-[28px] leading-[1.1] tracking-[-.03em] lg:max-w-[460px] lg:text-[44px] lg:leading-[1.02] lg:tracking-[-.04em] lg:text-[var(--k-on-soft)]">
               Find what you need today
             </h1>
-            <p className="mt-2.5 text-sm font-medium text-muted">
+            <p className="mt-2.5 text-sm font-medium text-muted lg:text-[var(--k-on-soft-muted)]">
               {total} product{total !== 1 ? 's' : ''} available
             </p>
           </div>

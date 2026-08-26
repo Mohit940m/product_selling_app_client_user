@@ -93,10 +93,13 @@ backend capability this pass didn't add or verify:
 - **4.1.8 Price/Sort/Category filter sheet** and **4.1.16 inline sort/filter
   chips** — `loadProducts` only sends `page`, `limit`, `search`, `category`
   today; sort/price-range params aren't wired against the backend yet.
-- **4.1.11/4.1.12 decorative hero blob + two category tiles with counts** —
-  the tiles need real per-category product counts; skipped rather than
-  showing invented numbers. The hero copy/CTA band itself is simplified to
-  heading + subtitle + search, no illustrated blob.
+- **4.1.12 two category tiles with counts** — needs real per-category
+  product counts; skipped rather than showing invented numbers.
+- **4.1.11 hero CTAs** — the decorative blob and the `bg-soft` hero-band
+  treatment were added in a post-Phase-7 follow-up (see below); the two
+  CTA buttons (`Shop the drop` / `Lookbook` in the prototype) are still
+  left out, since this storefront has no seasonal-drop campaign or
+  lookbook page to link them to honestly.
 - **4.1.13 desktop quick "+Add" pill** — needs a default variant id per
   product, which the list endpoint's `Product` shape doesn't carry (only
   `ProductDetailPage`'s single-product endpoint does). Adding it would mean
@@ -410,3 +413,13 @@ The plain "Back to products" link above the gallery is now desktop-only
 rounded-[13px] bg-card` tile over the gallery's top-left corner instead.
 The wishlist heart on the top-right stays dropped — see the 4.2.1 note
 above.
+
+
+## Post-Phase-7 follow-up — ProductListPage hero
+
+Added the decorative `300×300 rounded-full bg-white/45` blob and the
+`bg-soft` hero-band treatment to the desktop header (`lg+` only; mobile
+keeps the plain card header). Heading/eyebrow/subtitle text switches to
+`--k-on-soft`/`--k-on-soft-muted` so it stays readable against the soft
+wash in both themes. The two CTA buttons from the prototype's hero are
+still deliberately left out — see the 4.1.11 note above.
