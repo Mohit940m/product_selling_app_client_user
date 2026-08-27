@@ -704,3 +704,16 @@ has no hook equivalent) wrapping `<Routes>` inside `<Router>` (kept
 outside `ToastContainer` so a page crash doesn't also swallow toast
 notifications), rendering a themed fallback with a "Reload page" button
 instead of a blank screen.
+
+## Post-Phase-7 follow-up — guard the axios token read against a blocked localStorage
+
+`localStorage` can throw (privacy-mode storage blocking, some corporate
+browser policies) — `userApi.ts`'s request interceptor read
+`localStorage.getItem('userToken')` unguarded, so a throw there would
+have failed every single API call before it was even sent, app-wide.
+Wrapped in a `try/catch` that falls through to an unauthenticated
+request instead. The per-page `localStorage.getItem` auth-guard checks
+elsewhere are left unguarded — a throw there now hits the new
+`ErrorBoundary`'s fallback rather than a blank screen, which is an
+acceptable outcome for a rare edge case not worth 19 individual
+try/catch additions.
