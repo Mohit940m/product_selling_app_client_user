@@ -691,3 +691,16 @@ drove visual state only, with no ARIA state for screen readers. Added
 `aria-pressed={selected}` to the component itself so every existing and
 future `Chip` usage (category rail, sort/filter chips, address label
 chips if they're ever built) picks it up automatically.
+
+## Post-Phase-7 follow-up — top-level ErrorBoundary
+
+Neither app had a React error boundary anywhere — an unhandled render
+error in any component would white-screen the entire app with no
+recovery path short of a manual URL edit. Not a Kartly-plan item, but a
+real robustness gap in the same "cross-cutting hardening" spirit as the
+tap-target/text-overflow/dead-controls audits. Added
+`src/components/ErrorBoundary.tsx` (a class component — `componentDidCatch`
+has no hook equivalent) wrapping `<Routes>` inside `<Router>` (kept
+outside `ToastContainer` so a page crash doesn't also swallow toast
+notifications), rendering a themed fallback with a "Reload page" button
+instead of a blank screen.

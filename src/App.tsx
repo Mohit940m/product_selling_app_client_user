@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { ThemeProvider, useTheme } from './theme/ThemeProvider'
+import ErrorBoundary from './components/ErrorBoundary'
 import AppLayout from './components/layout/AppLayout'
 import WelcomePage, { WELCOME_SEEN_KEY } from './pages/WelcomePage'
 import LoginPage from './pages/LoginPage'
@@ -31,24 +32,26 @@ const AppRoutes = () => {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<RootRedirect />} />
-        <Route path="/welcome" element={<WelcomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<RootRedirect />} />
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
-        <Route element={<AppLayout />}>
-          <Route path="/products" element={<ProductListPage />} />
-          <Route path="/products/:productId" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/orders" element={<OrderListPage />} />
-          <Route path="/orders/success" element={<OrderSuccessPage />} />
-          <Route path="/wishlist" element={<WishlistPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/assistant" element={<AssistantPage />} />
-        </Route>
-      </Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/products" element={<ProductListPage />} />
+            <Route path="/products/:productId" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/orders" element={<OrderListPage />} />
+            <Route path="/orders/success" element={<OrderSuccessPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/assistant" element={<AssistantPage />} />
+          </Route>
+        </Routes>
+      </ErrorBoundary>
       <ToastContainer
         position="top-right"
         autoClose={5000}
