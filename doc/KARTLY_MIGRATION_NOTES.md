@@ -1017,3 +1017,17 @@ disclosure anywhere nearby. It was just a bare, false statement about
 something that never happens, contrary to this project's own stated
 discipline of honest states over fabricated ones. Changed to "Keep the
 order ID above for reference," which is both true and still useful.
+
+## Backend fix (cross-repo) — profile-photo upload had no size limit at all
+
+Found while auditing the upload path behind `ProfilePage.tsx`'s avatar
+picker: the backend's multer/Cloudinary storage config had no
+`limits` option — an authenticated shopper could upload an
+arbitrarily large file with nothing stopping it, consuming unbounded
+bandwidth and Cloudinary storage per request. Checked this app's own
+side too: `ProfilePage.tsx` has no client-side file-size check either,
+so this was a total gap end to end, not a missing backstop behind an
+existing client-side guard. Fixed server-side with a generous 10MB
+ceiling (`product_selling_app_server` commit `f6d8106`) — large enough
+that no legitimate photo is ever affected, so no frontend change was
+needed or made.
