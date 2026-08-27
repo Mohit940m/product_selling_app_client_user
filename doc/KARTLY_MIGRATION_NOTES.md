@@ -130,13 +130,15 @@ Deliberately **not** built:
   distinct "sheet overlapping the gallery by 24px" mobile treatment.
 - **4.2.4 rating pill** — no rating field exists on the product/variant
   API response.
-- **4.2.6 "See details" expand/collapse** — description renders in full;
-  no truncation state added.
-- **4.2.7 trust row (free ship / 30-day returns / warranty)** — would
-  assert policy claims the backend doesn't expose; skipped rather than
-  hardcoding unverified promises.
-- **4.2.8 sticky bottom action bar on mobile** — buttons stay in normal
-  flow; not pinned to the viewport bottom.
+- **4.2.6 "See details" expand/collapse, 4.2.8 sticky mobile action bar**
+  — both built in the "Post-Phase-7 follow-up — ProductDetailPage"
+  section further down; this paragraph is the original Phase-4-pass
+  state, kept as the historical record of what wasn't true yet.
+- **4.2.7 trust row (free ship / 30-day returns / warranty)** — also
+  corrected later: built in a follow-up using the prototype's own bare
+  geometric marks (no filled icons, no asserted policy text beyond what
+  the prototype itself already shows) — see the "PDP trust row" entry
+  further down.
 - **4.2.13/4.2.14 desktop cart drawer** — needs a cart-refetch-after-add
   flow and a new `CartDrawer` component; deferred rather than shipping a
   drawer that doesn't reflect real cart state.
