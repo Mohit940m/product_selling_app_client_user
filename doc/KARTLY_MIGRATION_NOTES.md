@@ -860,3 +860,23 @@ reset points — the create-order catch block, and the Razorpay modal's
 `ondismiss` — were already correct and untouched). This is the one
 double-submit guard in the app protecting a call that creates real
 Razorpay orders, so it's worth being exact about, not just present.
+
+## Backend fix (cross-repo) — stock could go negative under concurrent checkout
+
+Found while re-auditing the checkout flow for correctness, not a
+frontend change: the server's `createOrder` re-checks each variant's
+stock right before the Razorpay modal opens, but `verifyPayment`
+deducted stock afterward with an unconditional `$inc`. Those two points
+are separated by however long the buyer spends completing payment —
+long enough that two concurrent buyers for the last unit of something
+could both pass `createOrder`'s check and both pay successfully, taking
+stock negative once both payments verified. Fixed server-side
+(`product_selling_app_server` commit `399a162`) by making the deduction
+atomic and floor-safe (`stock: { $gte: quantity }` on the query) so it
+can no longer go negative; an order that turns out to be oversold still
+stays `PAID`/`CONFIRMED` (failing it after the customer's already been
+charged would be worse) and gets logged server-side instead. Deciding
+what to actively *do* about an oversold order — refund, backorder,
+notify the seller — is a business-policy call, not something to invent
+unilaterally, and is left as a follow-up need; this fix only stops the
+underlying data corruption.
