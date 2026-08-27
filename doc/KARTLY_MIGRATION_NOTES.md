@@ -83,10 +83,12 @@ badges, shimmer skeletons, empty state, AI teaser (flagged), pagination.
 Deliberately **not** built, and left unticked in the plan, because they need
 backend capability this pass didn't add or verify:
 
-- **4.1.3 full category rail** — the API has no "list categories" endpoint;
-  only a single active-category clear chip is shown (derived from a clicked
-  product), not a browsable rail. Building a fake rail would mean inventing
-  category names.
+- **4.1.3 full category rail** — corrected in the "ProductListPage
+  category rail" post-Phase-7 follow-up further down: the API still has
+  no "list categories" endpoint, but a real rail was built anyway, scoped
+  honestly to the categories present in the currently-loaded page (same
+  pattern as the admin dashboard's low-stock panel) rather than a true
+  full-catalog browsable list.
 - **4.1.4 / 4.1.15 "Trending now" section + "See all"** — the product list
   endpoint returns one paginated set, not a separate trending subset. No
   section split without fabricating one.
@@ -139,9 +141,10 @@ Deliberately **not** built:
   geometric marks (no filled icons, no asserted policy text beyond what
   the prototype itself already shows) — see the "PDP trust row" entry
   further down.
-- **4.2.13/4.2.14 desktop cart drawer** — needs a cart-refetch-after-add
-  flow and a new `CartDrawer` component; deferred rather than shipping a
-  drawer that doesn't reflect real cart state.
+- **4.2.13/4.2.14 desktop cart drawer** — built in the "CartDrawer"
+  post-Phase-7 follow-up further down; this paragraph is the original
+  Phase-4-pass state, kept as the historical record of what wasn't true
+  yet.
 
 ### 4.3 CartPage
 
@@ -266,12 +269,16 @@ because the model itself is single-address:
   The earlier note that Orders "already exists in the bottom tab bar" was
   wrong — it was never in `BottomTabBar.tsx` or `TopNav.tsx`, so `/orders`
   was completely unreachable from the UI until this follow-up added it.
-- **4.7.7 dashed "+ Add new address" CTA block, 4.7.10 Home/Work/Other
-  label chips, 4.7.12 delete confirmation** — the backend's address
-  shape (`UserAddress`) has no `label` field and there is exactly one
-  slot, added via `POST /profile/address` or replaced via
-  `PUT /profile/address/:id` — there's nothing to label or delete from a
-  list of one.
+- **4.7.7 dashed "+ Add new address" CTA block** — actually built (this
+  note previously and wrongly lumped it in with 4.7.10/4.7.12; it's
+  ticked in the plan). It calls the same real `POST /profile/address`
+  either way — "add new" just replaces the current single default slot,
+  since there's nowhere else for a second address to live.
+- **4.7.10 Home/Work/Other label chips, 4.7.12 delete confirmation** —
+  the backend's address shape (`UserAddress`) has no `label` field, and
+  with exactly one address slot (added via `POST /profile/address` or
+  replaced via `PUT /profile/address/:id`) there's no "delete one address
+  from a list" action to put behind a confirmation either.
 - **4.7.13–4.7.15 desktop three-column account shell** — corrected in a
   post-Phase-7 follow-up (see further down): the left-nav half is now
   built, since it only ever needed the same real destinations as 4.7.3
