@@ -672,3 +672,14 @@ a real shared shell wrapping all three pages would be a real routing/
 architecture change, out of scope for this pass. 4.7.15 (right rail's
 mobile collapse behavior) stays unticked for the same reason — there's
 no rail to collapse.
+
+## Post-Phase-7 follow-up — tick 4.3.2, already fully matching spec
+
+`CartPage`'s line-item markup already matches 4.3.2's spec exactly —
+`rounded-card border border-line p-3 flex gap-3.25` (rounded/border from
+the `Card` primitive's own base classes, `p-3`/`flex`/`gap-3.25`
+explicit), `64×64` `ImageFrame` thumb, name/variant/total text sizes,
+`QtyStepper` padding overridden to `px-2 py-1`, hover `border-accent
+slide-x`. This was built during the original Phase-4 pass but the
+checkbox was never checked off; just correcting the tracking, no code
+change.
