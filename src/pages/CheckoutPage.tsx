@@ -167,14 +167,19 @@ const CheckoutPage = () => {
     // React's next render — a fast double-click could otherwise fire two
     // Razorpay order-create calls before then. This is the one place in
     // the app where that would be genuinely consequential (real money).
+    // isPlacingOrder must flip to true *before* the first await (script
+    // load) rather than after it — script load is a real network fetch
+    // the first time it runs, leaving a wide window where a second click
+    // would still see isPlacingOrder as false and slip past this guard.
     if (isPlacingOrder) return;
+    setIsPlacingOrder(true);
     const loaded = await loadRazorpayScript();
     if (!loaded) {
       toast.error('Failed to load payment gateway. Please try again.');
+      setIsPlacingOrder(false);
       return;
     }
 
-    setIsPlacingOrder(true);
     try {
       const payload = buildAddressPayload();
       const { data } = await userApi.post('/order/create-order', payload);

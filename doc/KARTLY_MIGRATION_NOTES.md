@@ -842,3 +842,21 @@ The extra `clearTimeout` before scheduling a new one also fixes a minor
 edge case where clicking "Add to cart" twice in quick succession (once
 the double-submit guard's window has passed, e.g. two separate adds of
 different quantities) would otherwise leave two competing timers alive.
+
+## Post-Phase-7 follow-up — closed a gap in CheckoutPage's double-submit guard
+
+The `if (isPlacingOrder) return;` guard added in an earlier follow-up
+(see above) was checked correctly, but `setIsPlacingOrder(true)` wasn't
+called until *after* `await loadRazorpayScript()` — and the first time
+that script tag doesn't already exist in the DOM, loading it is a real
+network fetch, not an instant resolve. That left a wide window, on a
+shopper's very first checkout in a tab, where `isPlacingOrder` was still
+`false` and a second click on "Pay" would slip past the guard entirely
+and fire a second `/order/create-order` call. Moved
+`setIsPlacingOrder(true)` to immediately after the guard check, before
+the `await`, with a matching `setIsPlacingOrder(false)` added to the
+"payment gateway failed to load" early-return branch (the two existing
+reset points — the create-order catch block, and the Razorpay modal's
+`ondismiss` — were already correct and untouched). This is the one
+double-submit guard in the app protecting a call that creates real
+Razorpay orders, so it's worth being exact about, not just present.
