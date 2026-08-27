@@ -966,3 +966,18 @@ OTP-only reality, or (b) actually persist and hash it if password-based
 login is meant to exist as a fallback path (mirroring how the seller
 side already does this correctly with bcrypt on `Seller.model.ts`).
 Left unfixed rather than guessing which direction is intended.
+
+## Post-Phase-7 follow-up — race condition on CartDrawer reopen
+
+Missed in the earlier race-condition sweep because it's a component
+triggered by a modal-open boolean, not a page keyed on a route param —
+`CartDrawer.tsx` refetches `/cart/get-cart` every time `open` flips
+true, with no guard against closing and quickly reopening the drawer
+firing a second request before the first resolves. A slower first
+response landing after the second could overwrite fresher cart data
+with stale data. Added the same `isCurrent` guard pattern used
+everywhere else in this app. Swept both apps for any other
+open-boolean-triggered fetch with the same gap — found none (the
+admin app's only comparable case, `ProductDetailsPage`'s Manage
+Variant modal, pre-populates from already-loaded local state rather
+than refetching on open, so it was never exposed to this).

@@ -43,15 +43,28 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
 
   useEffect(() => {
     if (!open) return;
+    // Guards against a real race: closing and quickly reopening the
+    // drawer fires a second get-cart call before the first resolves — a
+    // slower first response landing after the second would otherwise
+    // overwrite fresher cart data with stale data.
+    let isCurrent = true;
     setIsLoading(true);
     userApi
       .get('/cart/get-cart')
-      .then(({ data }) => setCart(data.data))
+      .then(({ data }) => {
+        if (isCurrent) setCart(data.data);
+      })
       .catch((err) => {
+        if (!isCurrent) return;
         const msg = axios.isAxiosError(err) ? err.response?.data?.message ?? 'Failed to load cart.' : 'Failed to load cart.';
         toast.error(msg);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        if (isCurrent) setIsLoading(false);
+      });
+    return () => {
+      isCurrent = false;
+    };
   }, [open]);
 
   const itemCount = cart?.items?.length ?? 0;
