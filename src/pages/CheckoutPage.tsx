@@ -163,6 +163,11 @@ const CheckoutPage = () => {
   };
 
   const placeOrder = async () => {
+    // The disabled attribute on the Pay button only takes effect after
+    // React's next render — a fast double-click could otherwise fire two
+    // Razorpay order-create calls before then. This is the one place in
+    // the app where that would be genuinely consequential (real money).
+    if (isPlacingOrder) return;
     const loaded = await loadRazorpayScript();
     if (!loaded) {
       toast.error('Failed to load payment gateway. Please try again.');

@@ -142,6 +142,7 @@ const ProfilePage = () => {
 
   const saveProfile = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSavingProfile) return;
     setIsSavingProfile(true);
     try {
       const formData = new FormData();
@@ -201,6 +202,7 @@ const ProfilePage = () => {
 
   const saveAddress = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSavingAddress) return;
     setIsSavingAddress(true);
     const payload = {
       fullName: addrFullName,

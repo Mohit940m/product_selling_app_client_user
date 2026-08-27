@@ -100,7 +100,7 @@ const ProductDetailPage = () => {
       navigate('/login');
       return;
     }
-    if (!product || isWishlisted) return;
+    if (!product || isWishlisted || isWishlisting) return;
 
     setIsWishlisting(true);
     try {
@@ -162,7 +162,7 @@ const ProductDetailPage = () => {
       navigate('/login');
       return false;
     }
-    if (!product) return false;
+    if (!product || isAddingToCart) return false;
 
     setIsAddingToCart(true);
     try {

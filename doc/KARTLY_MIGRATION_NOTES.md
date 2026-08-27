@@ -771,3 +771,20 @@ protection against two requests overlapping — a rapid double-click on
 "Next page" (or fast category-chip switching) could let a stale
 response land after a newer one and silently show the wrong page's
 results. Added the same `isCurrent` guard.
+
+## Post-Phase-7 follow-up — explicit double-submit guards
+
+Same fix as the admin app: every submit/save/action handler already
+disabled its trigger via the `disabled` attribute while a request was in
+flight, but that only takes effect on React's *next* render, not
+synchronously — a fast double-click or double Enter could still fire a
+handler twice before then. Added an explicit guard as the first real
+line of every handler (`placeOrder`, `submitLogin`, `submitRegister`,
+`saveProfile`, `saveAddress`, `toggleWishlist`, `addToCart`,
+`removeItem`, `updateQuantity`) — belt-and-suspenders on top of the
+disabled attribute, not a replacement for it. `placeOrder` is the one
+place in this app where this is genuinely consequential (a double-click
+could otherwise create two Razorpay orders for the same cart).
+`removeItem`/`updateQuantity` share one cart line's key, so each also
+guards against the *other* action already being in flight for the same
+line, not just itself.

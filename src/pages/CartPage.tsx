@@ -84,7 +84,9 @@ const CartPage = () => {
   };
 
   const removeItem = async (productId: string, variantId: string) => {
-    setRemovingId(`${productId}-${variantId}`);
+    const key = `${productId}-${variantId}`;
+    if (removingId === key || updatingId === key) return;
+    setRemovingId(key);
     try {
       const { data } = await userApi.post('/cart/remove-from-cart', { productId, variantId });
       setCart(data.data);
@@ -104,6 +106,7 @@ const CartPage = () => {
   // once it hits 0), so the stepper always moves by exactly 1 per click.
   const updateQuantity = async (productId: string, variantId: string, delta: 1 | -1) => {
     const key = `${productId}-${variantId}`;
+    if (updatingId === key || removingId === key) return;
     setUpdatingId(key);
     try {
       const { data } = delta === 1
