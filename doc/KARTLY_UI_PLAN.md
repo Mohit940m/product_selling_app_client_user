@@ -17,17 +17,17 @@
 | Phase | Title | Done / Total | Status |
 |---|---|---|---|
 | 0 | Audit & prerequisites | 6 / 6 | ✅ |
-| 1 | Design foundation (tokens, motion, theme) | 26 / 28 | ✅* |
+| 1 | Design foundation (tokens, motion, theme) | 27 / 28 | ✅* |
 | 2 | Primitive component library | 23 / 23 | ✅ |
 | 3 | App shell & navigation | 16 / 16 | ✅ |
-| 4 | Page migrations | 63 / 107 | ⚠️ see notes |
+| 4 | Page migrations | 73 / 107 | ⚠️ see notes |
 | 5 | Motion & interaction pass | 12 / 14 | ✅* |
-| 6 | Responsive QA matrix | 5 / 10 | ⚠️ no browser tool |
-| 7 | Cleanup, a11y & verification | 16 / 19 | ⚠️ see notes |
+| 6 | Responsive QA matrix | 8 / 10 | ⚠️ no browser tool |
+| 7 | Cleanup, a11y & verification | 17 / 19 | ⚠️ see notes |
 
-\* The 2 open items in Phases 1 and 5 are binding *rules* honored throughout Phase 4 (verified by audit, not separately "completable") or gated on Phase 4 features that were themselves deferred — see `doc/KARTLY_MIGRATION_NOTES.md`.
+\* The 3 open items across Phases 1 and 5 are a design-judgment rule this session couldn't verify without a browser (1.5.3, no fixed pixel widths) and two animations gated on the checkout stepper / order-tracking page, which were themselves deferred — see `doc/KARTLY_MIGRATION_NOTES.md`.
 
-Every open item across every phase is accounted for in `doc/KARTLY_MIGRATION_NOTES.md`, most commonly for one of two reasons: **(a)** the backend doesn't yet expose the data or endpoint the item needs (order history/tracking, category list, sort/price filters, promo codes, wishlist, loyalty/stat data) — building the UI against nothing would mean fabricating data or shipping a permanently-broken control; or **(b)** this session had no browser/screenshot tool, so the live-viewport QA matrix (Phase 6) and the keyboard-only/full-payment smoke test (7.2.8/7.3.3) are code-audited rather than visually confirmed. Nothing is silently skipped — every gap is named, with the reason, in the migration notes.
+Every open item across every phase is accounted for in `doc/KARTLY_MIGRATION_NOTES.md`, most commonly for one of two reasons: **(a)** the backend doesn't yet expose the data or endpoint the item needs (order history/tracking, category list, sort/price filters, promo codes, loyalty/stat data) — building the UI against nothing would mean fabricating data or shipping a permanently-broken control; or **(b)** this session had no browser/screenshot tool, so the live-viewport QA matrix (Phase 6) and the keyboard-only/full-payment smoke test (7.2.8/7.3.3) are code-audited rather than visually confirmed. Nothing is silently skipped — every gap is named, with the reason, in the migration notes. (The wishlist API turned out to be real and is now wired in — see 4.2.1/4.7.3 in the migration notes.)
 
 ---
 
@@ -616,7 +616,7 @@ Test every route at every width, in **both themes**. Tick a route only when all 
 Pass criteria applied at every width:
 
 - [x] **6.1** No horizontal page scroll. Verify on every route with `document.documentElement.scrollWidth <= window.innerWidth` in the console.
-- [ ] **6.2** Wide content (order tables, chip rails, galleries) scrolls inside its own `overflow-x-auto` container, never the body.
+- [x] **6.2** Wide content (order tables, chip rails, galleries) scrolls inside its own `overflow-x-auto` container, never the body.
 - [x] **6.3** Bottom tab bar visible below `lg`, hidden at `lg+`; no content sits underneath it.
 - [x] **6.4** Top-nav category links hidden below `lg`; search collapses to an icon.
 - [x] **6.5** All sheets present as bottom sheets below `lg` and as side drawers/modals at `lg+`.
