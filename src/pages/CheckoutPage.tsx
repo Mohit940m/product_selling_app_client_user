@@ -354,13 +354,34 @@ const CheckoutPage = () => {
               loading={isPlacingOrder}
               disabled={isPlacingOrder || !summary || isLoadingSummary}
               fullWidth
-              className="mt-4"
+              className="mt-4 hidden lg:inline-flex"
             >
               Place Order & Pay
             </Button>
           </Panel>
         </aside>
       </div>
+
+      {/* Mobile sticky pay bar — sits just above the bottom tab bar, same
+          pattern as ProductDetailPage's sticky add-to-cart bar, so the pay
+          action is always reachable without scrolling past the whole form. */}
+      {summary && (
+        <div className="sticky bottom-[76px] z-30 -mx-5 mt-5 flex items-center gap-3.5 border-t border-line bg-card px-5 py-4 sm:-mx-8 sm:px-8 lg:hidden">
+          <div className="flex-1">
+            <p className="text-[10px] font-semibold text-muted">Pay total</p>
+            <p className="font-extrabold text-[21px] text-ink">{formatCurrency(summary.breakdown.total)}</p>
+          </div>
+          <Button
+            variant="dark"
+            onClick={placeOrder}
+            loading={isPlacingOrder}
+            disabled={isPlacingOrder || isLoadingSummary}
+            className="flex-1"
+          >
+            Pay now
+          </Button>
+        </div>
+      )}
     </Container>
   );
 };

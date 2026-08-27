@@ -553,3 +553,16 @@ wishlist grid); free-flowing panel contexts (profile fields, shipping
 address blocks, the PDP `<h1>`) rely on normal text wrapping, which the
 rule explicitly allows ("long addresses wrap"). No clipped-without-
 wrapping case found.
+
+## Post-Phase-7 follow-up — mobile sticky pay bar (4.4.5)
+
+Below `lg`, the Price Summary `Panel` (with its Pay button) previously
+sat in normal document flow after the address and items panels — a
+buyer had to scroll past the whole form to reach "Place Order & Pay."
+Added a mobile-only sticky pay bar (`sticky bottom-[76px]`, same pattern
+as `ProductDetailPage`'s sticky add-to-cart bar, positioned above the
+bottom tab bar) showing `Pay total` + amount and a `Pay now` button that
+calls the exact same `placeOrder` handler — the create-order → Razorpay
+modal → verify-payment flow itself is untouched, only reachability
+changed. The in-panel desktop button is now `hidden lg:inline-flex` so
+there's exactly one visible pay action per breakpoint, never two.
