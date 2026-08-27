@@ -627,3 +627,11 @@ indicator on mobile per 4.4.2's exact spec (`h-[5px] rounded-full`,
 desktop per 4.4.9. Both use the existing `t-base` transition utility so
 the fill animates on step change, and neither adds new page states or
 touches the actual payment call path — `placeOrder` is untouched.
+
+## Post-Phase-7 follow-up — 5.12 checked off with the checkout stepper
+
+The checkout progress indicator built above uses the shared `t-base`
+transition utility (`all 0.25s cubic-bezier(...)`, the same timing used
+for every other hover/state transition in this app) rather than a
+bespoke `400ms`, so the fill animates on step change per 5.12's intent
+with the app's standard transition speed instead of a one-off value.

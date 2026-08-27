@@ -20,12 +20,12 @@
 | 1 | Design foundation (tokens, motion, theme) | 27 / 28 | ✅* |
 | 2 | Primitive component library | 23 / 23 | ✅ |
 | 3 | App shell & navigation | 16 / 16 | ✅ |
-| 4 | Page migrations | 73 / 107 | ⚠️ see notes |
-| 5 | Motion & interaction pass | 12 / 14 | ✅* |
+| 4 | Page migrations | 76 / 107 | ⚠️ see notes |
+| 5 | Motion & interaction pass | 13 / 14 | ✅* |
 | 6 | Responsive QA matrix | 8 / 10 | ⚠️ no browser tool |
 | 7 | Cleanup, a11y & verification | 17 / 19 | ⚠️ see notes |
 
-\* The 3 open items across Phases 1 and 5 are a design-judgment rule this session couldn't verify without a browser (1.5.3, no fixed pixel widths) and two animations gated on the checkout stepper / order-tracking page, which were themselves deferred — see `doc/KARTLY_MIGRATION_NOTES.md`.
+\* The 2 open items across Phases 1 and 5 are a design-judgment rule this session couldn't verify without a browser (1.5.3, no fixed pixel widths) and the tracking-timeline animation (5.13), gated on `OrderTrackingPage`, which stays deferred — no order-detail endpoint exists. The checkout stepper (5.12) is now built — see `doc/KARTLY_MIGRATION_NOTES.md`.
 
 Every open item across every phase is accounted for in `doc/KARTLY_MIGRATION_NOTES.md`, most commonly for one of two reasons: **(a)** the backend doesn't yet expose the data or endpoint the item needs (order history/tracking, category list, sort/price filters, promo codes, loyalty/stat data) — building the UI against nothing would mean fabricating data or shipping a permanently-broken control; or **(b)** this session had no browser/screenshot tool, so the live-viewport QA matrix (Phase 6) and the keyboard-only/full-payment smoke test (7.2.8/7.3.3) are code-audited rather than visually confirmed. Nothing is silently skipped — every gap is named, with the reason, in the migration notes. (The wishlist API turned out to be real and is now wired in — see 4.2.1/4.7.3 in the migration notes.)
 
@@ -588,7 +588,7 @@ Do this after every page is structurally converted. Work through it as a single 
 - [x] **5.9** Cart badge: `animate-pop` whenever the count increases.
 - [x] **5.10** Add-to-cart: the button label crossfades to a check for 900ms before reverting, and the `Toast` from 2.5.3 fires.
 - [x] **5.11** Skeletons: `animate-shim` everywhere. Confirm no `animate-pulse` remains — `grep -rn "animate-pulse" src/` returns nothing.
-- [ ] **5.12** Checkout progress bar fills with a 400ms width transition on step change.
+- [x] **5.12** Checkout progress bar fills with a 400ms width transition on step change.
 - [ ] **5.13** Tracking timeline dots and connectors animate on `transition-all .5s` when the stage advances.
 - [x] **5.14** Re-verify the reduced-motion guard: with the OS setting on, no looping animation runs and no transform entrance plays; the success page shows a static check and no confetti.
 
