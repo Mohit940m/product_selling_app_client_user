@@ -880,3 +880,19 @@ what to actively *do* about an oversold order — refund, backorder,
 notify the seller — is a business-policy call, not something to invent
 unilaterally, and is left as a follow-up need; this fix only stops the
 underlying data corruption.
+
+## Backend fix (cross-repo) — search 500'd on normal punctuation
+
+Found the most impactful bug of this audit: `getAllProducts` built its
+search filter as `new RegExp(search, 'i')` straight from the raw query
+string. Any search term containing a regex metacharacter throws a
+`SyntaxError` there instead of returning results — and this app's
+`ProductListPage` search is debounced live-as-you-type, so a shopper
+typing something as ordinary as `"Samsung (Galaxy"` hits an unbalanced
+paren mid-keystroke and 500s the request before ever finishing the
+word. Verified the exact crash (`Unterminated group`) before fixing.
+Fixed server-side with a shared `escapeRegex()` utility applied at
+every `new RegExp(userInput, ...)` call site across both the user- and
+seller-facing product search/filter endpoints (`product_selling_app_server`
+commit `c4f8ebb`) — no frontend change needed, this app was already
+sending the right thing.
