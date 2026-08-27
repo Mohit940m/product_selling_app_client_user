@@ -921,3 +921,20 @@ conditionally from only the identifiers actually supplied, mirroring
 the pattern `registerUser` already used correctly for its own
 uniqueness check in the very same file — this was a same-file
 inconsistency, not a new rule. No frontend change needed.
+
+## Backend fix (cross-repo) — Razorpay checkout modal's email prefill was always blank
+
+`CheckoutPage.tsx`'s Razorpay `options.prefill.email` comes straight
+from `data.data.user.email` in `create-order`'s response, which the
+backend builds from `req.user.email`. `authenticateUser`'s
+`User.findById(...).select(" isActive isDeleted ")` only ever returns
+`_id` plus those two fields — a `.select()` with only inclusions
+returns nothing else — so `req.user.email` was `undefined` on every
+single checkout, regardless of whether the shopper actually had an
+email on file. Swept every other `req.user.`/`req.seller.` field
+access across the backend controllers to confirm this was the only one
+relying on a field the auth middleware didn't select (everything else
+only reads `._id`, always present regardless of projection). Fixed by
+adding `email` to the middleware's select (`product_selling_app_server`
+commit `0a55d47`). No frontend change needed — `CheckoutPage.tsx` was
+already reading the right field, it just never had real data.
