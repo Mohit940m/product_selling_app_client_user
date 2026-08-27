@@ -1002,3 +1002,18 @@ before a signature check could see it) and idempotent order/payment
 reconciliation — a genuine feature to design and build, tracked as a
 known gap in `product_selling_app_server`'s `.env.example` (commit
 `4c8a585`) rather than attempted unilaterally.
+
+## Post-Phase-7 follow-up — fixed a false claim on OrderSuccessPage
+
+`OrderSuccessPage.tsx` told every shopper "We've sent the details to
+your email" — but there is no email infrastructure anywhere in this
+system (grepped the entire backend for nodemailer/sendgrid/smtp/mailer
+and `package.json` for the same — nothing; matches this project's own
+documented "no real email/SMS delivery" for OTPs). Unlike the OTP
+screens' "sent to your email/phone" copy — which sits directly next to
+a `Badge tone="warn"` dev-notice card showing the raw OTP, so it isn't
+actually misleading in context — this claim had no such compensating
+disclosure anywhere nearby. It was just a bare, false statement about
+something that never happens, contrary to this project's own stated
+discipline of honest states over fabricated ones. Changed to "Keep the
+order ID above for reference," which is both true and still useful.

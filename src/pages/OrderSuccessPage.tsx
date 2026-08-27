@@ -85,7 +85,7 @@ const OrderSuccessPage = () => {
           className="mt-3.5 text-sm font-medium text-muted"
           style={prefersReducedMotion ? undefined : { animation: 'kfUp .6s .55s both' }}
         >
-          Your order is confirmed. We've sent the details to your email.
+          Your order is confirmed. Keep the order ID above for reference.
         </p>
 
         {estimatedTime && (
