@@ -981,3 +981,24 @@ open-boolean-triggered fetch with the same gap — found none (the
 admin app's only comparable case, `ProductDetailsPage`'s Manage
 Variant modal, pre-populates from already-loaded local state rather
 than refetching on open, so it was never exposed to this).
+
+## Known gap (cross-repo) — payment confirmation has no server-side fallback
+
+Found while reviewing `.env.example`: `RAZORPAY_WEBHOOK_SECRET` is
+declared there but grepping the entire backend for "webhook" turns up
+nothing else — there is no Razorpay webhook route or handler
+implemented at all. `CheckoutPage.tsx`'s flow (open Razorpay modal →
+on success, `POST /order/verify-payment`) is the *only* path that ever
+marks an order `PAID`/`CONFIRMED`. If the browser closes, the tab
+crashes, or the network drops in the gap between Razorpay capturing
+the payment and that `verify-payment` call completing, the shopper has
+been charged but the order silently stays `CREATED`/`PENDING` forever
+— nothing server-side is listening for Razorpay's own
+`payment.captured` webhook event as a fallback. This is a real,
+understood gap, not something to improvise a fix for here: a proper
+webhook handler needs raw-body signature verification (the backend's
+global `express.json()` middleware would otherwise consume the body
+before a signature check could see it) and idempotent order/payment
+reconciliation — a genuine feature to design and build, tracked as a
+known gap in `product_selling_app_server`'s `.env.example` (commit
+`4c8a585`) rather than attempted unilaterally.
