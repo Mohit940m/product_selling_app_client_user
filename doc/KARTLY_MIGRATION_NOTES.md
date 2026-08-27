@@ -896,3 +896,28 @@ every `new RegExp(userInput, ...)` call site across both the user- and
 seller-facing product search/filter endpoints (`product_selling_app_server`
 commit `c4f8ebb`) — no frontend change needed, this app was already
 sending the right thing.
+
+## Critical backend fix (cross-repo) — phone-only login could match the wrong user
+
+The most severe bug found this session. This app's login flow accepts
+*either* email or phone as the identifier — but `loginUser` and
+`verifyOtpForLogin` on the backend both looked the user up with
+`User.findOne({ $or: [{ email }, { phone }] })` unconditionally. When a
+shopper logs in with phone only (leaving `email` as `undefined`),
+Mongoose/the Mongo driver drop keys with an `undefined` value from a
+query filter — so `{ email: undefined }` silently became `{}`, which
+matches *every* document. The `$or` as a whole then matched every user
+in the collection, and `findOne` returned whichever one the query
+happened to return first — **not** the user who actually owns the
+phone number entered. Concretely: `verifyOtpForLogin`'s lookup result
+is who `generateAuthToken` issues a JWT for, so a phone-only login
+could authenticate the caller as an arbitrary, unrelated account.
+Verified with an isolated Mongoose query-casting test before and after
+the fix — confirmed the unconditional `$or` really did produce
+`{"$or":[{},{"phone":...}]}`, and the fix produces
+`{"$or":[{"phone":...}]}`. Fixed server-side
+(`product_selling_app_server` commit `3243884`) by building the `$or`
+conditionally from only the identifiers actually supplied, mirroring
+the pattern `registerUser` already used correctly for its own
+uniqueness check in the very same file — this was a same-file
+inconsistency, not a new rule. No frontend change needed.
