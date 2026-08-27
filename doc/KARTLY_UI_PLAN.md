@@ -20,7 +20,7 @@
 | 1 | Design foundation (tokens, motion, theme) | 27 / 28 | ✅* |
 | 2 | Primitive component library | 23 / 23 | ✅ |
 | 3 | App shell & navigation | 16 / 16 | ✅ |
-| 4 | Page migrations | 76 / 107 | ⚠️ see notes |
+| 4 | Page migrations | 77 / 107 | ⚠️ see notes |
 | 5 | Motion & interaction pass | 13 / 14 | ✅* |
 | 6 | Responsive QA matrix | 8 / 10 | ⚠️ no browser tool |
 | 7 | Cleanup, a11y & verification | 17 / 19 | ⚠️ see notes |
