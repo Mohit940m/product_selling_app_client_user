@@ -788,3 +788,28 @@ could otherwise create two Razorpay orders for the same cart).
 `removeItem`/`updateQuantity` share one cart line's key, so each also
 guards against the *other* action already being in flight for the same
 line, not just itself.
+
+## Post-Phase-7 follow-up — object-URL leak in ProfilePage's avatar preview
+
+`ProfilePage.tsx` calls `URL.createObjectURL(file)` when the seller picks a
+new avatar image and stores the resulting `blob:` URL in `previewImage` for
+the `<img>` preview. That URL was never revoked — picking a new image
+after already staging one, or navigating away from the page mid-edit,
+leaked the previous blob until the whole tab unloaded. Added a `useEffect`
+right after the `previewImage` state declaration whose cleanup revokes it:
+
+```tsx
+useEffect(() => {
+  return () => {
+    if (previewImage) URL.revokeObjectURL(previewImage);
+  };
+}, [previewImage]);
+```
+
+Keyed on `previewImage` itself, so the *previous* URL is revoked both when
+it's replaced by a new pick and on unmount (the cleanup for the effect run
+holding the current value fires either way) — no extra revoke call needed
+at each of the state's individual setters (cancel, re-pick, save-success).
+Verified the actual upload (`formData.append('profileImage', imageFile)`)
+sends the raw `File` object, never the `previewImage` string, so revoking
+it can't affect a successful save.

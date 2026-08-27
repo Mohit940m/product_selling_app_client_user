@@ -75,6 +75,16 @@ const ProfilePage = () => {
   const [editGender, setEditGender] = useState<'male' | 'female' | 'other' | ''>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  // Revokes the *previous* blob: URL whenever previewImage changes to a
+  // new value or clears — and on unmount, since the cleanup for the
+  // current effect run (keyed on the current previewImage) fires either
+  // way. Avoids needing a revoke call at each of this state's several
+  // setters (cancel, re-pick, save-success).
+  useEffect(() => {
+    return () => {
+      if (previewImage) URL.revokeObjectURL(previewImage);
+    };
+  }, [previewImage]);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   const [isEditingAddress, setIsEditingAddress] = useState(false);
