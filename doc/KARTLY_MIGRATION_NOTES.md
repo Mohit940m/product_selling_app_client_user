@@ -540,3 +540,16 @@ each other.
 Decorative, non-interactive elements at the same sizes (the `Toast`
 accent dot, `AssistantPage`'s bot-icon `<span>`) were left alone — they
 aren't tap targets.
+
+## Post-Phase-7 follow-up — text-overflow audit (6.7)
+
+Code-audited every place a user/product-controlled name or address
+renders (grep for `.name`/`.fullName` interpolations across
+`ProductListPage`, `ProductDetailPage`, `CartPage`, `CartDrawer`,
+`WishlistPage`, `CheckoutPage`, `ProfilePage`). Card/grid contexts
+already use `line-clamp-1`/`line-clamp-2`/`truncate` with a `min-w-0`
+flex/grid ancestor (product cards, cart lines, the cart drawer, the new
+wishlist grid); free-flowing panel contexts (profile fields, shipping
+address blocks, the PDP `<h1>`) rely on normal text wrapping, which the
+rule explicitly allows ("long addresses wrap"). No clipped-without-
+wrapping case found.

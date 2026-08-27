@@ -621,7 +621,7 @@ Pass criteria applied at every width:
 - [x] **6.4** Top-nav category links hidden below `lg`; search collapses to an icon.
 - [x] **6.5** All sheets present as bottom sheets below `lg` and as side drawers/modals at `lg+`.
 - [x] **6.6** Every tap target ≥ 44px on touch widths.
-- [ ] **6.7** Text never clips: long product names `line-clamp-2`, long addresses wrap.
+- [x] **6.7** Text never clips: long product names `line-clamp-2`, long addresses wrap.
 - [ ] **6.8** Run the entire matrix twice — once light, once dark.
 - [x] **6.9** Safe-area insets respected on iOS (notch top, home indicator bottom).
 - [ ] **6.10** Landscape phone (`812×375`) does not break the PDP sticky bar or the checkout pay bar.
