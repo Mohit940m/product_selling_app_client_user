@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiCheck, FiHeart, FiShoppingCart, FiTag } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -64,6 +64,13 @@ const ProductDetailPage = () => {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isWishlisting, setIsWishlisting] = useState(false);
+  const justAddedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clears the "Added" feedback timeout on unmount so a quick navigation
+  // away right after adding to cart doesn't leave a stray timer running.
+  useEffect(() => () => {
+    if (justAddedTimeoutRef.current) clearTimeout(justAddedTimeoutRef.current);
+  }, []);
 
   useEffect(() => {
     // Guards against a real race: navigating from one product straight to
@@ -173,7 +180,8 @@ const ProductDetailPage = () => {
       });
       showKartlyToast({ title: 'Added to bag', sub: `${product.name}${selectedVariant ? ` · ×${quantity}` : ''}` });
       setJustAdded(true);
-      setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS);
+      if (justAddedTimeoutRef.current) clearTimeout(justAddedTimeoutRef.current);
+      justAddedTimeoutRef.current = setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS);
       if (options?.openDrawer !== false) setCartDrawerOpen(true);
       return true;
     } catch (err) {

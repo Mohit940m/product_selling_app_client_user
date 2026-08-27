@@ -791,7 +791,7 @@ line, not just itself.
 
 ## Post-Phase-7 follow-up — object-URL leak in ProfilePage's avatar preview
 
-`ProfilePage.tsx` calls `URL.createObjectURL(file)` when the seller picks a
+`ProfilePage.tsx` calls `URL.createObjectURL(file)` when the shopper picks a
 new avatar image and stores the resulting `blob:` URL in `previewImage` for
 the `<img>` preview. That URL was never revoked — picking a new image
 after already staging one, or navigating away from the page mid-edit,
@@ -813,3 +813,32 @@ at each of the state's individual setters (cancel, re-pick, save-success).
 Verified the actual upload (`formData.append('profileImage', imageFile)`)
 sends the raw `File` object, never the `previewImage` string, so revoking
 it can't affect a successful save.
+
+## Post-Phase-7 follow-up — stray timer on ProductDetailPage's "Added" feedback
+
+`addToCart` set a bare `setTimeout(() => setJustAdded(false), 900)` after
+a successful add, to flip the button back from its "Added" state. Nothing
+cleared it if the shopper navigated away within that 900ms window right
+after adding an item — a harmless no-op `setState` on an unmounted
+component today, but a stray timer nonetheless, and inconsistent with
+every other timer in this app (`useCountdown`, the search debounce) which
+are all cleared on unmount. Tracked the timeout id in a ref and added an
+unmount-cleanup effect, matching the existing pattern:
+
+```tsx
+const justAddedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+useEffect(() => () => {
+  if (justAddedTimeoutRef.current) clearTimeout(justAddedTimeoutRef.current);
+}, []);
+
+// in addToCart, after a successful post:
+setJustAdded(true);
+if (justAddedTimeoutRef.current) clearTimeout(justAddedTimeoutRef.current);
+justAddedTimeoutRef.current = setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS);
+```
+
+The extra `clearTimeout` before scheduling a new one also fixes a minor
+edge case where clicking "Add to cart" twice in quick succession (once
+the double-submit guard's window has passed, e.g. two separate adds of
+different quantities) would otherwise leave two competing timers alive.
