@@ -198,7 +198,7 @@ const CheckoutPage = () => {
         <Link
           to="/cart"
           aria-label="Back to cart"
-          className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-[13px] border border-edge t-fast hover:border-accent"
+          className="relative flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-[13px] border border-edge t-fast before:absolute before:-inset-2 before:content-[''] hover:border-accent"
         >
           <FiArrowLeft size={16} />
         </Link>

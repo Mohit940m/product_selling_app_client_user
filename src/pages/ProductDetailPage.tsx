@@ -283,7 +283,7 @@ const ProductDetailPage = () => {
             <Link
               to="/products"
               aria-label="Back to products"
-              className="absolute left-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast hover:text-accent lg:hidden"
+              className="absolute left-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast before:absolute before:-inset-2 before:content-[''] hover:text-accent lg:hidden"
             >
               <FiArrowLeft size={16} />
             </Link>
@@ -293,7 +293,7 @@ const ProductDetailPage = () => {
               disabled={isWishlisting}
               aria-label={isWishlisted ? 'Saved to wishlist' : 'Save to wishlist'}
               aria-pressed={isWishlisted}
-              className={`absolute right-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast hover:scale-[1.08] hover:text-accent disabled:opacity-60 ${
+              className={`absolute right-4 top-4 flex h-9.5 w-9.5 items-center justify-center rounded-[13px] bg-card t-fast before:absolute before:-inset-2 before:content-[''] hover:scale-[1.08] hover:text-accent disabled:opacity-60 ${
                 isWishlisted ? 'text-accent' : 'text-ink'
               }`}
             >

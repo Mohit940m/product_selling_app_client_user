@@ -511,3 +511,32 @@ per click — matches how it already behaves everywhere else in this app.
 4.3.2 stays unticked since 4.3.3 (swipe-to-remove) is bundled into the
 same checklist item and remains deferred as UX polish this session can't
 verify without a browser.
+
+## Post-Phase-7 follow-up — tap-target audit (1.5.4, 6.6)
+
+Code-audited every icon-only interactive element for the 44×44px CSS
+touch-target rule (`grep` for `h-6`/`h-7`/`h-8`/`h-9`/`h-9.5` on
+`<button>`/`<a>`/`<Link>` elements — no browser available to measure
+rendered boxes directly, so this is a class-name audit, same method as
+the rest of Phase 6). Found and fixed:
+
+- **`ProfilePage.tsx`** avatar camera button (28px visible).
+- **`ProductDetailPage.tsx`** back tile and wishlist heart (38px each,
+  floating over the gallery — the exact "prototype's 38px icon tiles"
+  case 1.5.4 calls out).
+- **`CheckoutPage.tsx`** back tile (38px).
+- **`TopNav.tsx`** mobile search icon (40px) and cart/profile icons
+  (38px each).
+
+All fixed the same way the rule prescribes — "padding-box expansion, not
+a smaller hit area": an invisible `before:absolute before:-inset-*`
+pseudo-element enlarges the actual clickable/tappable box without
+changing the visible circle/tile size or the layout. Used `-inset-2`
+(+16px total) for isolated tiles with generous surrounding space, and
+the smaller `-inset-1` (+8px total) for the three TopNav icons that sit
+only `gap-3` (12px) apart, so their expanded hit areas don't overlap
+each other.
+
+Decorative, non-interactive elements at the same sizes (the `Toast`
+accent dot, `AssistantPage`'s bot-icon `<span>`) were left alone — they
+aren't tap targets.

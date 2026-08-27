@@ -325,7 +325,8 @@ const ProfilePage = () => {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-onacc t-fast hover:shadow-lift-accent-cta"
+                      aria-label="Change profile photo"
+                      className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-onacc t-fast before:absolute before:-inset-2 before:content-[''] hover:shadow-lift-accent-cta"
                     >
                       <FiCamera size={13} />
                     </button>

@@ -270,7 +270,7 @@ The prototype gives two distinct compositions: a 340×720 phone and a 1280-wide 
 
 - [x] **1.5.2** Fix the page container once, in `src/components/layout/Container.tsx`: `mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10`. Replace every ad-hoc `mx-auto max-w-7xl px-4 sm:px-6` in the app with it during Phase 4.
 - [ ] **1.5.3** Rule: **no fixed pixel widths in page code.** The prototype's `340px` and `1280px` are artboard sizes, not layout values. The only permitted fixed widths are the desktop cart drawer (`w-[340px]`) and the desktop account rail (`w-[300px]`) — and both collapse to full-width sheets below `lg`.
-- [ ] **1.5.4** Rule: every tap target is ≥ 44×44 CSS px on touch widths. The prototype's 38px icon tiles get padding-box expansion, not a smaller hit area.
+- [x] **1.5.4** Rule: every tap target is ≥ 44×44 CSS px on touch widths. The prototype's 38px icon tiles get padding-box expansion, not a smaller hit area.
 
 ---
 
@@ -620,7 +620,7 @@ Pass criteria applied at every width:
 - [x] **6.3** Bottom tab bar visible below `lg`, hidden at `lg+`; no content sits underneath it.
 - [x] **6.4** Top-nav category links hidden below `lg`; search collapses to an icon.
 - [x] **6.5** All sheets present as bottom sheets below `lg` and as side drawers/modals at `lg+`.
-- [ ] **6.6** Every tap target ≥ 44px on touch widths.
+- [x] **6.6** Every tap target ≥ 44px on touch widths.
 - [ ] **6.7** Text never clips: long product names `line-clamp-2`, long addresses wrap.
 - [ ] **6.8** Run the entire matrix twice — once light, once dark.
 - [x] **6.9** Safe-area insets respected on iOS (notch top, home indicator bottom).

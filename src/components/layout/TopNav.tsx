@@ -65,7 +65,7 @@ const TopNav = ({ cartCount }: TopNavProps) => {
           <Link
             to="/products?focus=search"
             aria-label="Search"
-            className="grid h-10 w-10 place-items-center rounded-[12px] border border-line t-fast hover:border-accent lg:hidden"
+            className="relative grid h-10 w-10 place-items-center rounded-[12px] border border-line t-fast before:absolute before:-inset-1 before:content-[''] hover:border-accent lg:hidden"
           >
             <FiSearch size={16} />
           </Link>
@@ -83,7 +83,7 @@ const TopNav = ({ cartCount }: TopNavProps) => {
             <Link
               to="/cart"
               aria-label="Cart"
-              className="relative grid h-9.5 w-9.5 place-items-center rounded-[12px] border border-line t-fast hover:border-accent"
+              className="relative grid h-9.5 w-9.5 place-items-center rounded-[12px] border border-line t-fast before:absolute before:-inset-1 before:content-[''] hover:border-accent"
             >
               <FiShoppingCart size={16} />
               {cartCount > 0 && (
@@ -102,7 +102,7 @@ const TopNav = ({ cartCount }: TopNavProps) => {
               <Link
                 to="/profile"
                 aria-label="Profile"
-                className="hidden h-9.5 w-9.5 place-items-center rounded-[12px] bg-soft sm:grid"
+                className="relative hidden h-9.5 w-9.5 place-items-center rounded-[12px] bg-soft before:absolute before:-inset-1 before:content-[''] sm:grid"
               >
                 <FiUser size={16} className="text-[var(--k-on-soft)]" />
               </Link>
