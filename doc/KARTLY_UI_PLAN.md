@@ -467,7 +467,7 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 ### Mobile
 
 - [x] **4.4.1** Header row: back tile `38×38 rounded-[13px] border border-edge` + `Checkout` at `font-extrabold text-[17px]`.
-- [ ] **4.4.2** Three-segment progress: `flex gap-2`, each `flex-1 h-[5px] rounded-full`, completed `bg-accent`, pending `bg-line`. Steps: Address → Payment → Confirm. Animate the fill on step change.
+- [x] **4.4.2** Three-segment progress: `flex gap-2`, each `flex-1 h-[5px] rounded-full`, completed `bg-accent`, pending `bg-line`. Steps: Address → Payment → Confirm. Animate the fill on step change.
 - [x] **4.4.3** `Deliver to` card: `rounded-[18px] border border-accent bg-soft2 p-3.75` with the name, the address in `text-muted text-[12px]`, and a `Change` link in `text-accent text-[11px] font-bold` opening the address `Sheet`.
 - [ ] **4.4.4** Payment method rows: `rounded-[18px] border border-line p-3.75 flex items-center gap-3.25` — radio `18×18 rounded-full`; the selected radio gets `border-[5px] border-accent` and its row gets `border-accent`. Unselected rows hover `border-accent lift-sm`. **Only render methods the backend actually supports** (Razorpay card/UPI/netbanking today) — do not ship the prototype's wallet and pay-in-4 rows as dead UI.
 - [x] **4.4.5** Sticky pay bar: `border-t border-line pt-4.5` with `Pay total` + amount at `font-extrabold text-[21px]` and a `dark` `Pay now` Button triggering the existing create-order → Razorpay modal → verify-payment flow, untouched.
@@ -477,7 +477,7 @@ Each page gets: the screens it maps to, a mobile checklist, and a desktop checkl
 ### Desktop
 
 - [x] **4.4.8** Two-column: form `flex-[1.5]`, order summary `w-[380px] sticky top-28` on `bg-soft2`, listing every line item with thumbs.
-- [ ] **4.4.9** The progress bar becomes a labelled stepper (dot + label per step) above the form.
+- [x] **4.4.9** The progress bar becomes a labelled stepper (dot + label per step) above the form.
 - [ ] **4.4.10** Address and payment render as two side-by-side `Panel`s at `xl`, stacked at `lg`.
 
 ## 4.5 `OrderSuccessPage.tsx` — payment success (screen 07) — **new file**

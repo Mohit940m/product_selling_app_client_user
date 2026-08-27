@@ -64,6 +64,8 @@ declare global {
   }
 }
 
+const CHECKOUT_STEPS = ['Address', 'Payment', 'Confirm'] as const;
+
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
@@ -216,6 +218,8 @@ const CheckoutPage = () => {
     }
   };
 
+  const currentStep = isPlacingOrder || isVerifying ? 2 : summary ? 1 : 0;
+
   return (
     <Container className="py-6 lg:py-10">
       {isVerifying && <LoadingOverlay />}
@@ -232,6 +236,37 @@ const CheckoutPage = () => {
           <p className="font-mono text-[11px] font-bold text-muted">FINAL STEP</p>
           <h1 className="mt-1 font-extrabold text-[22px] tracking-[-.02em]">Checkout</h1>
         </div>
+      </div>
+
+      {/* Progress indicator — purely reflects where the buyer already is in
+          this single-page flow (no step gating, nothing to regress): 0
+          while the address/summary is still loading, 1 once a real
+          breakdown is showing and ready to pay, 2 once payment has been
+          initiated. Mobile gets the spec's plain 3-bar treatment (4.4.2);
+          desktop gets a labelled dot stepper (4.4.9). */}
+      <div className="mb-6 flex gap-2 lg:hidden">
+        {CHECKOUT_STEPS.map((_, i) => (
+          <div key={i} className={`h-[5px] flex-1 rounded-full t-base ${i <= currentStep ? 'bg-accent' : 'bg-line'}`} />
+        ))}
+      </div>
+      <div className="mb-8 hidden items-center lg:flex">
+        {CHECKOUT_STEPS.map((label, i) => (
+          <div key={label} className="flex flex-1 items-center last:flex-none">
+            <div className="flex items-center gap-2.5">
+              <span
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold t-base ${
+                  i <= currentStep ? 'bg-accent text-onacc' : 'bg-line text-muted'
+                }`}
+              >
+                {i + 1}
+              </span>
+              <span className={`text-[12.5px] font-bold t-base ${i <= currentStep ? 'text-ink' : 'text-muted'}`}>{label}</span>
+            </div>
+            {i < CHECKOUT_STEPS.length - 1 && (
+              <div className={`mx-3.5 h-px flex-1 t-base ${i < currentStep ? 'bg-accent' : 'bg-line'}`} />
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">

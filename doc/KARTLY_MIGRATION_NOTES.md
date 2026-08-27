@@ -174,20 +174,19 @@ to the Kartly accent (`#A87BF5`), and a blocking three-dot overlay while
 
 Deliberately **not** built:
 
-- **4.4.1 back tile**, **4.4.2/4.4.9 step progress bar** — this flow has no
-  explicit step state machine (it's address-entry + one payment action, with
-  Razorpay's own modal handling the rest); a fake 3-step indicator would
-  imply steps that don't exist in the code.
 - **4.4.4 custom payment-method radio rows (card/wallet/pay-in-4)** — this
   app delegates payment method selection entirely to the Razorpay checkout
   modal, which already lists whatever methods the merchant account
   supports. Building a parallel custom radio UI would either duplicate or
   contradict Razorpay's own method list.
-- **4.4.5 sticky pay bar / 4.4.10 side-by-side panels at xl** — the pay
-  button stays in normal flow inside the summary panel rather than pinned
-  to the viewport; address and items panels stack in one column rather
-  than sitting side by side, since the order-items panel is conditionally
-  rendered after the summary loads.
+- **4.4.10 side-by-side panels at xl** — address and items panels stack in
+  one column rather than sitting side by side, since the order-items panel
+  is conditionally rendered after the summary loads.
+
+4.4.1 (back tile) and 4.4.5 (mobile sticky pay bar) were both built in
+later post-Phase-7 follow-ups (see further down) — this section is kept
+as the historical record of the original Phase-4 pass, when they weren't
+yet built.
 
 ### 4.5 OrderSuccessPage (new) / OrderListPage split
 
@@ -610,3 +609,21 @@ Two small real-data additions:
 - `Verified` badges next to Email/Phone when `profile.isEmailVerified`/
   `isPhoneVerified` are true — both fields were already being fetched
   from `GET /profile` and simply never rendered.
+
+## Post-Phase-7 follow-up — checkout progress indicator (4.4.2, 4.4.9)
+
+Reconsidered the earlier "no step state machine" deferral: the objection
+was specifically about converting this single-page flow into a real
+multi-step wizard (gating content behind steps), which is still correctly
+out of scope — but a purely decorative progress indicator that reflects
+where the buyer already is, without changing the page's structure or
+gating anything, carries none of that risk.
+
+Added `currentStep` (0 = address/summary still loading, 1 = a real
+breakdown is showing and ready to pay, 2 = payment has been initiated —
+`isPlacingOrder || isVerifying`), driving: a plain 3-bar `flex gap-2`
+indicator on mobile per 4.4.2's exact spec (`h-[5px] rounded-full`,
+`bg-accent`/`bg-line`), and a labelled dot-and-connector stepper on
+desktop per 4.4.9. Both use the existing `t-base` transition utility so
+the fill animates on step change, and neither adds new page states or
+touches the actual payment call path — `placeOrder` is untouched.
