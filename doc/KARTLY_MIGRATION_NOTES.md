@@ -683,3 +683,11 @@ explicit), `64×64` `ImageFrame` thumb, name/variant/total text sizes,
 slide-x`. This was built during the original Phase-4 pass but the
 checkbox was never checked off; just correcting the tracking, no code
 change.
+
+## Post-Phase-7 follow-up — Chip aria-pressed
+
+Same fix as the admin app: the shared `Chip` primitive's `selected` prop
+drove visual state only, with no ARIA state for screen readers. Added
+`aria-pressed={selected}` to the component itself so every existing and
+future `Chip` usage (category rail, sort/filter chips, address label
+chips if they're ever built) picks it up automatically.
