@@ -762,3 +762,12 @@ afterward. Added the standard guard: an `isCurrent` flag captured by the
 effect's cleanup, checked before every `setState` call in the load
 function, so a response for an abandoned `productId` is discarded
 instead of applied.
+
+## Post-Phase-7 follow-up — same race condition on ProductListPage
+
+Same class of bug as `ProductDetailPage`'s fix, on the list page:
+`loadProducts` re-runs on `page`/`search`/`category` changes with no
+protection against two requests overlapping — a rapid double-click on
+"Next page" (or fast category-chip switching) could let a stale
+response land after a newer one and silently show the wrong page's
+results. Added the same `isCurrent` guard.

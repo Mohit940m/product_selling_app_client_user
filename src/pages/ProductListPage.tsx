@@ -49,25 +49,35 @@ const ProductListPage = () => {
   const limit = 9;
 
   useEffect(() => {
-    loadProducts();
+    // Rapid page/category clicks can leave more than one request in
+    // flight together — isCurrent guards against an earlier one's
+    // response landing after a later one's and overwriting it with
+    // stale data.
+    let isCurrent = true;
+    loadProducts(() => isCurrent);
+    return () => {
+      isCurrent = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, search, category]);
 
-  const loadProducts = async () => {
+  const loadProducts = async (isCurrent: () => boolean = () => true) => {
     setIsLoading(true);
     try {
       const { data } = await userApi.get('/products/get-all-products', {
         params: { page, limit, search: search || undefined, category: category || undefined },
       });
+      if (!isCurrent()) return;
       setProducts(data.data?.products ?? []);
       setTotal(data.data?.total ?? 0);
     } catch (err) {
+      if (!isCurrent()) return;
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message ?? 'Failed to load products.'
         : 'Failed to load products.';
       toast.error(msg);
     } finally {
-      setIsLoading(false);
+      if (isCurrent()) setIsLoading(false);
     }
   };
 
