@@ -659,7 +659,7 @@ center column into a second rail would be redundant rather than
 simplifying anything, and no `active` nav-item state applies since this
 sidebar lives only on `ProfilePage` itself (Orders/Wishlist are separate
 routes, not sub-views of one shared account layout) — building that as
-a真 shared shell wrapping all three pages would be a real routing/
+a real shared shell wrapping all three pages would be a real routing/
 architecture change, out of scope for this pass. 4.7.15 (right rail's
 mobile collapse behavior) stays unticked for the same reason — there's
 no rail to collapse.
