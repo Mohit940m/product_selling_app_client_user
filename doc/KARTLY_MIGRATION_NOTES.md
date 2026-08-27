@@ -748,3 +748,17 @@ a timeout produces an `AxiosError` with no `response`, so the
 established `axios.isAxiosError(err) ? err.response?.data?.message ??
 fallback : fallback` pattern used everywhere already falls through to
 the same generic fallback message used for other network failures.
+
+## Post-Phase-7 follow-up — race condition when navigating between products quickly
+
+`ProductDetailPage`'s load effect had no protection against a real race:
+navigating from one product straight to another (e.g. clicking a
+related-product link before the first page finished loading) fires a
+new fetch for the new `productId` while the previous one is still in
+flight. If the *stale* fetch happened to resolve after the new one — not
+unusual with network jitter — its response would silently overwrite the
+correct, newer product's data, since nothing else re-triggers a reload
+afterward. Added the standard guard: an `isCurrent` flag captured by the
+effect's cleanup, checked before every `setState` call in the load
+function, so a response for an abandoned `productId` is discarded
+instead of applied.

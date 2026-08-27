@@ -66,7 +66,17 @@ const ProductDetailPage = () => {
   const [isWishlisting, setIsWishlisting] = useState(false);
 
   useEffect(() => {
-    loadProduct();
+    // Guards against a real race: navigating from one product straight to
+    // another (e.g. a related-product link) fires a new fetch before the
+    // previous one resolves. Without this, a slow/stale response for the
+    // *previous* productId could land after the new one and overwrite it
+    // with the wrong product's data — silently, since nothing else
+    // re-triggers a reload afterward.
+    let isCurrent = true;
+    loadProduct(() => isCurrent);
+    return () => {
+      isCurrent = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
@@ -108,10 +118,11 @@ const ProductDetailPage = () => {
     }
   };
 
-  const loadProduct = async () => {
+  const loadProduct = async (isCurrent: () => boolean) => {
     setIsLoading(true);
     try {
       const { data } = await userApi.get(`/products/get-product/${productId}`);
+      if (!isCurrent()) return;
       const { product: productData, selectedVariant: defaultVariant, variants } = data.data;
       const enrichedVariants: Variant[] = (variants ?? []).map((v: Variant) =>
         v._id === defaultVariant?._id
@@ -134,12 +145,13 @@ const ProductDetailPage = () => {
       setSelectedImage(0);
       setDescriptionExpanded(false);
     } catch (err) {
+      if (!isCurrent()) return;
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message ?? 'Failed to load product.'
         : 'Failed to load product.';
       toast.error(msg);
     } finally {
-      setIsLoading(false);
+      if (isCurrent()) setIsLoading(false);
     }
   };
 
