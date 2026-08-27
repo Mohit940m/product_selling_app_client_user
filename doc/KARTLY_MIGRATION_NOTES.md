@@ -938,3 +938,31 @@ only reads `._id`, always present regardless of projection). Fixed by
 adding `email` to the middleware's select (`product_selling_app_server`
 commit `0a55d47`). No frontend change needed — `CheckoutPage.tsx` was
 already reading the right field, it just never had real data.
+
+## Found, not fixed — SignUpPage's password is collected and silently discarded
+
+A genuine finding, but a product decision rather than a bug fix, so
+left as-is pending direction: `SignUpPage.tsx` collects a password
+(`payload = { name, email, password }`, with a full show/hide toggle
+UI) and sends it to `/auth/register`. The backend embeds it into the
+short-lived registration JWT via `...otherFields`, and at the final
+`verify-registration` step calls `User.create(userData)` — but the
+`User` Mongoose schema (`product_selling_app_server/src/models/userModels/user.model.ts`)
+**has no `password` field at all**. Mongoose schemas default to strict
+mode, so `password` is silently dropped on create; grepped the entire
+user-side backend (controllers + models) for any reference to
+`password` and found none. Consistent with this: `loginUser` and
+`verifyOtpForLogin` never check a password anywhere — this app's login
+really is OTP-only, exactly as this file's own "Authentication flow"
+section already documented above. So today, a shopper who sets a
+password at signup has that password read, briefly carried inside a
+signed-but-not-encrypted JWT that round-trips through their browser,
+and then thrown away with nothing to show for it — it can never
+actually be used to log in, and isn't stored anywhere for a future
+password-login feature either. Two honest ways to resolve this, both
+requiring an actual decision rather than a unilateral fix: (a) remove
+the password field from this signup form entirely, matching the
+OTP-only reality, or (b) actually persist and hash it if password-based
+login is meant to exist as a fallback path (mirroring how the seller
+side already does this correctly with bcrypt on `Seller.model.ts`).
+Left unfixed rather than guessing which direction is intended.
