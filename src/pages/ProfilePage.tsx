@@ -42,6 +42,14 @@ type Profile = {
   defaultAddress?: UserAddress;
 };
 
+// Real, working destinations only — same set as the mobile menu rows
+// further down. Payments/Settings from the prototype's left nav have no
+// backend/page to link to, so they're left out here too.
+const ACCOUNT_NAV_ITEMS = [
+  { label: 'Orders', icon: <FiPackage size={16} />, to: '/orders' },
+  { label: 'Wishlist', icon: <FiHeart size={16} />, to: '/wishlist' },
+];
+
 const formatDate = (iso: string) => {
   try {
     return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -224,7 +232,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <Container className="max-w-3xl! py-6 lg:py-10">
+    <Container className="max-w-3xl! py-6 lg:max-w-5xl! lg:py-10">
       <div className="mb-6 lg:mb-8">
         <p className="font-mono text-[11px] font-bold text-muted">MY ACCOUNT</p>
         <h1 className="mt-1.5 font-extrabold text-[22px] tracking-[-.02em]">Profile</h1>
@@ -244,7 +252,25 @@ const ProfilePage = () => {
           <Skeleton preset="block" className="h-40" />
         </div>
       ) : !profile ? null : (
-        <div className="space-y-5">
+        <div className="lg:flex lg:items-start lg:gap-8">
+          {/* Persistent left nav at lg+ (4.7.13, partial — see migration
+              notes for what's scoped out). Below lg, the same real
+              destinations render as the menu-rows Panel further down. */}
+          <nav aria-label="Account" className="hidden shrink-0 lg:block lg:w-[250px] lg:border-r lg:border-line lg:pr-6">
+            {ACCOUNT_NAV_ITEMS.map((item) => (
+              <button
+                key={item.to}
+                type="button"
+                onClick={() => navigate(item.to)}
+                className="relative slide-x t-fast flex w-full items-center gap-2.5 rounded-[13px] px-3.5 py-3 text-left text-[13px] font-semibold text-muted before:absolute before:-inset-y-1 before:inset-x-0 before:content-[''] hover:bg-soft2 hover:text-ink"
+              >
+                {item.icon}
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="space-y-5 lg:min-w-0 lg:flex-1">
           {/* Personal Information */}
           <Panel>
             <div className="mb-5 flex items-center justify-between">
@@ -451,7 +477,7 @@ const ProfilePage = () => {
           {/* Menu rows — only destinations that are real, working routes.
               Payment methods/Help & returns have no backend/page to link
               to, so they're left out rather than shipped as dead links. */}
-          <Panel className="!p-2">
+          <Panel className="!p-2 lg:hidden">
             {[
               { label: 'Orders', sub: 'Track and review your orders', icon: <FiPackage size={16} />, to: '/orders' },
               { label: 'Wishlist', sub: 'Items you have saved', icon: <FiHeart size={16} />, to: '/wishlist' },
@@ -479,6 +505,7 @@ const ProfilePage = () => {
             <span className="text-sm font-bold text-ink">Dark mode</span>
             <Switch checked={theme === 'dark'} onChange={toggleTheme} label="Dark mode" />
           </Panel>
+          </div>
         </div>
       )}
 

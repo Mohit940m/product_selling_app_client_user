@@ -531,7 +531,7 @@ The current file is 524 lines with inline edit forms. Restructure it rather than
 ### Desktop (screen D3 — account nav + profile rail)
 
 - [ ] **4.7.13** Three-column account shell: left nav `w-[250px] border-r border-line` (Orders / Wishlist / Addresses / Payments / Settings, each `rounded-[13px] px-3.5 py-3 font-semibold text-[13px] text-muted`, hover `bg-soft2 text-ink slide-x`, active `bg-soft text-[var(--k-on-soft)] font-extrabold`), content centre, and a profile rail `w-[300px] border-l border-line bg-soft2` holding the identity card and the saved-addresses list.
-- [ ] **4.7.14** Left nav bottom card: `rounded-tile bg-soft2 border border-line p-3.5` with tier + points. Populate from live data or omit the card entirely — do not hardcode `Gold member`.
+- [x] **4.7.14** Left nav bottom card: `rounded-tile bg-soft2 border border-line p-3.5` with tier + points. Populate from live data or omit the card entirely — do not hardcode `Gold member`.
 - [ ] **4.7.15** Below `lg` the left nav collapses into the mobile menu rows (4.7.3) and the right rail becomes a section further down the page.
 
 ## 4.8 `LoginPage.tsx` & `SignUpPage.tsx` — auth

@@ -270,9 +270,13 @@ because the model itself is single-address:
   slot, added via `POST /profile/address` or replaced via
   `PUT /profile/address/:id` — there's nothing to label or delete from a
   list of one.
-- **4.7.13–4.7.15 desktop three-column account shell (nav rail + profile
-  rail)** — would need the same non-existent destinations as 4.7.3;
-  kept the single responsive column instead.
+- **4.7.13–4.7.15 desktop three-column account shell** — corrected in a
+  post-Phase-7 follow-up (see further down): the left-nav half is now
+  built, since it only ever needed the same real destinations as 4.7.3
+  (Orders, Wishlist). 4.7.14 (the tier/points bottom card) was already
+  satisfiable as written — its own instruction is "populate from live
+  data or omit the card entirely," and there's no tier/points data, so
+  omitting it is a correct, tickable outcome, not a gap.
 
 ### 4.10 AssistantPage (new, flagged, demo UI only)
 
@@ -635,3 +639,27 @@ transition utility (`all 0.25s cubic-bezier(...)`, the same timing used
 for every other hover/state transition in this app) rather than a
 bespoke `400ms`, so the fill animates on step change per 5.12's intent
 with the app's standard transition speed instead of a one-off value.
+
+## Post-Phase-7 follow-up — ProfilePage left-nav sidebar (4.7.13, partial; 4.7.14)
+
+Reconsidered the earlier "same non-existent destinations as 4.7.3"
+deferral — that was true when it was written, but 4.7.3's Orders +
+Wishlist rows are real now (see the earlier follow-up). Added the
+spec's left nav at `lg+`: `hidden lg:block lg:w-[250px] lg:border-r`,
+real Orders/Wishlist links only, `rounded-[13px] px-3.5 py-3` rows with
+the spec's hover treatment. The existing mobile menu-rows `Panel`
+(4.7.3) now gets `lg:hidden` so the two don't both show at desktop.
+`Container`'s max width grows to `lg:max-w-5xl!` only at `lg+` to make
+room, leaving the mobile/tablet single-column width untouched.
+
+Stays **partial** — the spec's right profile rail (`w-[300px] border-l
+bg-soft2` holding the identity card + saved-addresses list) is not
+built. Duplicating the identity/address cards that already live in the
+center column into a second rail would be redundant rather than
+simplifying anything, and no `active` nav-item state applies since this
+sidebar lives only on `ProfilePage` itself (Orders/Wishlist are separate
+routes, not sub-views of one shared account layout) — building that as
+a真 shared shell wrapping all three pages would be a real routing/
+architecture change, out of scope for this pass. 4.7.15 (right rail's
+mobile collapse behavior) stays unticked for the same reason — there's
+no rail to collapse.
