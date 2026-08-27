@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiCamera, FiChevronRight, FiEdit2, FiHeart, FiMapPin, FiPackage, FiPlus, FiSave, FiUser, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -57,6 +57,7 @@ const ProfilePage = () => {
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [wishlistCount, setWishlistCount] = useState<number | null>(null);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editName, setEditName] = useState('');
@@ -86,6 +87,10 @@ const ProfilePage = () => {
     const token = localStorage.getItem('userToken');
     if (!token) { navigate('/login'); return; }
     loadProfile();
+    // Real count from the wishlist API — no orders/savings equivalent
+    // exists (no order-history endpoint), so this stays a single stat
+    // rather than the prototype's three-tile row.
+    userApi.get('/wishlist').then(({ data }) => setWishlistCount((data.data ?? []).length)).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -284,13 +289,19 @@ const ProfilePage = () => {
                   {profile.email && (
                     <div>
                       <p className="font-mono text-[10px] font-bold uppercase tracking-wide text-muted">Email</p>
-                      <p className="mt-0.5 font-bold text-ink">{profile.email}</p>
+                      <div className="mt-0.5 flex items-center gap-1.5">
+                        <p className="font-bold text-ink">{profile.email}</p>
+                        {profile.isEmailVerified && <Badge tone="success">Verified</Badge>}
+                      </div>
                     </div>
                   )}
                   {profile.phone && (
                     <div>
                       <p className="font-mono text-[10px] font-bold uppercase tracking-wide text-muted">Phone</p>
-                      <p className="mt-0.5 font-bold text-ink">{profile.phone}</p>
+                      <div className="mt-0.5 flex items-center gap-1.5">
+                        <p className="font-bold text-ink">{profile.phone}</p>
+                        {profile.isPhoneVerified && <Badge tone="success">Verified</Badge>}
+                      </div>
                     </div>
                   )}
                   {profile.dob && (
@@ -365,6 +376,17 @@ const ProfilePage = () => {
               </form>
             )}
           </Panel>
+
+          {/* Stat tile — real wishlist count only. No orders/savings
+              equivalent exists (no order-history endpoint), so this is
+              one tile rather than the prototype's three-tile row. */}
+          <Link
+            to="/wishlist"
+            className="flex w-full max-w-45 flex-col gap-1 rounded-[18px] border border-line p-3.75 lift t-fast hover:border-accent"
+          >
+            <span className="font-extrabold text-[19px] text-ink">{wishlistCount ?? '—'}</span>
+            <span className="text-[10.5px] font-bold text-muted">WISHLIST ITEMS</span>
+          </Link>
 
           {/* Default Address */}
           <Panel>

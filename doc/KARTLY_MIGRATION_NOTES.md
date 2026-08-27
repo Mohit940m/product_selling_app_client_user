@@ -249,10 +249,15 @@ blocker is narrower: there's no `GET` to list a user's addresses and no
 default address," but because of a missing list/delete endpoint, not
 because the model itself is single-address:
 
-- **4.7.1 tier/loyalty pill, 4.7.2 stat tiles (Orders/Wishlist/Wallet)**
-  — no loyalty tier, order-count, wishlist-count, or wallet-balance data
-  exists anywhere in this API. Fabricating "24 orders · Gold · $212"
-  would violate the same no-fake-data rule as the dashboard/order pages.
+- **4.7.1 tier/loyalty pill** — no loyalty-tier data exists anywhere in
+  this API. Fabricating "Gold member" would violate the no-fake-data
+  rule.
+- **4.7.2 stat tiles (Orders/Wishlist/Wallet)** — corrected in the
+  post-Phase-7 follow-up below: a real wishlist-count tile is now built
+  (the wishlist API is real, see 4.2.1's correction above), linking to
+  `/wishlist`. Orders and savings stay out — no order-history endpoint
+  exists to compute either from — so this is one real tile, not the
+  prototype's three.
 - **4.7.3 menu rows** — see the post-Phase-7 follow-up further down: a
   real Orders + Wishlist pair of rows is now built. Addresses stays out
   (already the single card on this page, not a separate destination) and
@@ -591,3 +596,17 @@ only when a value was actually passed (no fabricated fallback).
 endpoint — same blocker as `OrderTrackingPage`, section 4.6). Rather
 than link to a page that would 404 or fake the button's destination,
 the ETA card ships without a Track action.
+
+## Post-Phase-7 follow-up — ProfilePage: real wishlist stat tile + verified badges
+
+Two small real-data additions:
+
+- A single stat tile (`rounded-[18px] border border-line p-3.75`, value
+  `font-extrabold text-[19px]`, label `text-[10.5px] text-muted font-bold`,
+  per 4.7.2's spec) showing the live wishlist item count from `GET
+  /wishlist`, linking to `/wishlist`. Shows `—` while loading, never a
+  fabricated `0`. Only one tile — Orders/Wallet stay out since neither
+  has a backing endpoint.
+- `Verified` badges next to Email/Phone when `profile.isEmailVerified`/
+  `isPhoneVerified` are true — both fields were already being fetched
+  from `GET /profile` and simply never rendered.
