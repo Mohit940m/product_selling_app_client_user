@@ -717,3 +717,20 @@ elsewhere are left unguarded — a throw there now hits the new
 `ErrorBoundary`'s fallback rather than a blank screen, which is an
 acceptable outcome for a rare edge case not worth 19 individual
 try/catch additions.
+
+## Post-Phase-7 follow-up — global 401 handling (expired/invalid token)
+
+Another real gap: there was no response interceptor at all, so an
+expired or invalid `userToken` meant every page's own fetch failed with
+a generic "failed to load" toast and no path back to a working state
+except manually navigating to `/login`. Added a response interceptor on
+`userApi` that, on a `401`, clears the stored token and redirects to
+`/login` — but only when a token was actually present (a `401` with no
+stored token is the expected outcome of an anonymous action like adding
+to cart while logged out, already handled per-page) and only when not
+already on `/login`/`/signup` (so it can't create a redirect loop or
+clobber a real invalid-OTP error shown on those pages). The rejection
+still propagates to each page's own `catch`, so the existing "failed to
+load" toast can still show briefly before the redirect completes — a
+minor, acceptable overlap against the alternative of leaving the user
+stuck.
