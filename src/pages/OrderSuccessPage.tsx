@@ -1,11 +1,16 @@
 import { useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import { FiClock } from 'react-icons/fi';
 import Container from '../components/layout/Container';
 import Confetti from '../components/motion/Confetti';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 type LocationState = {
   orderId?: string;
+  /** The real per-seller delivery-time estimate from the checkout summary
+   * (e.g. "3-5 Days") — not a fabricated date, just carried forward from
+   * `SellerShipping.calculateShipping`'s actual output. */
+  estimatedTime?: string;
 };
 
 /**
@@ -18,6 +23,7 @@ const OrderSuccessPage = () => {
   const location = useLocation();
   const state = location.state as LocationState | null;
   const orderId = state?.orderId;
+  const estimatedTime = state?.estimatedTime;
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -81,6 +87,19 @@ const OrderSuccessPage = () => {
         >
           Your order is confirmed. We've sent the details to your email.
         </p>
+
+        {estimatedTime && (
+          <div
+            className="mt-3.5 flex items-center justify-between rounded-card border border-line bg-soft2 p-4"
+            style={prefersReducedMotion ? undefined : { animation: 'kfUp .6s .55s both' }}
+          >
+            <span className="flex items-center gap-2 font-mono text-[11px] font-bold text-muted">
+              <FiClock size={14} />
+              ESTIMATED ARRIVAL
+            </span>
+            <span className="font-extrabold text-ink">{estimatedTime}</span>
+          </div>
+        )}
 
         <div
           className="mt-8 grid gap-3 sm:grid-cols-2"

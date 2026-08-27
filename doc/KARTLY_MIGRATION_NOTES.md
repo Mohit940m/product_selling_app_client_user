@@ -566,3 +566,20 @@ calls the exact same `placeOrder` handler — the create-order → Razorpay
 modal → verify-payment flow itself is untouched, only reachability
 changed. The in-panel desktop button is now `hidden lg:inline-flex` so
 there's exactly one visible pay action per breakpoint, never two.
+
+## Post-Phase-7 follow-up — real ETA card on OrderSuccessPage (4.5.7, partial)
+
+The `checkout` summary endpoint's response already includes real
+per-seller `shippingDetails[].time` estimates (computed by
+`SellerShipping.calculateShipping`, e.g. `"3-5 Days"`) — data that was
+sitting unused. `CheckoutPage` now picks the longest (worst-case) time
+across sellers via `pickEstimatedTime()` and carries it through
+`navigate('/orders/success', { state: { orderId, estimatedTime } })`;
+`OrderSuccessPage` renders it as the spec's `ESTIMATED ARRIVAL` card,
+only when a value was actually passed (no fabricated fallback).
+
+4.5.7 stays unticked: the spec also wants a `Track` button linking to
+`/orders/:orderId`, and that page still doesn't exist (no order-detail
+endpoint — same blocker as `OrderTrackingPage`, section 4.6). Rather
+than link to a page that would 404 or fake the button's destination,
+the ETA card ships without a Track action.

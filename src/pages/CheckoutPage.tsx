@@ -44,10 +44,18 @@ type Breakdown = {
   total: number;
 };
 
+type ShippingDetail = {
+  sellerId: string;
+  cost: number;
+  time: string;
+  type: string;
+};
+
 type CheckoutSummary = {
   shippingAddress: ShippingAddress;
   items: CheckoutItem[];
   breakdown: Breakdown;
+  shippingDetails?: ShippingDetail[];
 };
 
 declare global {
@@ -58,6 +66,24 @@ declare global {
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+
+/** With multiple sellers in one order, show the longest (worst-case)
+ * delivery window rather than an arbitrary one — falls back to the
+ * first entry's raw text if none of the times parse as "N-M Days". */
+const pickEstimatedTime = (shippingDetails?: ShippingDetail[]): string | undefined => {
+  if (!shippingDetails?.length) return undefined;
+  let worst = shippingDetails[0];
+  let worstMax = -1;
+  for (const detail of shippingDetails) {
+    const match = detail.time.match(/(\d+)\D*$/);
+    const max = match ? Number(match[1]) : -1;
+    if (max > worstMax) {
+      worstMax = max;
+      worst = detail;
+    }
+  }
+  return worst.time;
+};
 
 const loadRazorpayScript = (): Promise<boolean> =>
   new Promise((resolve) => {
@@ -165,7 +191,7 @@ const CheckoutPage = () => {
               razorpay_signature: response.razorpay_signature,
             });
             toast.success('Payment successful! Order placed.');
-            navigate('/orders/success', { state: { orderId } });
+            navigate('/orders/success', { state: { orderId, estimatedTime: pickEstimatedTime(summary?.shippingDetails) } });
           } catch {
             toast.error('Payment verification failed. Please contact support.');
           } finally {
