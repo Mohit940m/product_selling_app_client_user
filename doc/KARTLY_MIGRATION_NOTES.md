@@ -238,8 +238,16 @@ prototype's profile screen this app can actually back with live state.
 New `src/components/ui/Switch.tsx` primitive (shared with the future
 admin build).
 
-Deliberately **not** built — this app's address model is a single
-optional `profile.defaultAddress`, not a list of labelled addresses:
+Deliberately **not** built — **correction (post-Phase-7 follow-up)**:
+re-reading `address.model.ts`/`profile.controller.ts` shows the backend
+actually stores addresses as a full collection (`POST /profile/address`
+can create more than one, each with its own `isDefault` flag), not a
+single embedded field as previously stated here. The real, practical
+blocker is narrower: there's no `GET` to list a user's addresses and no
+`DELETE` for one — `getUserProfile` only ever populates the current
+`defaultAddress`. So this UI can still only ever manage "my one current
+default address," but because of a missing list/delete endpoint, not
+because the model itself is single-address:
 
 - **4.7.1 tier/loyalty pill, 4.7.2 stat tiles (Orders/Wishlist/Wallet)**
   — no loyalty tier, order-count, wishlist-count, or wallet-balance data
