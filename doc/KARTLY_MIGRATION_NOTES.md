@@ -734,3 +734,17 @@ still propagates to each page's own `catch`, so the existing "failed to
 load" toast can still show briefly before the redirect completes — a
 minor, acceptable overlap against the alternative of leaving the user
 stuck.
+
+## Post-Phase-7 follow-up — request timeout
+
+`userApi` had no timeout configured (axios default is none), so a
+dropped connection — not a 4xx/5xx, just no response ever arriving —
+left a page's loading spinner stuck indefinitely with no recovery. Added
+`timeout: 45000`, generous enough to not interrupt the production
+backend's real cold-start delay (this app points at a Render free-tier
+deployment, which sleeps the service after inactivity and can take real
+time to wake). Every existing error handler already copes correctly —
+a timeout produces an `AxiosError` with no `response`, so the
+established `axios.isAxiosError(err) ? err.response?.data?.message ??
+fallback : fallback` pattern used everywhere already falls through to
+the same generic fallback message used for other network failures.
