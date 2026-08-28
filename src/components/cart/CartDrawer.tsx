@@ -48,7 +48,14 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
     // slower first response landing after the second would otherwise
     // overwrite fresher cart data with stale data.
     let isCurrent = true;
-    setIsLoading(true);
+    // setIsLoading(true) goes through requestAnimationFrame rather than
+    // running synchronously at the top of the effect body — matches the
+    // pattern StatCard.tsx's useCountUp already uses for the same
+    // react(set-state-in-effect) rule (a newer oxlint version, upgraded
+    // alongside this fix, is what actually caught this here).
+    const frame = requestAnimationFrame(() => {
+      if (isCurrent) setIsLoading(true);
+    });
     userApi
       .get('/cart/get-cart')
       .then(({ data }) => {
@@ -64,6 +71,7 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
       });
     return () => {
       isCurrent = false;
+      cancelAnimationFrame(frame);
     };
   }, [open]);
 
