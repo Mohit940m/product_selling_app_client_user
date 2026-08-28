@@ -1106,3 +1106,18 @@ product-browsing endpoints (which have no cart to check against yet)
 keep the old per-item approximation, unchanged. No frontend change
 needed — `CartPage.tsx`/`CheckoutPage.tsx` already just display
 whatever `discountedPrice` the backend returns.
+
+## Post-Phase-7 follow-up — added a 404 page (there was no catch-all route)
+
+`App.tsx` had no `path="*"` route. In React Router v6, a path-less
+parent `<Route>` — which is exactly what `AppLayout`'s wrapper route
+is — only ever matches when one of its nested children's path matches
+the current URL; it doesn't match everything by default. With no
+catch-all anywhere, any unmatched URL (a typo, a stale bookmark, a
+broken external link) rendered `<Routes>` down to nothing at all: a
+completely blank white screen, no nav chrome, no message, no way back
+into the app short of manually editing the address bar. Added
+`NotFoundPage.tsx` (reuses the existing `EmptyState` primitive,
+consistent with every other empty/missing state in this app) and wired
+it as a top-level `path="*"` route, outside `AppLayout` so it renders
+regardless of auth state, with a single "Back to shopping" action.

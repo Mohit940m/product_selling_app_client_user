@@ -17,6 +17,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage'
 import WishlistPage from './pages/WishlistPage'
 import ProfilePage from './pages/ProfilePage'
 import AssistantPage from './pages/AssistantPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 const RootRedirect = () => {
   const hasSeenWelcome = typeof window !== 'undefined' && localStorage.getItem(WELCOME_SEEN_KEY);
@@ -50,6 +51,10 @@ const AppRoutes = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/assistant" element={<AssistantPage />} />
           </Route>
+
+          {/* Catch-all: React Router renders nothing for an unmatched path
+              otherwise — a blank white screen with no way back. */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ErrorBoundary>
       <ToastContainer
