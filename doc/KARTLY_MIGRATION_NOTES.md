@@ -1225,3 +1225,32 @@ rather than leftover scaffolding, and its name suggests a specific
 promotional-content purpose that may still be planned — not enough
 evidence either way to justify deleting it, unlike `Modal`.
 `useDialogBehavior.ts` stays untouched; `Sheet.tsx` still needs it.
+
+## Post-Phase-7 follow-up — oxlint was stale and missing real rule coverage
+
+Worth its own entry: this session's own earlier summary documents
+fixing `react-hooks/refs`/`set-state-in-effect`/`purity` violations,
+but all of those were in the *admin* app's ESLint setup — checking
+this app's actual effective oxlint config (`oxlint --print-config`)
+found `react/refs`, `react/purity`, and `react/set-state-in-effect`
+genuinely absent from the installed version (1.71.0), leaving a real
+gap versus what the admin app's linter catches for the equivalent
+React-Compiler-era hook-safety issues. The declared range in
+`package.json` (`^1.69.0`) already permitted 1.80.0 — this was a
+stale install, not a version-constraint change. Updated via `npm
+update oxlint` (a devDependency, no runtime/build risk); the newer
+version adds those three rules plus several more (21 `react/*` rules
+before, 33 after).
+
+Running the full lint with the upgraded version immediately surfaced
+one real, previously-invisible violation: `CartDrawer.tsx` called
+`setIsLoading(true)` synchronously at the top of its effect body —
+code from *this same session's* earlier cart-badge race-condition
+fix, that the old oxlint version simply couldn't have caught. Fixed
+by routing it through `requestAnimationFrame`, matching the exact
+pattern `StatCard.tsx`'s `useCountUp` already uses for the same rule.
+A useful reminder that "the linter is clean" is only as strong a
+signal as the linter's actual, currently-installed rule set — worth
+periodically checking `--print-config` against what a fix is assumed
+to be protected by, not just assuming version pins stay current on
+their own.
