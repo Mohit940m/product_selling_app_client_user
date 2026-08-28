@@ -1121,3 +1121,31 @@ into the app short of manually editing the address bar. Added
 consistent with every other empty/missing state in this app) and wired
 it as a top-level `path="*"` route, outside `AppLayout` so it renders
 regardless of auth state, with a single "Back to shopping" action.
+
+## Post-Phase-7 follow-up — every page now has a real document.title (13/13)
+
+`document.title` was never touched anywhere — every page showed the
+same static "Kartly | ShopNow" from `index.html` regardless of which
+page was actually open, so browser tabs, history entries, and
+bookmarks were all indistinguishable. Added a small
+`useDocumentTitle(title)` hook (`src/hooks/useDocumentTitle.ts` — sets
+the title on mount, restores the previous value on unmount) and called
+it from all 13 pages, including `NotFoundPage`. `ProductDetailPage`
+uses the loaded product's name (falling back to "Product" before it
+loads); every other page uses a fixed, page-appropriate title.
+
+## Post-Phase-7 follow-up — added a skip-to-content link (WCAG 2.4.1)
+
+Neither this app nor its shared components had a skip link anywhere.
+`AppLayout` is the persistent shell wrapping every authenticated page
+— its `TopNav` (category links, search, cart, profile) repeats
+identically on every single navigation, so without a way to bypass it,
+a keyboard or screen-reader user had to tab through the full nav on
+every page before ever reaching that page's actual content. Added a
+"Skip to content" link as the very first element in `AppLayout`,
+visually hidden until focused (`sr-only focus:not-sr-only`, matching
+the standard pattern), pointing at a new `id="main-content"` on the
+`<main>` element. Left the pre-login routes (`WelcomePage`, `LoginPage`,
+`SignUpPage`, via `AuthLayout`) alone — their nav chrome is a single
+brand-mark link at most, not a repeating multi-item nav, so the
+bypass burden a skip link solves for doesn't really apply there.
