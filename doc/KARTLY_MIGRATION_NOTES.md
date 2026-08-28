@@ -1187,3 +1187,18 @@ placeholder-only text as their only visual label, but missed two:
 products"` and `aria-label="Ask the assistant"` respectively. Verified
 (not changed, already correct) `ProfilePage.tsx`'s "Set as default"
 checkbox — it's properly wrapped in a `<label htmlFor>`.
+
+## Post-Phase-7 follow-up — form error messages weren't linked to their fields
+
+`Input.tsx`, `Textarea.tsx`, and `Select.tsx` — the three shared form
+primitives every form in this app is built from — each correctly set
+`aria-invalid={!!error}` and rendered the error text visually below
+the field, but never linked the two together with `aria-describedby`.
+A screen reader user landing on an invalid field heard that it was
+invalid, but not *why* — the error text had no programmatic connection
+to the field at all, only proximity on screen. Added an `errorId`
+(`${fieldId}-error`) to all three components: the error `<p>` now
+carries that `id`, and the field carries `aria-describedby={error ?
+errorId : undefined}` pointing at it. This fixes every form across the
+whole app at once, since they're all built from these three
+primitives — no page-level changes needed.
