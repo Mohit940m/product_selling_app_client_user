@@ -101,4 +101,4 @@ Toast notifications use `react-toastify`, restyled to the Kartly card/border/sha
 
 ### TypeScript
 
-Strict mode is on (`noUnusedLocals`, `noUnusedParameters`). Module resolution is `bundler` (Vite). Run `npm run build` to catch type errors.
+Strict mode (`strict: true` in `tsconfig.app.json`) is genuinely on — it wasn't for a long stretch of this app's history despite this file previously claiming otherwise; `noUnusedLocals`/`noUnusedParameters` (also on) are a separate "Additional Checks" option pair, not part of TypeScript's `strict` family, so don't cite them as evidence strict mode is enabled. The codebase was already effectively strict-clean when `strict: true` was actually added — verified with `tsc -b --force` before committing to it, not assumed. Module resolution is `bundler` (Vite). Run `npm run build` to catch type errors.
