@@ -37,7 +37,7 @@ This is a **React 19 + TypeScript + Vite SPA** serving as the buyer-facing store
 
 **`src/components/layout/`** — App shell: `AppLayout` (the routed shell — `TopNav` + page content + `Footer` + `BottomTabBar`, mounted once via nested routing so it doesn't remount on navigation), `TopNav` (desktop header, category links + search collapse below `lg`), `BottomTabBar` (mobile-only tab bar, `lg:hidden`), `BrandMark`, `Container` (the one page-width wrapper, `max-w-[1280px]`), `AuthLayout` (shared shell for `/login` and `/signup`, outside `AppLayout`).
 
-**`src/components/ui/`** — The primitive library everything else is built from: `Button`, `Input`, `Select`, `Textarea`, `Chip`, `Badge`, `Card`, `Panel`, `PromoCard`, `QtyStepper`, `ProgressBar`, `Skeleton`, `EmptyState`, `ImageFrame` (image slot with a hatched placeholder fallback), `Switch`, `Sheet` (bottom sheet on mobile, right drawer on desktop — same component), `Modal`, `Toast` (`showKartlyToast` helper wired through `react-toastify`).
+**`src/components/ui/`** — The primitive library everything else is built from: `Button`, `Input`, `Select`, `Textarea`, `Chip`, `Badge`, `Card`, `Panel`, `PromoCard`, `QtyStepper`, `ProgressBar`, `Skeleton`, `EmptyState`, `ImageFrame` (image slot with a hatched placeholder fallback, falls back on a failed load too, not just an absent `src`), `Switch`, `Sheet` (bottom sheet on mobile, right drawer on desktop — same component; the near-duplicate `Modal` component was removed as dead code — `Sheet` is this app's one dialog primitive), `Toast` (`showKartlyToast` helper wired through `react-toastify`).
 
 **`src/components/motion/`** — `Reveal` (staggered entrance), `Shimmer`/`Skeleton`'s loading sweep, `Confetti` (payment-success screen).
 
@@ -45,7 +45,7 @@ This is a **React 19 + TypeScript + Vite SPA** serving as the buyer-facing store
 
 **`src/theme/ThemeProvider.tsx`** — light/dark mode via a `data-theme` attribute on `<html>`, persisted to `localStorage` (`kartlyTheme`). `useTheme()` exposes `{ theme, setTheme, toggleTheme }`. Toggled live from `ProfilePage`'s dark-mode `Switch`.
 
-**`src/hooks/`** — `useCartCount` (shared between `TopNav`/`BottomTabBar` so they don't each fetch independently), `useCountdown` (OTP resend), `usePrefersReducedMotion`.
+**`src/hooks/`** — `useCartCount` (shared between `TopNav`/`BottomTabBar` so they don't each fetch independently; call the co-exported `notifyCartChanged()` after any cart mutation so the badge re-fetches — `AppLayout` mounts once for the whole session, so without this the badge would fetch its count exactly once, ever), `useCountdown` (OTP resend), `usePrefersReducedMotion`, `useDocumentTitle` (sets a real per-page `document.title`, called from every page).
 
 ### Routing (App.tsx)
 
@@ -65,6 +65,8 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
 /wishlist                 → saved products, backed by the real /wishlist API (read-only, no remove endpoint yet)
 /profile                  → personal info, default address management, Orders/Wishlist menu rows, dark-mode toggle
 /assistant                → AI shopping assistant, demo UI behind VITE_ENABLE_ASSISTANT
+*                         → NotFoundPage (catch-all; there was none for a long stretch of this
+                            app's history, so any unmatched URL just rendered a blank screen)
 ```
 
 **Note:** the backend's user order routes only expose `checkout` / `create-order` / `verify-payment` — there is no endpoint to list past orders or fetch one order's detail/tracking status. `/orders` is therefore an honest empty state rather than a fabricated list, and there is no `/orders/:orderId` tracking page. See `doc/KARTLY_MIGRATION_NOTES.md` section "4.6" for detail.
@@ -81,9 +83,9 @@ The backend returns the OTP in the response body ("for testing/demo purposes" �
 
 Checkout page POSTs to `/order/checkout` to calculate summary → user clicks "Place Order & Pay" → POSTs to `/order/create-order` → loads Razorpay JS SDK dynamically → opens Razorpay modal (themed to the Kartly accent, `#A87BF5`) → on success POSTs to `/order/verify-payment` (a blocking overlay covers the page while this is in flight) → navigates to `/orders/success` with `{ orderId }` in navigation state.
 
-### The AI assistant (flagged, no backend yet)
+### The AI assistant (flagged, no frontend wiring yet)
 
-`product_selling_app_agent/` is documentation-only today (see its `doc/AGENT_DEV_PLAN.md`) — there is no agent service to call. `AssistantPage.tsx` and its entry points (the `TopNav` "Ask AI" pill, the `BottomTabBar` AI tab, the `ProductListPage` teaser row) are all gated behind `VITE_ENABLE_ASSISTANT` (default `false`). With the flag on, the page renders static demo content with every non-functional control explicitly `disabled`; with it off, reaching `/assistant` directly shows an `EmptyState`.
+`product_selling_app_agent/` is **not** docs-only — its own `doc/AGENT_DEV_PLAN.md` (phased plan) and `doc/TEST_REPORTS.md` (tested results per phase) plus its commit history confirm Phases 0–3 are implemented: a real Gemini agentic loop, JWT auth shared with `product_selling_app_server`, a `POST /api/v1/chat/message` + `GET /api/v1/chat/conversations` API with Mongo-backed multi-turn conversation storage, and two read-only tools (`search_products`, `get_product_details`) wired to the real backend rather than dummy data. What's genuinely still missing is Phase 4 (cart-writing tools) and — the reason this still matters for this app specifically — **Phase 5, which is where the actual frontend chat widget gets built here**. No client-side code calls this service yet. `AssistantPage.tsx` and its entry points (the `TopNav` "Ask AI" pill, the `BottomTabBar` AI tab, the `ProductListPage` teaser row) are all gated behind `VITE_ENABLE_ASSISTANT` (default `false`). With the flag on, the page renders static demo content with every non-functional control explicitly `disabled`; with it off, reaching `/assistant` directly shows an `EmptyState`. This is still the honest state of things — the demo content isn't standing in for something that could be wired up trivially, Phase 5 is real, unstarted frontend work.
 
 ### Styling
 
