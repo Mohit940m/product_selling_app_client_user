@@ -1087,3 +1087,22 @@ fire repeatedly (mount + every event), and a plain per-effect
 these calls landing out of order relative to each other (e.g. two fast
 cart edits). Added a `requestId` counter so only the most recently
 *started* call is allowed to commit its result.
+
+## Backend fix (cross-repo) — cart-value-gated offers checked the wrong number
+
+Found while re-auditing offer resolution: `calculateBestPrice`'s
+`minCartValue` gate (a seller-configured "spend over ₹X" threshold)
+was checked against a single item's own price, not the actual cart or
+order total — even in `getCart`, `checkout`, and `createOrder`, all of
+which have a real cart total available. A cart of five ₹500 items
+totalling ₹2500 would never qualify for a "spend ₹2000+" offer, since
+no single item alone reached ₹2000 — defeating the entire point of a
+cart-value-gated offer for every shopper on this app whose qualifying
+purchase was spread across multiple items, which is the normal case.
+Fixed server-side (`product_selling_app_server` commit `5221b1d`) by
+threading the real pre-discount cart subtotal through to
+`findApplicableOffers` from all three real-cart call sites; the two
+product-browsing endpoints (which have no cart to check against yet)
+keep the old per-item approximation, unchanged. No frontend change
+needed — `CartPage.tsx`/`CheckoutPage.tsx` already just display
+whatever `discountedPrice` the backend returns.
