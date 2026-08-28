@@ -1031,3 +1031,25 @@ existing client-side guard. Fixed server-side with a generous 10MB
 ceiling (`product_selling_app_server` commit `f6d8106`) — large enough
 that no legitimate photo is ever affected, so no frontend change was
 needed or made.
+
+## Post-Phase-7 follow-up — ImageFrame didn't actually handle a broken image
+
+The component's own doc comment claimed it falls back to the hatched
+placeholder for a "broken/absent" image, but the implementation only
+ever checked `!src` (absent) — a `src` that's present but fails to
+load (a deleted Cloudinary asset, a malformed URL, a network failure)
+rendered the browser's raw broken-image icon instead, contrary to what
+the component claimed to do. Added an `onError` handler plus a
+`failed` state flag that gates the placeholder branch alongside `!src`.
+The one real subtlety: `ProductDetailPage`'s gallery reuses a single
+`ImageFrame` instance across a *changing* `src` as the shopper clicks
+between thumbnails, so `failed` needed resetting on every `src` change
+— otherwise one broken thumbnail would incorrectly blank out every
+other, perfectly-fine image switched to afterward. Used React's
+"adjust state during render" pattern (track the `src` a `failed` flag
+applies to, compare and reset directly in the render body when it
+changes) rather than a `useEffect` reset, since the admin app's
+`react-hooks/set-state-in-effect` rule rejects the effect version
+outright, and the render-time version avoids an extra render cycle on
+every image switch anyway — applied identically to both apps' copies
+of this component for consistency.
