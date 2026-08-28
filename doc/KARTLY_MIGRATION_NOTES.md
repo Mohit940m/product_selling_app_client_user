@@ -1202,3 +1202,26 @@ carries that `id`, and the field carries `aria-describedby={error ?
 errorId : undefined}` pointing at it. This fixes every form across the
 whole app at once, since they're all built from these three
 primitives — no page-level changes needed.
+
+## Post-Phase-7 follow-up — removed an orphaned Modal component
+
+Swept for genuinely-unused components (following the admin app's
+`Toolbar.tsx`/`Button.tsx` cleanups) and found `Modal.tsx` has zero
+imports anywhere in this app. Unlike those admin-app cases, this one
+needed real judgment: `Sheet.tsx` (a bottom-sheet on mobile, a
+right-side drawer on desktop, sharing the same `useDialogBehavior`
+hook `Modal` used) is this app's actual, actively-used dialog
+primitive — `CartDrawer` and `ProfilePage`'s address form both use it.
+`Modal` was just a different visual presentation (a centered box) of
+the exact same underlying behavior, and unlike `QueueList.tsx`/
+`BarChart.tsx` in the admin app's notes, nothing here documents it as
+the intended implementation for a specific feature still blocked on a
+missing backend endpoint — it's a superseded, generic alternative this
+app has simply never needed, not scaffolding for something not yet
+buildable. Deleted it. Left `PromoCard.tsx` alone despite also having
+zero current usage: it was actively edited in an earlier dark-mode
+color-token fix (see the entry above), suggesting real intended use
+rather than leftover scaffolding, and its name suggests a specific
+promotional-content purpose that may still be planned — not enough
+evidence either way to justify deleting it, unlike `Modal`.
+`useDialogBehavior.ts` stays untouched; `Sheet.tsx` still needs it.
