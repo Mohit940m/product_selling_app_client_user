@@ -112,6 +112,7 @@ const AssistantPage = () => {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Ask anything… (demo — not connected)"
+            aria-label="Ask the assistant"
             className="flex-1 rounded-full border border-line px-4 py-3 text-[12.5px] text-ink placeholder:text-muted t-fast focus:border-accent"
           />
           <button

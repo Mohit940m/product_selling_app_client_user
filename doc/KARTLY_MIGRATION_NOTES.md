@@ -1176,3 +1176,14 @@ Checked: this is the only password-visibility toggle in either app
 OTP-only — and the admin app's password fields have no visibility
 toggle to begin with), so this was an isolated instance, not a
 recurring pattern.
+
+## Post-Phase-7 follow-up — two placeholder-only inputs missing aria-label
+
+An earlier round added `aria-label` to search inputs relying on
+placeholder-only text as their only visual label, but missed two:
+`ProductListPage.tsx`'s actual search `<input>` (as opposed to
+`TopNav.tsx`'s mobile search *icon link*, which already had one) and
+`AssistantPage.tsx`'s demo chat input. Added `aria-label="Search
+products"` and `aria-label="Ask the assistant"` respectively. Verified
+(not changed, already correct) `ProfilePage.tsx`'s "Set as default"
+checkbox — it's properly wrapped in a `<label htmlFor>`.

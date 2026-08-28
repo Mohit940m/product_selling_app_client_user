@@ -145,6 +145,7 @@ const ProductListPage = () => {
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full bg-transparent text-base outline-none placeholder:text-muted sm:text-[13px]"
                 placeholder={`Search ${total || ''} products`.trim()}
+                aria-label="Search products"
               />
               {searchInput && (
                 <button
