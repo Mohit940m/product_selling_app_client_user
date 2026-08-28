@@ -13,6 +13,7 @@ import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import { showKartlyToast } from '../components/ui/Toast';
 import CartDrawer from '../components/cart/CartDrawer';
+import { notifyCartChanged } from '../hooks/useCartCount';
 
 const ADDED_FEEDBACK_MS = 900;
 
@@ -178,6 +179,7 @@ const ProductDetailPage = () => {
         variantId: selectedVariant?._id,
         quantity,
       });
+      notifyCartChanged();
       showKartlyToast({ title: 'Added to bag', sub: `${product.name}${selectedVariant ? ` · ×${quantity}` : ''}` });
       setJustAdded(true);
       if (justAddedTimeoutRef.current) clearTimeout(justAddedTimeoutRef.current);

@@ -10,6 +10,7 @@ import Panel from '../components/ui/Panel';
 import Input from '../components/ui/Input';
 import ImageFrame from '../components/ui/ImageFrame';
 import Skeleton from '../components/ui/Skeleton';
+import { notifyCartChanged } from '../hooks/useCartCount';
 
 type CheckoutItem = {
   productId: string;
@@ -202,6 +203,10 @@ const CheckoutPage = () => {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
+            // verifyPayment clears the cart server-side on success — keep
+            // the nav badge in sync rather than leaving it showing the
+            // now-checked-out item count.
+            notifyCartChanged();
             toast.success('Payment successful! Order placed.');
             navigate('/orders/success', { state: { orderId, estimatedTime: pickEstimatedTime(summary?.shippingDetails) } });
           } catch {

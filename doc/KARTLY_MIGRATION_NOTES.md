@@ -1053,3 +1053,37 @@ changes) rather than a `useEffect` reset, since the admin app's
 outright, and the render-time version avoids an extra render cycle on
 every image switch anyway — applied identically to both apps' copies
 of this component for consistency.
+
+## Post-Phase-7 follow-up — the nav cart badge never updated after the first load
+
+A significant, highly-visible bug: `AppLayout`'s own doc comment says
+it's "rendered once by the router so navigating between pages does not
+remount the chrome," and `useCartCount()`'s `useEffect` only depends on
+`isLoggedIn` — a value read once from `localStorage` and effectively
+frozen for the session. Combined, this meant the `/cart/get-cart` fetch
+behind the `TopNav`/`BottomTabBar` badge ran *exactly once* for the
+whole session. Adding an item, removing one, changing quantity, or
+completing checkout (which clears the cart server-side) never touched
+that count again — the badge just froze at whatever it showed on first
+load, for the rest of the session, until a full page reload.
+
+This app has no global state management by design, so rather than
+introduce one just for this, added a plain `window` custom event
+(`notifyCartChanged()` / a `kartly:cart-changed` listener, both in
+`useCartCount.ts`) — every real cart-mutating call site now calls
+`notifyCartChanged()` after a successful request: `ProductDetailPage`'s
+`addToCart`, `CartPage`'s `removeItem` and `updateQuantity` (both
+increment and decrement branches — a decrement can empty a line and
+change the distinct-item count the badge is based on), and
+`CheckoutPage`'s payment-success handler (the cart is cleared
+server-side once `verify-payment` succeeds). Grepped for every
+`/cart/add-to-cart` and `/cart/remove-from-cart` call site to confirm
+all of them are now covered.
+
+While rewriting the hook to support being re-triggered by the event
+(not just once on mount), also closed a related race: `load()` can now
+fire repeatedly (mount + every event), and a plain per-effect
+`isCurrent` flag would only have guarded against unmount, not two of
+these calls landing out of order relative to each other (e.g. two fast
+cart edits). Added a `requestId` counter so only the most recently
+*started* call is allowed to commit its result.

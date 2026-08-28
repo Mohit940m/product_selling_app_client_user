@@ -12,6 +12,7 @@ import ImageFrame from '../components/ui/ImageFrame';
 import QtyStepper from '../components/ui/QtyStepper';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
+import { notifyCartChanged } from '../hooks/useCartCount';
 
 type CartVariant = {
   _id: string;
@@ -90,6 +91,7 @@ const CartPage = () => {
     try {
       const { data } = await userApi.post('/cart/remove-from-cart', { productId, variantId });
       setCart(data.data);
+      notifyCartChanged();
       toast.success('Item removed from cart.');
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -113,6 +115,11 @@ const CartPage = () => {
         ? await userApi.post('/cart/add-to-cart', { productId, variantId, quantity: 1 })
         : await userApi.post('/cart/remove-from-cart', { productId, variantId, quantity: 1 });
       setCart(data.data);
+      // A decrement that empties a line changes the distinct-line count
+      // the nav badge is based on; an increment doesn't, but notifying
+      // either way keeps this correct regardless of exactly which count
+      // semantic the badge ends up using.
+      notifyCartChanged();
     } catch (err) {
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message ?? 'Failed to update quantity.'
