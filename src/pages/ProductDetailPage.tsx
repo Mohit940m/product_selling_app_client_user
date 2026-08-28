@@ -448,6 +448,7 @@ const ProductDetailPage = () => {
               <button
                 type="button"
                 onClick={() => setDescriptionExpanded((v) => !v)}
+                aria-expanded={descriptionExpanded}
                 className="mt-1.5 text-xs font-bold text-accent hover:underline"
               >
                 {descriptionExpanded ? 'Show less' : 'See details'}

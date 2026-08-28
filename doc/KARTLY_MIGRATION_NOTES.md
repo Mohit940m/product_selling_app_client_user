@@ -1149,3 +1149,30 @@ the standard pattern), pointing at a new `id="main-content"` on the
 `SignUpPage`, via `AuthLayout`) alone — their nav chrome is a single
 brand-mark link at most, not a repeating multi-item nav, so the
 bypass burden a skip link solves for doesn't really apply there.
+
+## Post-Phase-7 follow-up — two more toggle-button accessibility gaps
+
+Found while sweeping for the same "disclosure toggle with no state
+reflected to assistive tech" class as the admin app's hamburger fix
+(see its notes): `ProductDetailPage.tsx`'s description "See details" /
+"Show less" button had no `aria-expanded` (its changing label already
+conveys state reasonably, but the ARIA Authoring Practices Guide
+specifically calls for `aria-expanded` on this exact "show more"
+pattern) — added it.
+
+More seriously, `SignUpPage.tsx`'s show/hide-password button had
+`tabIndex={-1}`, which doesn't just deprioritize it in the tab order —
+it removes a real, interactive `<button>` from keyboard reachability
+entirely. A keyboard-only user could never toggle password visibility
+on this form; the mouse was the only way to reach it. Removed the
+`tabIndex={-1}` (native buttons are focusable by default, so this
+needed removing, not replacing), added `aria-pressed={showPassword}`
+(the correct role for a toggle button, matching the `Chip` primitive's
+existing pattern), and added the standard `focus-visible` ring styling
+used everywhere else in this app — the button had none at all, so even
+once reachable it would have been focused with no visible indicator.
+Checked: this is the only password-visibility toggle in either app
+(the user client's `LoginPage` has no password field at all — login is
+OTP-only — and the admin app's password fields have no visibility
+toggle to begin with), so this was an isolated instance, not a
+recurring pattern.
