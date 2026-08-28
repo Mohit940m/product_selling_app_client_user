@@ -4,6 +4,7 @@ import { FiClock } from 'react-icons/fi';
 import Container from '../components/layout/Container';
 import Confetti from '../components/motion/Confetti';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type LocationState = {
   orderId?: string;
@@ -20,6 +21,7 @@ type LocationState = {
  * via navigation state from CheckoutPage — no fabricated order data.
  */
 const OrderSuccessPage = () => {
+  useDocumentTitle('Order Confirmed');
   const location = useLocation();
   const state = location.state as LocationState | null;
   const orderId = state?.orderId;

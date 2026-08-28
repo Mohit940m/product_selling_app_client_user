@@ -11,6 +11,7 @@ import Input from '../components/ui/Input';
 import ImageFrame from '../components/ui/ImageFrame';
 import Skeleton from '../components/ui/Skeleton';
 import { notifyCartChanged } from '../hooks/useCartCount';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type CheckoutItem = {
   productId: string;
@@ -114,6 +115,7 @@ const LoadingOverlay = () => (
 );
 
 const CheckoutPage = () => {
+  useDocumentTitle('Checkout');
   const navigate = useNavigate();
   const [summary, setSummary] = useState<CheckoutSummary | null>(null);
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);

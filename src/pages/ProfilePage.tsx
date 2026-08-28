@@ -15,6 +15,7 @@ import Sheet from '../components/ui/Sheet';
 import Switch from '../components/ui/Switch';
 import Skeleton from '../components/ui/Skeleton';
 import { useTheme } from '../theme/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type UserAddress = {
   _id: string;
@@ -59,6 +60,7 @@ const formatDate = (iso: string) => {
 };
 
 const ProfilePage = () => {
+  useDocumentTitle('Profile');
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme } = useTheme();

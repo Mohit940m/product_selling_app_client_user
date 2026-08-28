@@ -10,6 +10,7 @@ import Button from '../components/ui/Button';
 import ImageFrame from '../components/ui/ImageFrame';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type WishlistProduct = {
   _id: string;
@@ -36,6 +37,7 @@ const formatCurrency = (value: number) =>
  * since one would have nothing to call.
  */
 const WishlistPage = () => {
+  useDocumentTitle('Wishlist');
   const navigate = useNavigate();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import BrandMark from '../components/layout/BrandMark';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export const WELCOME_SEEN_KEY = 'kartlySeenWelcome';
 
@@ -9,6 +10,7 @@ export const WELCOME_SEEN_KEY = 'kartlySeenWelcome';
  * unset and there's no logged-in user; both actions below set the flag.
  */
 const WelcomePage = () => {
+  useDocumentTitle('Welcome');
   const navigate = useNavigate();
 
   const dismiss = (to: string) => {

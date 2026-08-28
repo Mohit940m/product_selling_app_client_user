@@ -14,6 +14,7 @@ import EmptyState from '../components/ui/EmptyState';
 import { showKartlyToast } from '../components/ui/Toast';
 import CartDrawer from '../components/cart/CartDrawer';
 import { notifyCartChanged } from '../hooks/useCartCount';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const ADDED_FEEDBACK_MS = 900;
 
@@ -66,6 +67,7 @@ const ProductDetailPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isWishlisting, setIsWishlisting] = useState(false);
   const justAddedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useDocumentTitle(product?.name ?? 'Product');
 
   // Clears the "Added" feedback timeout on unmount so a quick navigation
   // away right after adding to cart doesn't leave a stray timer running.

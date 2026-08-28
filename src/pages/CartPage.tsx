@@ -13,6 +13,7 @@ import QtyStepper from '../components/ui/QtyStepper';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import { notifyCartChanged } from '../hooks/useCartCount';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type CartVariant = {
   _id: string;
@@ -53,6 +54,7 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
 const CartPage = () => {
+  useDocumentTitle('Your Bag');
   const navigate = useNavigate();
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);

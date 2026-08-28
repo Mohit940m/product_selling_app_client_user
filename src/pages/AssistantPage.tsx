@@ -5,6 +5,7 @@ import Chip from '../components/ui/Chip';
 import EmptyState from '../components/ui/EmptyState';
 import ChatBubble from '../components/assistant/ChatBubble';
 import TypingDots from '../components/assistant/TypingDots';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
 
@@ -24,6 +25,7 @@ const SUGGESTIONS = ['Cheaper', 'Gold only', 'Ship by Fri'];
  * the flag is off, it shows an honest "coming soon" state instead.
  */
 const AssistantPage = () => {
+  useDocumentTitle('Assistant');
   const [draft, setDraft] = useState('');
 
   if (!ASSISTANT_ENABLED) {

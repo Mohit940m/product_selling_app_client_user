@@ -4,6 +4,7 @@ import { FiPackage, FiShoppingCart } from 'react-icons/fi';
 import Container from '../components/layout/Container';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 /**
  * Order history landing. There is currently no backend endpoint to list a
@@ -13,6 +14,7 @@ import EmptyState from '../components/ui/EmptyState';
  * "list my orders" endpoint once one exists.
  */
 const OrderListPage = () => {
+  useDocumentTitle('Orders');
   const navigate = useNavigate();
 
   useEffect(() => {

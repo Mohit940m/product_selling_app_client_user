@@ -13,6 +13,7 @@ import ImageFrame from '../components/ui/ImageFrame';
 import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import Reveal from '../components/motion/Reveal';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
 
@@ -39,6 +40,7 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
 const ProductListPage = () => {
+  useDocumentTitle('Shop');
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
