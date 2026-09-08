@@ -1328,3 +1328,24 @@ against a live Razorpay flow in this environment — the fix is
 verified as "now matches the real route," not as "a real payment was
 completed," and should get a real click-through pass when one is
 possible.
+
+## Backend fix (cross-repo) — verifyPayment wasn't idempotent
+
+Prompted directly by the `/order` vs `/orders` fix above — having just
+audited the checkout flow's URLs, re-examined `verifyPayment`'s
+authorization/idempotency properties too, since it's the financially
+critical endpoint at the end of the same flow this page's
+`handler` callback calls.
+
+Nothing stopped `verifyPayment` from running its full body — including
+the stock-deduction loop — more than once for the same order. This
+page's own Razorpay `handler` isn't guaranteed exactly-once by
+Razorpay's own docs, and a network retry or replayed request with the
+same still-valid signature would each succeed and deduct stock again
+for an order already paid and already stocked-out for. Fixed
+server-side by returning early once a payment is found already `PAID`,
+before re-verifying or re-deducting — see
+`product_selling_app_server` commit `ef55abb`. No change needed here;
+this page's own retry behavior (there isn't any — one `handler` call
+per successful Razorpay checkout) was never the problem, the backend's
+missing guard was.
