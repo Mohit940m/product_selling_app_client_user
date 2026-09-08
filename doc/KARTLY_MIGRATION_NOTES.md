@@ -1368,3 +1368,41 @@ from its own prior API responses; the fixes matter for a malformed direct
 API call, or a future bug elsewhere that ends up sending a bad id.
 
 Verified with `npm run build` (server, clean) for each.
+
+## 2026-09-09 — CRITICAL: typing in a dialog stole its own keyboard focus
+
+Found while re-auditing `useDialogBehavior.ts` for focus-trap correctness
+— a fresh angle this session hadn't checked despite doing extensive other
+accessibility work (skip links, aria-describedby, keyboard-reachable
+rows) on adjacent components. Its focus-trap effect depended on
+`[open, onClose]`. `onClose` is passed as a fresh inline arrow function
+at real call sites (`onClose={() => setCartDrawerOpen(false)}`), and any
+dialog containing an input the user types into re-renders its parent on
+every keystroke — creating a new `onClose` reference each time. That
+identity change tore the whole effect down and rebuilt it on every single
+character typed: the cleanup's `triggerRef.current.focus()` yanked focus
+to the element that opened the dialog, then the setup's
+`focusable[0].focus()` moved it again to whatever's first inside the
+dialog — stealing keyboard focus out of the field being typed into, every
+keystroke, in any Sheet/Modal with a form field.
+
+This app's own `Sheet.tsx` (used by `CartDrawer`) shares this hook, but
+`CartDrawer` has no text input inside it, so this specific app's live
+impact was narrower than the admin app's (whose `Modal`/`ConfirmDialog`
+share the same hook and have several form-bearing dialogs) — fixed here
+regardless, since the hook is shared and any future Sheet with a form
+field would have hit it immediately.
+
+A WCAG 2.1.2 (No Keyboard Trap) / basic usability failure — genuinely
+broken typing for a keyboard or screen-reader user, janky even with a
+mouse. Fixed with the standard "ref for a callback that shouldn't be an
+effect dependency" pattern: `onClose` tracked in a ref, kept current via
+a no-dependency-array effect, the Escape handler calls
+`onCloseRef.current()`, and the main effect's dependency array is now
+`[open]` only.
+
+Verified with `npm run build` (clean) and `npm run lint` (only the 2
+pre-existing `only-export-components` warnings, unrelated). No live
+browser was available to click-test this interactively in this
+environment — verified by tracing React's effect-dependency semantics
+against the actual code, the same way the bug itself was found.
