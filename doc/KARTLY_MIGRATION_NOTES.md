@@ -1406,3 +1406,35 @@ pre-existing `only-export-components` warnings, unrelated). No live
 browser was available to click-test this interactively in this
 environment — verified by tracing React's effect-dependency semantics
 against the actual code, the same way the bug itself was found.
+
+## Empirical verification, live server — the /order vs /orders fix confirmed for real
+
+`product_selling_app_server`'s real `.env` was already fully populated
+(a real MongoDB Atlas cluster, real Cloudinary/Razorpay keys) — started
+it with `npm run dev` and confirmed a genuine `MongoDB Connected` log
+line, then hit the actual routes with `curl` rather than relying solely
+on reading the code:
+
+- `POST /api/v1/user/order/checkout` (the old, broken path this app used
+  to call) → **404** — proves it never resolved to anything.
+- `POST /api/v1/user/orders/checkout` (the fix) → **401 "Authentication
+  required"** — proves the route exists and the auth middleware runs;
+  a 404 here would have meant the fix itself was wrong.
+- Same 404-then-401 pattern confirmed for `create-order` and
+  `verify-payment`, and (cross-repo) for the admin app's
+  `/offer/create-offer` vs `/offers/create-offer` fix, plus 401s on both
+  new endpoints added this session (`GET /seller/offers/`,
+  `DELETE /user/wishlist/remove/:productId`).
+
+Did not go further into a full authenticated register → login →
+add-to-cart → checkout run: that would create real User/Cart/Order/
+Payment documents in what's evidently a real, possibly-shared or
+production-connected database (not a local/throwaway test instance),
+which isn't a safe thing to do without asking first. The route-existence
+checks above are read-only (no auth, no writes) and were enough to
+convert this fix from "verified by reading the code" to "verified
+against the actual live server" — a meaningfully stronger confidence
+level for what was flagged as this session's most severe bug. Server
+process was stopped cleanly afterward (confirmed via a follow-up
+connection-refused check and a process list) — a pre-existing, unrelated
+node process from before this check was left untouched.
