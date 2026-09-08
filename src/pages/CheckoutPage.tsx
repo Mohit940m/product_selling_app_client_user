@@ -149,7 +149,7 @@ const CheckoutPage = () => {
   const calculateSummary = async (payload: Record<string, unknown>) => {
     setIsLoadingSummary(true);
     try {
-      const { data } = await userApi.post('/order/checkout', payload);
+      const { data } = await userApi.post('/orders/checkout', payload);
       setSummary(data.data);
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -185,7 +185,7 @@ const CheckoutPage = () => {
 
     try {
       const payload = buildAddressPayload();
-      const { data } = await userApi.post('/order/create-order', payload);
+      const { data } = await userApi.post('/orders/create-order', payload);
       const { orderId, razorpayOrderId, amount, currency, key, user } = data.data;
 
       const options = {
@@ -200,7 +200,7 @@ const CheckoutPage = () => {
         handler: async (response: Record<string, string>) => {
           setIsVerifying(true);
           try {
-            await userApi.post('/order/verify-payment', {
+            await userApi.post('/orders/verify-payment', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
