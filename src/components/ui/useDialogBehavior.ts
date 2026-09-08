@@ -12,6 +12,24 @@ export const useDialogBehavior = (open: boolean, onClose: () => void) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
+  // Keep the latest onClose in a ref rather than as a dependency of the
+  // effect below. onClose is passed as a fresh inline arrow function at
+  // nearly every real call site (`onClose={() => setX(false)}`), and any
+  // dialog containing an input the user types into re-renders its parent
+  // on every keystroke, creating a new onClose reference each time. With
+  // onClose in the main effect's dependency array, that identity change
+  // tore the whole effect down and set it back up again — the cleanup's
+  // triggerRef.current.focus() yanked focus to the element that opened
+  // the dialog, then the setup's focusable[0].focus() moved it again to
+  // whatever's first inside the dialog, stealing keyboard focus out of
+  // the field being typed into after every single character. A ref
+  // sidesteps that: the main effect now only reruns when `open` itself
+  // actually changes.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
   useEffect(() => {
     if (!open) return;
 
@@ -26,7 +44,7 @@ export const useDialogBehavior = (open: boolean, onClose: () => void) => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key !== 'Tab' || !container) return;
@@ -52,7 +70,7 @@ export const useDialogBehavior = (open: boolean, onClose: () => void) => {
       document.removeEventListener('keydown', handleKeyDown);
       triggerRef.current?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return containerRef;
 };
