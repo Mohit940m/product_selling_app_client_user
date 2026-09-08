@@ -1289,3 +1289,42 @@ wraps only the image/text, `Card` itself stays a plain `div`.
 Verified with `npm run build` (server + this app, both clean) and
 `npm run lint` (only the 2 pre-existing `only-export-components`
 warnings, unrelated).
+
+## 2026-09-09 — CRITICAL: the entire checkout flow was calling the wrong URL
+
+Found immediately after fixing the identical bug class in the admin
+app (`product_selling_app_clinet_admin` commit `c509c70`,
+`/offer/create-offer` vs the real `/offers` mount) — prompted a
+systematic re-check of every `userApi`/`sellerApi` call site in both
+frontend apps against the actual backend route mounts, rather than
+trusting that this session's earlier, extensive checkout-related
+review (cart-total offer gating, atomic stock deduction on
+`verifyPayment`, the auth `$or` fix, etc.) had ever exercised the real
+URL — it hadn't; that review was all controller-level, and no browser
+tool has been available in this environment to click through the app.
+
+`CheckoutPage.tsx` called `userApi.post('/order/checkout', ...)`,
+`'/order/create-order'`, and `'/order/verify-payment'` — singular
+`order` — but `src/routes/user.routes/userRoute.ts` mounts
+`order.routes.ts` at `/orders` (plural). Every checkout summary
+calculation, order creation, and post-Razorpay payment verification
+through the real UI has been hitting a 404 since this page was built.
+This is likely the single most severe bug found in this app across
+every session's worth of migration work — worse than the earlier
+auth `$or` bug, because that one only widened who could log in;
+this one meant no purchase could complete at all through the actual
+frontend, full stop.
+
+Fixed all three call sites to `/orders/checkout`, `/orders/create-order`,
+`/orders/verify-payment`. Grepped every remaining call site in this
+app (auth, profile, products, cart, wishlist) against its real mount
+to rule out further instances — none found; this was isolated to
+`CheckoutPage.tsx`.
+
+Verified with `npm run build` (clean) and `npm run lint` (only the 2
+pre-existing `only-export-components` warnings, unrelated). No
+automated or manual browser test could confirm the fix end-to-end
+against a live Razorpay flow in this environment — the fix is
+verified as "now matches the real route," not as "a real payment was
+completed," and should get a real click-through pass when one is
+possible.

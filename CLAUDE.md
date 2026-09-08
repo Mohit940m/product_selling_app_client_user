@@ -81,7 +81,7 @@ The backend returns the OTP in the response body ("for testing/demo purposes" �
 
 ### Payment flow
 
-Checkout page POSTs to `/order/checkout` to calculate summary → user clicks "Place Order & Pay" → POSTs to `/order/create-order` → loads Razorpay JS SDK dynamically → opens Razorpay modal (themed to the Kartly accent, `#A87BF5`) → on success POSTs to `/order/verify-payment` (a blocking overlay covers the page while this is in flight) → navigates to `/orders/success` with `{ orderId }` in navigation state.
+Checkout page POSTs to `/orders/checkout` to calculate summary → user clicks "Place Order & Pay" → POSTs to `/orders/create-order` → loads Razorpay JS SDK dynamically → opens Razorpay modal (themed to the Kartly accent, `#A87BF5`) → on success POSTs to `/orders/verify-payment` (a blocking overlay covers the page while this is in flight) → navigates to `/orders/success` with `{ orderId }` in navigation state. (These three paths are plural — `/orders/*` — matching how `userRoute.ts` mounts `order.routes.ts`; this file itself had the singular form until it was caught and fixed, see `doc/KARTLY_MIGRATION_NOTES.md`.)
 
 ### The AI assistant (flagged, no frontend wiring yet)
 
