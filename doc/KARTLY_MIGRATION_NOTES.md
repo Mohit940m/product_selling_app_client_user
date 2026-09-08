@@ -1349,3 +1349,22 @@ before re-verifying or re-deducting — see
 this page's own retry behavior (there isn't any — one `handler` call
 per successful Razorpay checkout) was never the problem, the backend's
 missing guard was.
+
+## Backend fixes (cross-repo) — malformed-id CastErrors across the user-facing API
+
+A batch of related fixes in `product_selling_app_server`, all the same
+pattern: a malformed Mongo id (not valid ObjectId hex) reaching a
+`findOne`/`findOneAndUpdate`/`$in` query unguarded throws a Mongoose
+CastError, caught by that function's own generic catch block and reported
+as a 500 instead of a clean 400/404. First found and fixed in
+`getProductById` and `addProductToWishList` earlier this session; a
+systematic sweep of every controller touching `req.params`/`req.body`
+found and fixed three more instances that affect this app directly:
+`addToCart`/`removeFromCart` (cart controller, commit `7fdce44`) and
+`editShippingAddress` (profile controller, commit `abb702c` — this app's
+own `ProfilePage.tsx` address-edit flow). No frontend change needed for
+any of these — this app already only ever sends real ObjectIds it got
+from its own prior API responses; the fixes matter for a malformed direct
+API call, or a future bug elsewhere that ends up sending a bad id.
+
+Verified with `npm run build` (server, clean) for each.
