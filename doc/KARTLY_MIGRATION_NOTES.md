@@ -1254,3 +1254,38 @@ signal as the linter's actual, currently-installed rule set — worth
 periodically checking `--print-config` against what a fix is assumed
 to be protected by, not just assuming version pins stay current on
 their own.
+
+## 2026-09-09 — wishlist remove endpoint added, page/toggle no longer read-only
+
+`WishlistPage.tsx` has carried an explicit "read-only, no remove
+endpoint yet" note since its Kartly migration, and
+`ProductDetailPage.tsx`'s `toggleWishlist` was genuinely add-only —
+its guard clause (`isWishlisted && return`) made a second click on an
+already-saved product a silent no-op, despite the button's own
+`aria-pressed`/label already implying a real toggle. Re-checked
+`product_selling_app_server/src/routes/user.routes/wishList.routes.ts`
+directly rather than assuming the earlier note was still accurate (the
+same discipline this file's Phase-7 entries used for other "endpoint
+doesn't exist" claims) — confirmed only `POST /add` and `GET /` existed.
+
+Added `DELETE /wishlist/remove/:productId` server-side
+(`removeProductFromWishList`, mirroring `addProductToWishList`'s auth
+guard and `mongoose.isValidObjectId()` validation, scoped to the
+authenticated user via `WishList.findOneAndDelete({ userId, productId
+})`) — see `product_selling_app_server` commit `f7a7ff3`. Wired both
+consumers here: `toggleWishlist` now really toggles, and
+`WishlistPage.tsx` gained a per-card remove (X) button.
+
+One real correctness issue caught while wiring the remove button: the
+first draft put it *inside* the card's `<Link>` (matching
+`ProductListPage.tsx`'s `Card as={Link}` pattern), which would have
+nested a `<button>` inside an `<a>` — invalid HTML, since both are
+interactive content, and something browsers handle inconsistently by
+implicitly closing the anchor early. `ProductListPage`'s card has no
+second interactive control, so it never hit this. Restructured so the
+remove button is a sibling of the `Link`, not a child — the `Link`
+wraps only the image/text, `Card` itself stays a plain `div`.
+
+Verified with `npm run build` (server + this app, both clean) and
+`npm run lint` (only the 2 pre-existing `only-export-components`
+warnings, unrelated).
