@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiHeart } from 'react-icons/fi';
+import { FiHeart, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userApi from '../api/userApi';
@@ -31,16 +31,16 @@ const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
 
 /**
- * Backed by the real `/wishlist` endpoints (`GET /` here, `POST /add` from
- * the ProductDetailPage heart button). There is no remove-from-wishlist
- * endpoint yet, so this page is read-only — no remove control is shown,
- * since one would have nothing to call.
+ * Backed by the real `/wishlist` endpoints: `GET /` here, `POST /add` and
+ * `DELETE /remove/:productId` from this page's own remove button and from
+ * ProductDetailPage's heart-toggle button.
  */
 const WishlistPage = () => {
   useDocumentTitle('Wishlist');
   const navigate = useNavigate();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -62,6 +62,31 @@ const WishlistPage = () => {
   }, [navigate]);
 
   const validItems = items.filter((item): item is WishlistItem & { productId: WishlistProduct } => !!item.productId);
+
+  const removeItem = async (productId: string) => {
+    if (removingIds.has(productId)) return;
+    setRemovingIds((prev) => new Set(prev).add(productId));
+    try {
+      await userApi.delete(`/wishlist/remove/${productId}`);
+      setItems((prev) => prev.filter((item) => item.productId?._id !== productId));
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 404) {
+        // Already gone server-side — drop it from the list anyway.
+        setItems((prev) => prev.filter((item) => item.productId?._id !== productId));
+      } else {
+        const msg = axios.isAxiosError(err)
+          ? err.response?.data?.message ?? 'Failed to remove from wishlist.'
+          : 'Failed to remove from wishlist.';
+        toast.error(msg);
+      }
+    } finally {
+      setRemovingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(productId);
+        return next;
+      });
+    }
+  };
 
   return (
     <Container className="py-6 lg:py-10">
@@ -96,15 +121,29 @@ const WishlistPage = () => {
       ) : (
         <div className="grid gap-3.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-5">
           {validItems.map((item) => (
-            <Card key={item._id} as={Link} to={`/products/${item.productId._id}`} className="block lift-lg hover:shadow-lift-accent-lg">
-              <ImageFrame src={item.productId.images?.[0]} alt={item.productId.name} className="h-[104px] lg:h-[210px]" />
-              <div className="p-3 pt-2.75 pb-3.25 lg:p-4.5">
-                <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-wide text-muted">{item.productId.category}</p>
-                <h3 className="line-clamp-2 text-[13px] font-bold text-ink">{item.productId.name}</h3>
-                <span className="mt-2.5 block text-[14px] font-extrabold text-ink lg:mt-3 lg:text-base">
-                  {formatCurrency(item.productId.price)}
-                </span>
-              </div>
+            <Card key={item._id} className="relative lift-lg hover:shadow-lift-accent-lg">
+              <button
+                type="button"
+                onClick={() => removeItem(item.productId._id)}
+                disabled={removingIds.has(item.productId._id)}
+                aria-label={`Remove ${item.productId.name} from wishlist`}
+                className="absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-[11px] bg-card text-muted t-fast hover:text-accent disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                <FiX size={15} />
+              </button>
+              {/* A <button> can't validly nest inside the <Link> below (both are
+                  interactive content), so the remove control above is a sibling,
+                  not a child, of the link — only the image/text are navigable. */}
+              <Link to={`/products/${item.productId._id}`} className="block">
+                <ImageFrame src={item.productId.images?.[0]} alt={item.productId.name} className="h-[104px] lg:h-[210px]" />
+                <div className="p-3 pt-2.75 pb-3.25 lg:p-4.5">
+                  <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-wide text-muted">{item.productId.category}</p>
+                  <h3 className="line-clamp-2 text-[13px] font-bold text-ink">{item.productId.name}</h3>
+                  <span className="mt-2.5 block text-[14px] font-extrabold text-ink lg:mt-3 lg:text-base">
+                    {formatCurrency(item.productId.price)}
+                  </span>
+                </div>
+              </Link>
             </Card>
           ))}
         </div>

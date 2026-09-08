@@ -110,9 +110,27 @@ const ProductDetailPage = () => {
       navigate('/login');
       return;
     }
-    if (!product || isWishlisted || isWishlisting) return;
+    if (!product || isWishlisting) return;
 
     setIsWishlisting(true);
+    if (isWishlisted) {
+      try {
+        await userApi.delete(`/wishlist/remove/${product._id}`);
+        setIsWishlisted(false);
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          // Already gone server-side (e.g. removed from another tab) —
+          // the UI's stale "wishlisted" state was wrong either way.
+          setIsWishlisted(false);
+        } else {
+          toast.error('Failed to remove from wishlist.');
+        }
+      } finally {
+        setIsWishlisting(false);
+      }
+      return;
+    }
+
     try {
       await userApi.post('/wishlist/add', { productId: product._id });
       setIsWishlisted(true);
