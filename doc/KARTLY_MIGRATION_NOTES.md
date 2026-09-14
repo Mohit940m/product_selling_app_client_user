@@ -1438,3 +1438,39 @@ level for what was flagged as this session's most severe bug. Server
 process was stopped cleanly afterward (confirmed via a follow-up
 connection-refused check and a process list) — a pre-existing, unrelated
 node process from before this check was left untouched.
+
+## 2026-09-15 — 4.6 built: real order history and order detail pages
+
+The 4.6 entry above ("OrderTrackingPage — not built") was accurate when
+written: the backend had no way to list or fetch a user's orders. That
+endpoint gap is now closed in `product_selling_app_server` (commit
+`1122a7e`: `GET /orders`, `GET /orders/:orderId`, both user-scoped), so
+the section is built:
+
+- `OrderListPage.tsx` — replaced the permanent `EmptyState` with a real,
+  paginated list (`?page=` in the URL): first item's image, `ORD-...` id,
+  status badge, date, item count, total. The empty state remains for
+  users with no paid orders.
+- `OrderDetailPage.tsx` at `/orders/:orderId` — items with attributes and
+  price-at-purchase, a 4-step fulfilment timeline, the seller's tracking
+  number and link when set (link only rendered for `http(s)` URLs), the
+  shipping address, and the stored subtotal/discount/shipping/tax/total.
+  A 404 (missing, or someone else's order) renders a "not found" state.
+- `OrderSuccessPage.tsx` — its second button linked to `/products` a
+  second time ("Browse more products"); it's now "View order".
+
+**What's still honestly limited:** nothing on the backend moves an order
+past `CONFIRMED` — sellers have no order routes, so there's no way to set
+`SHIPPED`/`DELIVERED` or attach tracking. The timeline and tracking panel
+are driven entirely by real fields and will show progress as soon as
+that exists, but today every paid order sits at step 1. No ETA is shown
+on the detail page: the order record doesn't store the checkout-time
+delivery estimate, and inventing one would repeat the fabrication this
+file has avoided throughout. Status labels/tones and shared types live in
+`src/components/order/orderMeta.ts`.
+
+Verified with `npm run build` (clean) and `npm run lint` (no new
+warnings), plus a live read-only check that both new server routes
+return 401 without a token (mounted, auth-guarded) — not an
+authenticated click-through, which would need real orders in the
+connected database.

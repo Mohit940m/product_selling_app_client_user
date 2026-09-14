@@ -14,6 +14,7 @@ import CartPage from './pages/CartPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderListPage from './pages/OrderListPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
+import OrderDetailPage from './pages/OrderDetailPage'
 import WishlistPage from './pages/WishlistPage'
 import ProfilePage from './pages/ProfilePage'
 import AssistantPage from './pages/AssistantPage'
@@ -47,6 +48,7 @@ const AppRoutes = () => {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/orders" element={<OrderListPage />} />
             <Route path="/orders/success" element={<OrderSuccessPage />} />
+            <Route path="/orders/:orderId" element={<OrderDetailPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/assistant" element={<AssistantPage />} />
