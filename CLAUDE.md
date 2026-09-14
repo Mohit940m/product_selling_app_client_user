@@ -60,8 +60,9 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
 /products/:productId      → product detail with image gallery, variant selector, add to cart
 /cart                     → cart items, remove, order summary
 /checkout                 → address selection/entry, order breakdown, Razorpay payment
-/orders                   → order history landing (currently an EmptyState — see note below)
+/orders                   → paginated order history (GET /orders; ?page= in the URL)
 /orders/success            → post-payment success screen (needs an orderId in navigation state)
+/orders/:orderId          → order detail: items, status timeline, tracking link, address, totals
 /wishlist                 → saved products, backed by the real /wishlist API (add, remove, list all wired)
 /profile                  → personal info, default address management, Orders/Wishlist menu rows, dark-mode toggle
 /assistant                → AI shopping assistant, demo UI behind VITE_ENABLE_ASSISTANT
@@ -69,7 +70,7 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
                             app's history, so any unmatched URL just rendered a blank screen)
 ```
 
-**Note:** the backend's user order routes only expose `checkout` / `create-order` / `verify-payment` — there is no endpoint to list past orders or fetch one order's detail/tracking status. `/orders` is therefore an honest empty state rather than a fabricated list, and there is no `/orders/:orderId` tracking page. See `doc/KARTLY_MIGRATION_NOTES.md` section "4.6" for detail.
+**Note:** `/orders` and `/orders/:orderId` use `GET /orders` and `GET /orders/:orderId`. The list shows only `PAID`/`REFUNDED` orders (the endpoint's default — `create-order` writes a `PENDING` order before payment, so abandoned checkouts would otherwise clutter it). The detail page's timeline reflects the real `orderStatus`; nothing on the backend advances an order past `CONFIRMED` yet (sellers have no order routes), so in practice every order shows "Confirmed" until that exists. Shared order types and status labels live in `src/components/order/orderMeta.ts`.
 
 ### Authentication flow
 
