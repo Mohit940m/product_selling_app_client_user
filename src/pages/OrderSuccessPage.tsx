@@ -114,10 +114,10 @@ const OrderSuccessPage = () => {
             Continue shopping
           </Link>
           <Link
-            to="/products"
+            to={`/orders/${encodeURIComponent(orderId)}`}
             className="flex items-center justify-center gap-2 rounded-btn bg-ink px-4 py-3 text-sm font-extrabold text-card t-base hover:shadow-lift-ink"
           >
-            Browse more products
+            View order
           </Link>
         </div>
       </div>

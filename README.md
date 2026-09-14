@@ -64,7 +64,7 @@ npm run preview   # Serve the built dist/ locally
 - **Cart** — Add/remove items with per-variant tracking, live order summary, drawer preview
 - **Wishlist** — Save/remove products for later
 - **Checkout** — Address management (new or saved), order cost breakdown, Razorpay payment modal
-- **Orders** — Post-payment success screen; order history listing is an honest empty state (no backend order-listing endpoint exists yet — see `CLAUDE.md`)
+- **Orders** — Post-payment success screen, paginated order history, and an order detail page with status timeline and tracking link
 - **Profile** — Personal info, default address, dark-mode toggle
 - **AI Assistant** — Demo UI behind `VITE_ENABLE_ASSISTANT`; not wired to a real backend yet (see `CLAUDE.md`)
 
@@ -80,8 +80,9 @@ npm run preview   # Serve the built dist/ locally
 | `/products/:productId` | Product detail | Browsable while logged out; add-to-cart/wishlist require login |
 | `/cart` | Cart | Redirects to `/login` if not logged in |
 | `/checkout` | Checkout + payment | Redirects to `/login` if not logged in |
-| `/orders` | Order history | Empty state — no listing endpoint yet |
+| `/orders` | Order history | Redirects to `/login` if not logged in |
 | `/orders/success` | Post-payment success | Needs an `orderId` in navigation state |
+| `/orders/:orderId` | Order detail | Redirects to `/login` if not logged in |
 | `/wishlist` | Saved products | Redirects to `/login` if not logged in |
 | `/profile` | Account settings | Redirects to `/login` if not logged in |
 | `/assistant` | AI assistant demo | Gated by `VITE_ENABLE_ASSISTANT` |
