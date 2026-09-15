@@ -15,7 +15,7 @@ import EmptyState from '../components/ui/EmptyState';
 import Reveal from '../components/motion/Reveal';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
+import { ASSISTANT_ENABLED } from '../config/assistant';
 
 type ActiveOffer = {
   _id: string;

@@ -7,7 +7,7 @@ import ChatBubble from '../components/assistant/ChatBubble';
 import TypingDots from '../components/assistant/TypingDots';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
+import { ASSISTANT_ENABLED } from '../config/assistant';
 
 const PICKS = [
   { name: 'Fine Chain Pendant', note: '14k plated · ships Fri', price: '₹4,500' },

@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
+import { ASSISTANT_ENABLED } from '../../config/assistant';
 
 interface Tab {
   label: string;

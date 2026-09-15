@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiSearch, FiShoppingCart, FiUser } from 'react-icons/fi';
 import BrandMark from './BrandMark';
 
-const ASSISTANT_ENABLED = import.meta.env.VITE_ENABLE_ASSISTANT === 'true';
+import { ASSISTANT_ENABLED } from '../../config/assistant';
 
 const CATEGORY_LINKS = ['New', 'Apparel', 'Tech', 'Home', 'Sale'];
 
