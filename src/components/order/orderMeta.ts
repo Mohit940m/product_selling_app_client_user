@@ -33,6 +33,7 @@ export type Order = {
   orderStatus: OrderStatus;
   subTotal: number;
   discount: number;
+  cashback?: number;
   shippingCost: number;
   tax: number;
   totalAmount: number;

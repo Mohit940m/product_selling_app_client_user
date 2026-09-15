@@ -41,6 +41,7 @@ type Breakdown = {
   subTotal: number;
   discount: number;
   discountedAmount: number;
+  cashback?: number;
   shipping: number;
   tax: number;
   total: number;
@@ -401,6 +402,12 @@ const CheckoutPage = () => {
                   <div className="flex justify-between text-ok-fg">
                     <span className="font-medium">Discount</span>
                     <span className="font-semibold">-{formatCurrency(summary.breakdown.discount)}</span>
+                  </div>
+                )}
+                {(summary.breakdown.cashback ?? 0) > 0 && (
+                  <div className="flex justify-between text-ok-fg">
+                    <span className="font-medium">Cashback</span>
+                    <span className="font-semibold">-{formatCurrency(summary.breakdown.cashback ?? 0)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">

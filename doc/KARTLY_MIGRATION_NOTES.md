@@ -1474,3 +1474,19 @@ warnings), plus a live read-only check that both new server routes
 return 401 without a token (mounted, auth-guarded) — not an
 authenticated click-through, which would need real orders in the
 connected database.
+
+## 2026-09-15 — Order progress is real; cashback shown in totals
+
+The 4.6 entry above noted every paid order sat at "Confirmed" because
+nothing could advance it. Sellers can now move orders forward and add
+tracking from the admin app (`product_selling_app_server` commit
+`0f7e8a8`), so `OrderDetailPage`'s timeline and "Track package" link now
+show real progress with no change needed here.
+
+`CASHBACK` offers are now deducted once from the order total at checkout.
+`CartPage`, `CheckoutPage` and `OrderDetailPage` show a separate
+"Cashback" line (green, like Discount) when one applies; the totals the
+backend returns already have it subtracted, and Razorpay is charged that
+same total.
+
+Verified with `npm run build` and `npm run lint` (no new warnings).

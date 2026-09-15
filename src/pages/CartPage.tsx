@@ -47,6 +47,7 @@ type Cart = {
   items: CartItem[];
   subTotal: number;
   discount: number;
+  cashback?: number;
   total: number;
 };
 
@@ -258,6 +259,12 @@ const CartPage = () => {
                   <div className="flex justify-between text-ok-fg">
                     <span className="font-medium">Discount</span>
                     <span className="font-semibold">-{formatCurrency(cart.discount)}</span>
+                  </div>
+                )}
+                {(cart.cashback ?? 0) > 0 && (
+                  <div className="flex justify-between text-ok-fg">
+                    <span className="font-medium">Cashback</span>
+                    <span className="font-semibold">-{formatCurrency(cart.cashback ?? 0)}</span>
                   </div>
                 )}
                 <div className="flex justify-between border-t border-line pt-3">
