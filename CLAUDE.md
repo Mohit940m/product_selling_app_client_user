@@ -20,7 +20,8 @@ Create a `.env` file at the project root (see `.env.example`):
 ```
 VITE_SERVER_URL=https://product-selling-app-server.onrender.com   # Backend base URL
 VITE_PORT=5204                                                      # Dev server port (optional)
-VITE_ENABLE_ASSISTANT=false                                         # Feature flag, see below
+VITE_ENABLE_ASSISTANT=true                                          # Assistant on unless "false" (agentic-chat branch)
+VITE_AGENT_URL=http://localhost:4100                                # product_selling_app_agent
 ```
 
 ## Architecture
@@ -41,7 +42,7 @@ This is a **React 19 + TypeScript + Vite SPA** serving as the buyer-facing store
 
 **`src/components/motion/`** — `Reveal` (staggered entrance), `Shimmer`/`Skeleton`'s loading sweep, `Confetti` (payment-success screen).
 
-**`src/components/auth/OtpInput.tsx`**, **`src/components/assistant/`** — page-specific composites for auth and the (flagged) assistant demo.
+**`src/components/auth/OtpInput.tsx`**, **`src/components/assistant/`** — page-specific composites for auth and the shopping assistant chat (bubbles, typing dots, and the reply cards under `blocks/`).
 
 **`src/theme/ThemeProvider.tsx`** — light/dark mode via a `data-theme` attribute on `<html>`, persisted to `localStorage` (`kartlyTheme`). `useTheme()` exposes `{ theme, setTheme, toggleTheme }`. Toggled live from `ProfilePage`'s dark-mode `Switch`.
 
@@ -65,7 +66,7 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
 /orders/:orderId          → order detail: items, status timeline, tracking link, address, totals
 /wishlist                 → saved products, backed by the real /wishlist API (add, remove, list all wired)
 /profile                  → personal info, default address management, Orders/Wishlist menu rows, dark-mode toggle
-/assistant                → AI shopping assistant, demo UI behind VITE_ENABLE_ASSISTANT
+/assistant                → AI shopping assistant chat (agentic-chat branch; log-in prompt when logged out)
 *                         → NotFoundPage (catch-all; there was none for a long stretch of this
                             app's history, so any unmatched URL just rendered a blank screen)
 ```

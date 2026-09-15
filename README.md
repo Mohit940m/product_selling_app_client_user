@@ -40,6 +40,7 @@ Create a `.env` file in the project root:
 ```env
 VITE_SERVER_URL=https://product-selling-app-server.onrender.com
 VITE_PORT=5204
+VITE_AGENT_URL=http://localhost:4100   # assistant service (agentic-chat branch)
 ```
 
 | Variable | Description | Default |
