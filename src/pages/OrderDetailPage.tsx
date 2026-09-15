@@ -210,6 +210,12 @@ const OrderDetailPage = () => {
                   <dd className="font-bold text-ok-fg">−{formatCurrency(order.discount)}</dd>
                 </div>
               )}
+              {(order.cashback ?? 0) > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-muted">Cashback</dt>
+                  <dd className="font-bold text-ok-fg">−{formatCurrency(order.cashback ?? 0)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-muted">Shipping</dt>
                 <dd className="font-bold text-ink">{order.shippingCost > 0 ? formatCurrency(order.shippingCost) : 'Free'}</dd>
