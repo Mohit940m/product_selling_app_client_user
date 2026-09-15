@@ -66,7 +66,7 @@ npm run preview   # Serve the built dist/ locally
 - **Checkout** — Address management (new or saved), order cost breakdown, Razorpay payment modal
 - **Orders** — Post-payment success screen, paginated order history, and an order detail page with status timeline and tracking link
 - **Profile** — Personal info, default address, dark-mode toggle
-- **AI Assistant** — Demo UI behind `VITE_ENABLE_ASSISTANT`; not wired to a real backend yet (see `CLAUDE.md`)
+- **AI Assistant** *(branch `agentic-chat`)* — Chat that finds products and shows them as cards you can add to your bag, manages the bag and wishlist, and tracks orders; changes it proposes wait for your confirmation. Needs `product_selling_app_agent` (branch `mcp`) and the server's `mcp` branch (see `CLAUDE.md`)
 
 ## Routes
 
@@ -85,7 +85,7 @@ npm run preview   # Serve the built dist/ locally
 | `/orders/:orderId` | Order detail | Redirects to `/login` if not logged in |
 | `/wishlist` | Saved products | Redirects to `/login` if not logged in |
 | `/profile` | Account settings | Redirects to `/login` if not logged in |
-| `/assistant` | AI assistant demo | Gated by `VITE_ENABLE_ASSISTANT` |
+| `/assistant` | AI shopping assistant | Log-in prompt when logged out; hidden with `VITE_ENABLE_ASSISTANT=false` |
 | `*` | 404 page | Catch-all |
 
 There's no route-level auth gate (unlike the admin app's `RequireSellerAuth`) — each protected page checks `localStorage.getItem('userToken')` itself and redirects if absent.

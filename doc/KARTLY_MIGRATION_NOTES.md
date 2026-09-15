@@ -1503,3 +1503,19 @@ vary" on the order list and header when items are at different stages,
 so a half-shipped order doesn't simply read "Confirmed".
 
 Verified with `npm run build` and `npm run lint` (no new warnings).
+
+## 2026-09-16 — The assistant is real (branch `agentic-chat`)
+
+Earlier entries describe `AssistantPage` as static demo content behind
+`VITE_ENABLE_ASSISTANT` because no agent existed to call. On this branch
+it's a working chat with `product_selling_app_agent` (branch `mcp`),
+which acts through the server's MCP endpoint as the logged-in user. The
+demo picks and disabled controls are gone. Replies render real Kartly
+cards: product tiles with a variant/quantity sheet and wishlist heart, a
+live bag with quantity steppers, cashback and Checkout, orders with
+per-item status and tracking, and a Confirm/Cancel card for changes the
+assistant proposes. See `doc/AGENTIC_CHAT_PLAN.md` and `CLAUDE.md`.
+
+Verified with `npm run build` and `npm run lint`. The agent behind it was
+tested live (search → cards, variant question, cart, pending action,
+cancel), but no browser was available to click through this page.

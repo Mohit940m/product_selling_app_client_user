@@ -33,12 +33,12 @@ just text.
   Typed requests go through the agent (with confirmation).
 
 ## Steps — commit after each
-1. **Plan** — this file.
-2. **Agent API client + types** — `src/api/agentApi.ts` (`VITE_AGENT_URL`,
+1. ✅ **Plan** — this file.
+2. ✅ **Agent API client + types** — `src/api/agentApi.ts` (`VITE_AGENT_URL`,
    same `userToken`), `src/components/assistant/types.ts`; `.env.example`;
    `VITE_ENABLE_ASSISTANT` defaults to on in this branch.
-3. **Block components** — `src/components/assistant/blocks/*`.
-4. **AssistantPage** — thread, composer, suggestions, pending action,
+3. ✅ **Block components** — `src/components/assistant/blocks/*`.
+4. ✅ **AssistantPage** — thread, composer, suggestions, pending action,
    conversation list, login redirect, error states.
-5. **Entry points & docs** — nav/tab entries always shown on this branch,
+5. ✅ **Entry points & docs** — nav/tab entries always shown on this branch,
    `CLAUDE.md`, migration notes.
