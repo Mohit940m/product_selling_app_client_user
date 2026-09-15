@@ -70,7 +70,7 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
                             app's history, so any unmatched URL just rendered a blank screen)
 ```
 
-**Note:** `/orders` and `/orders/:orderId` use `GET /orders` and `GET /orders/:orderId`. The list shows only `PAID`/`REFUNDED` orders (the endpoint's default — `create-order` writes a `PENDING` order before payment, so abandoned checkouts would otherwise clutter it). The detail page's timeline and tracking panel reflect the real `orderStatus`/`tracking`, which the seller advances from the admin app. Cart, checkout and order detail show a separate "Cashback" line when a `CASHBACK` offer applies; the backend has already taken it off the total. Shared order types and status labels live in `src/components/order/orderMeta.ts`.
+**Note:** `/orders` and `/orders/:orderId` use `GET /orders` and `GET /orders/:orderId`. The list shows only `PAID`/`REFUNDED` orders (the endpoint's default — `create-order` writes a `PENDING` order before payment, so abandoned checkouts would otherwise clutter it). Every item is its own sub-order: the detail page shows one card per item with its `subOrderId`, status badge, 4-step timeline and "Track package" link, all set per item by that product's seller from the admin app. The order-level badge uses the least advanced item stage and adds "items vary" when items differ. Cart, checkout and order detail show a separate "Cashback" line when a `CASHBACK` offer applies; the backend has already taken it off the total. Shared order types and status labels live in `src/components/order/orderMeta.ts`.
 
 ### Authentication flow
 
