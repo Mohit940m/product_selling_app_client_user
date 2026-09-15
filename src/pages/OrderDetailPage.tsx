@@ -12,20 +12,67 @@ import Skeleton from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
+  FULFILMENT_STEPS,
   formatAttributes,
   formatCurrency,
   formatOrderDate,
+  getItemStatusMeta,
   getOrderStatusMeta,
   type Order,
-  type OrderStatus,
+  type OrderItem,
 } from '../components/order/orderMeta';
 
-const FULFILMENT_STEPS: { status: OrderStatus; label: string }[] = [
-  { status: 'CONFIRMED', label: 'Confirmed' },
-  { status: 'SHIPPED', label: 'Shipped' },
-  { status: 'OUT FOR DELIVERY', label: 'Out for delivery' },
-  { status: 'DELIVERED', label: 'Delivered' },
-];
+const ItemFulfilment = ({ item, paid }: { item: OrderItem; paid: boolean }) => {
+  const stepIndex = FULFILMENT_STEPS.findIndex((step) => step.status === item.status);
+  const { tracking } = item;
+  const safeTrackingUrl = tracking?.trackingUrl && /^https?:\/\//i.test(tracking.trackingUrl) ? tracking.trackingUrl : null;
+
+  return (
+    <>
+      {paid && stepIndex !== -1 && (
+        <ol className="mt-4 grid grid-cols-4 gap-2" aria-label={`Progress for ${item.name}`}>
+          {FULFILMENT_STEPS.map((step, i) => {
+            const done = i <= stepIndex;
+            return (
+              <li key={step.status} className="flex flex-col items-center gap-1.5 text-center">
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                    done ? 'bg-accent text-onacc' : 'border border-line bg-soft2 text-muted'
+                  }`}
+                  aria-hidden="true"
+                >
+                  {done ? <FiCheck size={13} /> : <span className="text-[10px] font-bold">{i + 1}</span>}
+                </span>
+                <span className={`text-[10.5px] font-bold leading-tight ${done ? 'text-ink' : 'text-muted'}`}>
+                  {step.label}
+                  <span className="sr-only">{done ? ' (done)' : ' (pending)'}</span>
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+      {(tracking?.trackingId || safeTrackingUrl) && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-btn bg-soft2 p-3">
+          <span className="text-sm">
+            <span className="font-bold text-ink">{tracking?.courier || 'Courier'}</span>{' '}
+            {tracking?.trackingId && <span className="font-mono text-muted">{tracking.trackingId}</span>}
+          </span>
+          {safeTrackingUrl && (
+            <a
+              href={safeTrackingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-extrabold text-accent hover:underline"
+            >
+              Track package <FiExternalLink size={14} />
+            </a>
+          )}
+        </div>
+      )}
+    </>
+  );
+};
 
 type LoadState = { key: string; order: Order | null; error: string | null };
 
@@ -108,9 +155,8 @@ const OrderDetailPage = () => {
   }
 
   const status = getOrderStatusMeta(order);
-  const stepIndex = FULFILMENT_STEPS.findIndex((step) => step.status === order.orderStatus);
-  const showTimeline = order.paymentStatus === 'PAID' && stepIndex !== -1;
-  const { tracking, shippingAddress: address } = order;
+  const paid = order.paymentStatus === 'PAID';
+  const { shippingAddress: address } = order;
 
   return (
     <Container className="py-6 lg:py-10">
@@ -126,74 +172,44 @@ const OrderDetailPage = () => {
 
       <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
         <div className="space-y-5">
-          {showTimeline && (
-            <Panel aria-label="Order progress" className="p-4 sm:p-6">
-              <ol className="grid grid-cols-4 gap-2">
-                {FULFILMENT_STEPS.map((step, i) => {
-                  const done = i <= stepIndex;
-                  return (
-                    <li key={step.status} className="flex flex-col items-center gap-2 text-center">
-                      <span
-                        className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                          done ? 'bg-accent text-onacc' : 'border border-line bg-soft2 text-muted'
-                        }`}
-                        aria-hidden="true"
-                      >
-                        {done ? <FiCheck size={15} /> : <span className="text-[11px] font-bold">{i + 1}</span>}
-                      </span>
-                      <span className={`text-[11px] font-bold leading-tight ${done ? 'text-ink' : 'text-muted'}`}>
-                        {step.label}
-                        <span className="sr-only">{done ? ' (done)' : ' (pending)'}</span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ol>
-              {tracking?.trackingId && (
-                <div className="mt-5 flex flex-wrap items-center justify-between gap-2 rounded-btn bg-soft2 p-3">
-                  <span className="text-sm">
-                    <span className="font-bold text-ink">{tracking.courier || 'Courier'}</span>{' '}
-                    <span className="font-mono text-muted">{tracking.trackingId}</span>
-                  </span>
-                  {tracking.trackingUrl && /^https?:\/\//i.test(tracking.trackingUrl) && (
-                    <a
-                      href={tracking.trackingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-extrabold text-accent hover:underline"
-                    >
-                      Track package <FiExternalLink size={14} />
-                    </a>
-                  )}
-                </div>
-              )}
-            </Panel>
+          {order.items.length > 1 && (
+            <p className="text-sm font-medium text-muted">
+              Each item ships separately and has its own order number and tracking.
+            </p>
           )}
-
-          <Panel className="p-4 sm:p-6">
-            <h2 className="mb-4 font-extrabold text-ink">Items</h2>
-            <ul className="divide-y divide-line">
-              {order.items.map((item) => (
-                <li key={`${item.productId}-${item.variantId}`} className="flex gap-3.5 py-3.5 first:pt-0 last:pb-0">
-                  <ImageFrame src={item.image} alt={item.name} className="h-16 w-16 shrink-0" rounded="rounded-btn" />
-                  <div className="min-w-0 flex-1">
-                    <Link to={`/products/${item.productId}`} className="line-clamp-2 text-[14px] font-bold text-ink hover:text-accent">
-                      {item.name}
-                    </Link>
-                    {formatAttributes(item.attributes) && (
-                      <p className="mt-1 text-xs font-medium text-muted">{formatAttributes(item.attributes)}</p>
-                    )}
-                    <p className="mt-1 text-xs font-medium text-muted">
-                      {formatCurrency(item.priceAtPurchase)} × {item.quantity}
-                    </p>
-                  </div>
-                  <span className="shrink-0 text-[14px] font-extrabold text-ink">
-                    {formatCurrency(item.priceAtPurchase * item.quantity)}
-                  </span>
+          <ul className="space-y-4">
+            {order.items.map((item) => {
+              const itemStatus = getItemStatusMeta(item.status);
+              return (
+                <li key={item.subOrderId}>
+                  <Panel className="p-4 sm:p-6">
+                    <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
+                      <span className="break-all font-mono text-[11px] font-bold text-muted">{item.subOrderId}</span>
+                      {paid && <Badge tone={itemStatus.tone}>{itemStatus.label}</Badge>}
+                    </div>
+                    <div className="flex gap-3.5">
+                      <ImageFrame src={item.image} alt={item.name} className="h-16 w-16 shrink-0" rounded="rounded-btn" />
+                      <div className="min-w-0 flex-1">
+                        <Link to={`/products/${item.productId}`} className="line-clamp-2 text-[14px] font-bold text-ink hover:text-accent">
+                          {item.name}
+                        </Link>
+                        {formatAttributes(item.attributes) && (
+                          <p className="mt-1 text-xs font-medium text-muted">{formatAttributes(item.attributes)}</p>
+                        )}
+                        <p className="mt-1 text-xs font-medium text-muted">
+                          {formatCurrency(item.priceAtPurchase)} × {item.quantity}
+                        </p>
+                      </div>
+                      <span className="shrink-0 text-[14px] font-extrabold text-ink">
+                        {formatCurrency(item.priceAtPurchase * item.quantity)}
+                      </span>
+                    </div>
+                    <ItemFulfilment item={item} paid={paid} />
+                  </Panel>
                 </li>
-              ))}
-            </ul>
-          </Panel>
+              );
+            })}
+          </ul>
         </div>
 
         <div className="space-y-5">

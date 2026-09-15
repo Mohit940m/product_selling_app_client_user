@@ -1490,3 +1490,16 @@ backend returns already have it subtracted, and Razorpay is charged that
 same total.
 
 Verified with `npm run build` and `npm run lint` (no new warnings).
+
+## 2026-09-15 — Per-item order numbers, progress and tracking
+
+Each product in an order is now its own sub-order (backend commit
+`de68810`). `OrderDetailPage.tsx` replaced its single order-wide
+timeline and tracking panel with one card per item: sub-order number,
+status badge, 4-step timeline and "Track package" link, each driven by
+that item's own fields. A short note explains that items ship separately
+when there's more than one. `getOrderStatusMeta` shows "<stage> · items
+vary" on the order list and header when items are at different stages,
+so a half-shipped order doesn't simply read "Confirmed".
+
+Verified with `npm run build` and `npm run lint` (no new warnings).

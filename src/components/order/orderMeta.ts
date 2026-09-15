@@ -1,6 +1,13 @@
 import type { BadgeTone } from '../ui/Badge';
 
+export type OrderTracking = { courier?: string; trackingId?: string; trackingUrl?: string };
+
+/** Each item is its own sub-order with its own status and tracking. */
 export type OrderItem = {
+  subOrderId: string;
+  status: OrderStatus;
+  tracking?: OrderTracking;
+  statusUpdatedAt?: string;
   productId: string;
   variantId: string;
   name: string;
@@ -30,6 +37,7 @@ export type Order = {
   items: OrderItem[];
   shippingAddress: OrderAddress;
   paymentStatus: PaymentStatus;
+  /** Least advanced stage among the items. */
   orderStatus: OrderStatus;
   subTotal: number;
   discount: number;
@@ -37,7 +45,6 @@ export type Order = {
   shippingCost: number;
   tax: number;
   totalAmount: number;
-  tracking?: { courier?: string; trackingId?: string; trackingUrl?: string };
   createdAt: string;
 };
 
@@ -56,12 +63,29 @@ const ORDER_STATUS_META: Record<OrderStatus, { label: string; tone: BadgeTone }>
   CANCELLED: { label: 'Cancelled', tone: 'danger' },
 };
 
-/** Payment state overrides fulfilment state when it's the more important fact. */
-export const getOrderStatusMeta = (order: Pick<Order, 'orderStatus' | 'paymentStatus'>) => {
+export const getItemStatusMeta = (status: OrderStatus) =>
+  ORDER_STATUS_META[status] ?? { label: status, tone: 'plum' as BadgeTone };
+
+/**
+ * Payment state overrides fulfilment state when it's the more important fact.
+ * When items are at different stages, say so rather than showing only the slowest.
+ */
+export const getOrderStatusMeta = (order: Pick<Order, 'orderStatus' | 'paymentStatus'> & { items?: Pick<OrderItem, 'status'>[] }) => {
   if (order.paymentStatus === 'REFUNDED') return { label: 'Refunded', tone: 'ink' as BadgeTone };
   if (order.paymentStatus === 'FAILED') return { label: 'Payment failed', tone: 'danger' as BadgeTone };
-  return ORDER_STATUS_META[order.orderStatus] ?? { label: order.orderStatus, tone: 'plum' as BadgeTone };
+  const stages = new Set((order.items ?? []).map((item) => item.status));
+  if (stages.size > 1 && order.orderStatus !== 'CREATED') {
+    return { label: `${getItemStatusMeta(order.orderStatus).label} · items vary`, tone: 'plum' as BadgeTone };
+  }
+  return getItemStatusMeta(order.orderStatus);
 };
+
+export const FULFILMENT_STEPS: { status: OrderStatus; label: string }[] = [
+  { status: 'CONFIRMED', label: 'Confirmed' },
+  { status: 'SHIPPED', label: 'Shipped' },
+  { status: 'OUT FOR DELIVERY', label: 'Out for delivery' },
+  { status: 'DELIVERED', label: 'Delivered' },
+];
 
 export const formatAttributes = (attributes: Record<string, unknown> | undefined) =>
   Object.entries(attributes ?? {})
