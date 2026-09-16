@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiCheck, FiExternalLink, FiPackage } from 'react-icons/fi';
+import { FiArrowLeft, FiCheck, FiExternalLink, FiPackage, FiRotateCcw } from 'react-icons/fi';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import userApi from '../api/userApi';
 import Container from '../components/layout/Container';
 import Button from '../components/ui/Button';
@@ -81,9 +82,35 @@ const OrderDetailPage = () => {
   const { orderId = '' } = useParams();
   const navigate = useNavigate();
   const [state, setState] = useState<LoadState | null>(null);
+  // subOrderId the buyer is being asked to confirm cancelling, and the one whose
+  // cancel request is currently in flight (disables the buttons).
+  const [confirmingCancel, setConfirmingCancel] = useState<string | null>(null);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
   const isLoading = state?.key !== orderId;
   const order = isLoading ? null : state.order;
   useDocumentTitle(order ? `Order ${order.orderId}` : 'Order');
+
+  const cancelItem = async (subOrderId: string) => {
+    if (!order) return;
+    setCancellingId(subOrderId);
+    try {
+      const { data } = await userApi.patch(
+        `/orders/${encodeURIComponent(order.orderId)}/items/${encodeURIComponent(subOrderId)}/cancel`,
+      );
+      // The endpoint returns the full updated order (item marked CANCELLED,
+      // refund recorded, order status/payment status recomputed).
+      setState({ key: orderId, order: data.data ?? order, error: null });
+      setConfirmingCancel(null);
+      toast.success(data.message ?? 'Item cancelled and refund initiated.');
+    } catch (err) {
+      const msg = axios.isAxiosError(err)
+        ? err.response?.data?.message ?? 'Could not cancel this item. Please try again.'
+        : 'Could not cancel this item. Please try again.';
+      toast.error(msg);
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -180,6 +207,9 @@ const OrderDetailPage = () => {
           <ul className="space-y-4">
             {order.items.map((item) => {
               const itemStatus = getItemStatusMeta(item.status);
+              // Buyers can only cancel a paid item that hasn't shipped yet.
+              const canCancel = paid && item.status === 'CONFIRMED';
+              const busy = cancellingId === item.subOrderId;
               return (
                 <li key={item.subOrderId}>
                   <Panel className="p-4 sm:p-6">
@@ -205,6 +235,51 @@ const OrderDetailPage = () => {
                       </span>
                     </div>
                     <ItemFulfilment item={item} paid={paid} />
+
+                    {item.status === 'CANCELLED' && item.refund && (
+                      <div className="mt-4 flex items-start gap-2 rounded-btn bg-soft2 p-3 text-sm">
+                        <FiRotateCcw size={15} className="mt-0.5 shrink-0 text-muted" aria-hidden="true" />
+                        <span className="text-muted">
+                          <span className="font-bold text-ink">
+                            Refund of {formatCurrency(item.refund.amount)}{' '}
+                            {item.refund.status === 'COMPLETED' ? 'completed' : 'initiated'}.
+                          </span>{' '}
+                          It will be returned to your original payment method.
+                        </span>
+                      </div>
+                    )}
+
+                    {canCancel && (
+                      <div className="mt-4 border-t border-line pt-4">
+                        {confirmingCancel === item.subOrderId ? (
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="mr-auto text-sm font-medium text-muted">
+                              Cancel this item and get a refund of {formatCurrency(item.priceAtPurchase * item.quantity)}?
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setConfirmingCancel(null)}
+                              disabled={busy}
+                            >
+                              Keep item
+                            </Button>
+                            <Button variant="dark" size="sm" onClick={() => cancelItem(item.subOrderId)} loading={busy}>
+                              Yes, cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setConfirmingCancel(item.subOrderId)}
+                            disabled={!!cancellingId}
+                          >
+                            Cancel item
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </Panel>
                 </li>
               );

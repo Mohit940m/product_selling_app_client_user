@@ -1519,3 +1519,28 @@ assistant proposes. See `doc/AGENTIC_CHAT_PLAN.md` and `CLAUDE.md`.
 Verified with `npm run build` and `npm run lint`. The agent behind it was
 tested live (search → cards, variant question, cart, pending action,
 cancel), but no browser was available to click through this page.
+
+## 2026-09-16 — Buyers can cancel a pre-ship item (order cancellation/refunds)
+
+Previously listed as a missing-endpoint gap. The backend now exposes
+`PATCH /orders/:orderId/items/:subOrderId/cancel` (buyer, own orders):
+it cancels a **paid** item that is still `CONFIRMED` (not yet shipped),
+restores that variant's stock, and records a **record-only** refund on
+the line (`refund: { status: "INITIATED", amount, initiatedAt, reason? }`).
+When the last remaining item is cancelled the whole order flips to
+`paymentStatus: "REFUNDED"`. There is no live Razorpay refund call yet —
+that is a single clearly-marked spot in the server controller.
+
+`OrderDetailPage.tsx`:
+- Each paid, `CONFIRMED` item shows a **Cancel item** button with an
+  inline "Cancel this item for a refund of ₹X? / Keep item" confirm step
+  (no new dialog dependency). On success it swaps in the returned order
+  and toasts the refund message.
+- A cancelled line shows a refund note ("Refund of ₹X initiated…").
+- `orderMeta.ts` gained an `OrderRefund` type on `OrderItem`. The order
+  header already rendered `REFUNDED` and CANCELLED tones, so no status
+  mapping changed.
+
+Verified with `npm run build`/`npm run lint` (no new warnings) and the
+endpoint was exercised live end-to-end (happy path, partial vs. full
+cancel, re-cancel → 409, stock restored). No browser click-through.

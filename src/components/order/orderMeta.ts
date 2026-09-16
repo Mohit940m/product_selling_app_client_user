@@ -2,11 +2,15 @@ import type { BadgeTone } from '../ui/Badge';
 
 export type OrderTracking = { courier?: string; trackingId?: string; trackingUrl?: string };
 
+/** Record-only refund attached to a line once the buyer cancels it (pre-ship). */
+export type OrderRefund = { status: 'INITIATED' | 'COMPLETED'; amount: number; initiatedAt?: string; reason?: string };
+
 /** Each item is its own sub-order with its own status and tracking. */
 export type OrderItem = {
   subOrderId: string;
   status: OrderStatus;
   tracking?: OrderTracking;
+  refund?: OrderRefund;
   statusUpdatedAt?: string;
   productId: string;
   variantId: string;
