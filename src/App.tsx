@@ -18,6 +18,7 @@ import OrderDetailPage from './pages/OrderDetailPage'
 import WishlistPage from './pages/WishlistPage'
 import ProfilePage from './pages/ProfilePage'
 import AssistantPage from './pages/AssistantPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 const RootRedirect = () => {
@@ -52,6 +53,7 @@ const AppRoutes = () => {
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/assistant" element={<AssistantPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
           </Route>
 
           {/* Catch-all: React Router renders nothing for an unmatched path

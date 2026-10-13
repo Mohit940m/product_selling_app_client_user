@@ -22,6 +22,7 @@ VITE_SERVER_URL=https://product-selling-app-server.onrender.com   # Backend base
 VITE_PORT=5204                                                      # Dev server port (optional)
 VITE_ENABLE_ASSISTANT=true                                          # Assistant on unless "false" (agentic-chat branch)
 VITE_AGENT_URL=http://localhost:4100                                # product_selling_app_agent
+VITE_SUPPORT_EMAIL=                                                 # Optional contact shown on /privacy
 ```
 
 ## Architecture
@@ -67,6 +68,10 @@ Nested routing: `/welcome`, `/login`, `/signup` render outside the shell; everyt
 /wishlist                 → saved products, backed by the real /wishlist API (add, remove, list all wired)
 /profile                  → personal info, default address management, Orders/Wishlist menu rows, dark-mode toggle
 /assistant                → AI shopping assistant chat (agentic-chat branch; log-in prompt when logged out)
+/privacy                  → privacy policy (public). Discloses that sellers see signed-in buyers who reach checkout
+                            (name/email/phone, their items, paid or not; server GET /seller/checkouts). Linked from
+                            the footer, the checkout summary (/privacy#sellers) and sign-up. Keep it in sync with
+                            how data is actually handled.
 *                         → NotFoundPage (catch-all; there was none for a long stretch of this
                             app's history, so any unmatched URL just rendered a blank screen)
 ```
