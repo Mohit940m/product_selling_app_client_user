@@ -433,6 +433,14 @@ const CheckoutPage = () => {
               <p className="text-sm text-muted">Enter an address to see the full breakdown.</p>
             )}
 
+            <p className="mt-4 text-[11.5px] leading-relaxed text-muted">
+              The sellers of these items can see your name, email and phone and what you're buying from them once you
+              reach checkout, even if you don't pay.{' '}
+              <Link to="/privacy#sellers" className="font-bold text-accent hover:underline">
+                Privacy policy
+              </Link>
+            </p>
+
             <Button
               variant="dark"
               onClick={placeOrder}

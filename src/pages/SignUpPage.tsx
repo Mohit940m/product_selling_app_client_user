@@ -201,6 +201,13 @@ const SignUpPage = () => {
         <Button type="submit" variant="primary" loading={isSubmitting} fullWidth>
           {step === 'details' ? 'Send OTP' : 'Verify and create account'}
         </Button>
+        <p className="text-center text-[12px] leading-relaxed text-muted">
+          By creating an account you agree to our{' '}
+          <Link to="/privacy" className="font-bold text-accent hover:underline">
+            privacy policy
+          </Link>
+          , including that sellers can see your contact details when you go to checkout.
+        </p>
       </form>
 
       <p className="mt-6 text-center text-sm text-muted">
